@@ -2,6 +2,9 @@ package it.unicam.cs.FilieraAgricola.Product;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.CheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.LoadProductCheckStrategy;
+import it.unicam.cs.FilieraAgricola.Command.Command;
+import it.unicam.cs.FilieraAgricola.Command.CommandInvoker;
+import it.unicam.cs.FilieraAgricola.Command.LoadProductCommand;
 import it.unicam.cs.FilieraAgricola.User.User;
 
 public class ProductManager {
@@ -24,6 +27,12 @@ public class ProductManager {
             throw new IllegalArgumentException("Product non valid for loading");
 
 
+        Command<Product> loadProductCommand = new LoadProductCommand(user, product);
+
+        CommandInvoker invoker = new CommandInvoker();
+
+        invoker.setCommand(loadProductCommand);
+        invoker.invoke();
 
     }
 
