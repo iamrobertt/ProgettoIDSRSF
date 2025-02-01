@@ -12,4 +12,24 @@ public class BundleProduct extends Product{
         this.productsInBundle = new ArrayList<>(productsInBundle);
     }
 
+
+    @Override
+    public void setProductPrice(double productPrice) {
+        double price = 0.0;
+        for (Product product : this.productsInBundle)
+            price += product.getProductPrice();
+
+        this.productPrice = price;
+    }
+
+    public void add(Product product) {
+        if(product == null) throw new NullPointerException("Product is null");
+        this.productsInBundle.add(product);
+    }
+
+    public List<Product> getProductsInBundle() {
+        return productsInBundle;
+    }
+
+
 }

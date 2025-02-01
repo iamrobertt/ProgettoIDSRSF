@@ -2,82 +2,54 @@ package it.unicam.cs.FilieraAgricola.Product;
 
 public abstract class Product {
 
-    private int productID;
+    protected int productID;
 
-    private String productName;
+    protected String productName;
 
-    private String productDescription;
+    protected String productDescription;
 
-    private double productPrice;
+    protected double productPrice;
 
-    private int productQuantity;
+    protected int productQuantity;
 
-    private ProductState ProductState;
+    protected ProductState productState;
 
     Product(int productID,
             String productName,
             String productDescription,
             double productPrice,
             int productQuantity,
-            ProductState ProductState
+            ProductState productState
     ) {
         this.productID = productID;
         this.productName = productName;
         this.productDescription = productDescription;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
-        this.ProductState = ProductState;
+        this.productState = productState;
     }
 
-    public int getProductID() {
-        return productID;
-    }
+    public int getProductID() { return productID; }
 
-    public String getProductName() {
-        return productName;
-    }
+    public void setProductID(int productID) { this.productID = productID; }
 
-    public String getProductDescription() {
-        return productDescription;
-    }
+    public String getProductName() { return productName; }
 
-    public double getProductPrice() {
-        return productPrice;
-    }
+    public void setProductName(String productName) { this.productName = productName; }
 
-    public int getProductQuantity() {
-        return productQuantity;
-    }
+    public String getProductDescription() { return productDescription; }
 
-    public ProductState getProductState() {
-        return ProductState;
-    }
+    public void setProductDescription(String productDescription) { this.productDescription = productDescription; }
 
-    public void setProductID(int productID) {
-        this.productID = productID;
-    }
+    public double getProductPrice() { return productPrice; }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
+    public void setProductPrice(double productPrice){ this.productPrice = productPrice; }
 
-    public void setProductDescription(String productDescription) {
-        this.productDescription = productDescription;
-    }
+    public int getProductQuantity() { return productQuantity; }
 
-    public void setProductPrice(double productPrice) {
-        this.productPrice = productPrice;
-    }
+    public void setProductQuantity(int productQuantity) { this.productQuantity = productQuantity; }
 
-    public void setProductQuantity(int productQuantity) {
-        this.productQuantity = productQuantity;
-    }
+    public ProductState getProductState() { return productState; }
 
-    public void setProductState(ProductState ProductState) {
-        this.ProductState = ProductState;
-    }
-
-    public boolean isBundle(){
-        return this instanceof BundleProduct;
-    }
+    public void setProductState(ProductState ProductState) { this.productState = ProductState; }
 }
