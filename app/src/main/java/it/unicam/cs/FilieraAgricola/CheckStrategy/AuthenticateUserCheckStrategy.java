@@ -3,7 +3,7 @@ package it.unicam.cs.FilieraAgricola.CheckStrategy;
 import it.unicam.cs.FilieraAgricola.User.UserUtility;
 import it.unicam.cs.FilieraAgricola.User.User;
 
-public class AuthenticateUserCheckStrategy implements CheckStrategy<User> {
+public class AuthenticateUserCheckStrategy implements CheckStrategy {
 
     private final String userEmail;
     private final String userPassword;
