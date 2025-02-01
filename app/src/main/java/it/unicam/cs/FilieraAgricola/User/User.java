@@ -1,5 +1,7 @@
 package it.unicam.cs.FilieraAgricola.User;
 
+import java.util.List;
+
 public class User {
 
     private int userID;
@@ -8,7 +10,7 @@ public class User {
     private String userEmail;
     private String userPassword;
     private int companyVATNumber;
-    private UserRole userRole;
+    private List<UserRole> userRole;
     private UserState userState;
 
     public User(
@@ -18,7 +20,7 @@ public class User {
             String userEmail,
             String userPassword,
             int companyVATNumber,
-            UserRole userRole,
+            List <UserRole> userRole,
             UserState userState
     ) {
         this.userID = userID;
@@ -37,7 +39,7 @@ public class User {
     public String getUserEmail() { return userEmail;}
     public String getUserPassword() { return userPassword;}
     public int getCompanyVATNumber() { return companyVATNumber;}
-    public UserRole getUserRole() { return userRole;}
+    public List <UserRole> getUserRole() { return userRole;}
     public UserState getUserState() { return userState;}
 
     public void setUserID(int userID) { this.userID = userID;}
@@ -46,6 +48,6 @@ public class User {
     public void setUserEmail(String userEmail) { this.userEmail = userEmail;}
     public void setUserPassword(String userPassword) { this.userPassword = userPassword;}
     public void setCompanyVATNumber(int companyVATNumber) { this.companyVATNumber = companyVATNumber;}
-    public void setUserRole(UserRole userRole) { this.userRole = userRole;}
+    public void setUserRole(List <UserRole> userRole) { this.userRole = userRole;}
     public void setUserState(UserState userState) { this.userState = userState;}
 }
