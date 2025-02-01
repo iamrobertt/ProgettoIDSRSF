@@ -1,17 +1,15 @@
 package it.unicam.cs.FilieraAgricola.Command;
 
 import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.ProductLoader;
-import it.unicam.cs.FilieraAgricola.Product.ProductLoaderFactory;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadProductCommand extends Command<Product> {
+public class SellProductCommand extends Command<Product> {
 
-    public LoadProductCommand(User user, Product product) {
+    public SellProductCommand(User user, Product product) {
         super(user, product);
     }
 
@@ -29,7 +27,6 @@ public class LoadProductCommand extends Command<Product> {
 
     @Override
     public void execute() {
-        ProductLoader productLoader = ProductLoaderFactory.getProductLoader(this.item.getClass());
-        productLoader.loadProduct(this.item);
+        //TODO
     }
 }

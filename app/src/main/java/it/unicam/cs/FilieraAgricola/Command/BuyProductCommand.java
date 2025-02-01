@@ -9,9 +9,9 @@ import it.unicam.cs.FilieraAgricola.User.UserRole;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadProductCommand extends Command<Product> {
+public class BuyProductCommand extends Command<Product> {
 
-    public LoadProductCommand(User user, Product product) {
+    public BuyProductCommand(User user, Product product) {
         super(user, product);
     }
 
@@ -29,7 +29,6 @@ public class LoadProductCommand extends Command<Product> {
 
     @Override
     public void execute() {
-        ProductLoader productLoader = ProductLoaderFactory.getProductLoader(this.item.getClass());
-        productLoader.loadProduct(this.item);
+        //TODO
     }
 }

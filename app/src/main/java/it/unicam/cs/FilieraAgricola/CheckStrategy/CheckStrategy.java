@@ -1,5 +1,5 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
-public interface CheckStrategy<T> {
+public interface CheckStrategy {
     boolean validate();
 }

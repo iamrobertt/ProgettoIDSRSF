@@ -8,6 +8,6 @@ public enum ProductState {
 
     PRODUCT_VALIDATED,
 
-    PRODUCT_NOT_VALIDATE
+    PRODUCT_NOT_VALIDATED
 
 }

@@ -5,7 +5,7 @@ import it.unicam.cs.FilieraAgricola.User.UserRole;
 
 import java.util.List;
 
-public abstract class Command <T>{
+public abstract class Command<T> {
 
     protected T item;
 
