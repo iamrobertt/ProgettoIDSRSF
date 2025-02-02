@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ValidateProductCommand extends Command<Product> {
 
-    private ProductState productState;
+    private final ProductState productState;
 
     public ValidateProductCommand(User user, Product product, ProductState newProductState) {
         super(user, product);

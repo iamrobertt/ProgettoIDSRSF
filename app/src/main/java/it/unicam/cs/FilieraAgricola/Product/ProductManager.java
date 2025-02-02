@@ -3,18 +3,12 @@ package it.unicam.cs.FilieraAgricola.Product;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
 import it.unicam.cs.FilieraAgricola.Command.*;
 import it.unicam.cs.FilieraAgricola.User.User;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProductManager {
 
-    private static final ProductManager instance = null;
-
     private ProductManager() {}
-
-    public static ProductManager getInstance() {
-        if(instance == null) return new ProductManager();
-
-        return instance;
-    }
 
     public void loadProductRequest(User user, Product product) {
 

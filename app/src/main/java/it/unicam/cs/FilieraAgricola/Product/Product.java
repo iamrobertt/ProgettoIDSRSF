@@ -1,20 +1,36 @@
 package it.unicam.cs.FilieraAgricola.Product;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+
+@Data
+@Table(name = "product")
+
+@Entity
 public abstract class Product {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "productID")
     protected int productID;
 
+    //@Column(name = "productName")
     protected String productName;
 
+    //@Column(name = "productDescription")
     protected String productDescription;
 
+    //@Column(name = "productPrice")
     protected double productPrice;
 
+    //@Column(name = "productQuantity")
     protected int productQuantity;
 
+    //@Column(name = "productState")
     protected ProductState productState;
 
-    Product(int productID,
+    public Product(int productID,
             String productName,
             String productDescription,
             double productPrice,
@@ -29,27 +45,7 @@ public abstract class Product {
         this.productState = productState;
     }
 
-    public int getProductID() { return productID; }
+    public Product() {
 
-    public void setProductID(int productID) { this.productID = productID; }
-
-    public String getProductName() { return productName; }
-
-    public void setProductName(String productName) { this.productName = productName; }
-
-    public String getProductDescription() { return productDescription; }
-
-    public void setProductDescription(String productDescription) { this.productDescription = productDescription; }
-
-    public double getProductPrice() { return productPrice; }
-
-    public void setProductPrice(double productPrice){ this.productPrice = productPrice; }
-
-    public int getProductQuantity() { return productQuantity; }
-
-    public void setProductQuantity(int productQuantity) { this.productQuantity = productQuantity; }
-
-    public ProductState getProductState() { return productState; }
-
-    public void setProductState(ProductState ProductState) { this.productState = ProductState; }
+    }
 }
