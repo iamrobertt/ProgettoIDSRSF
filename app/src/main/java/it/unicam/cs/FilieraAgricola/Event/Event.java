@@ -10,7 +10,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Event {
+ public abstract class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -34,7 +34,7 @@ public class EventManager {
         if (!bookEventStrategy.validate())
             throw new IllegalArgumentException("The event is not on the book");
 
-        Command<Event> createEventCommand = CreateEventCommand (user, event);
+        Command<Event> createEventCommand = new CreateEventCommand (user, event);
 
         CommandInvoker invoker = new CommandInvoker();
 
