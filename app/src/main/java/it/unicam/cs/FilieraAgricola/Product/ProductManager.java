@@ -5,6 +5,7 @@ import it.unicam.cs.FilieraAgricola.Command.*;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class ProductManager {
 
@@ -56,6 +57,7 @@ public class ProductManager {
         invoker.setCommand(buyProductCommand);
         invoker.invoke();
     }
+
 
     public void validateProductRequest(User user, Product product, ProductState newProductState) {
         CheckStrategy validateProductStrategy = new ValidateProductCheckStrategy(product, newProductState);

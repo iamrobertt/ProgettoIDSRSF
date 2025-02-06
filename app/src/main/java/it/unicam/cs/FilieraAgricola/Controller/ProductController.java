@@ -25,7 +25,9 @@ public class ProductController {
 
     @PostMapping("/insertProduct")
     public String insertProduct(@RequestBody ProductDTO productDTO) {
-        Product product = convertToProduct(productDTO);
+
+        ControllerUtility controllerUtility = new ControllerUtility();
+        Product product = controllerUtility.convertToProduct(productDTO);
 
         List<UserRole> userRole = new ArrayList<UserRole>();
         userRole.add(UserRole.SELLER);
@@ -58,34 +60,5 @@ public class ProductController {
             return "porcodio";
     }
 
-
-    private Product convertToProduct(ProductDTO productDTO) {
-        if (productDTO.getBundleProducts() != null && !productDTO.getBundleProducts().isEmpty()) {
-            List<Product> products = productDTO.getBundleProducts()
-                    .stream()
-                    .map(this::convertToProduct)
-                    .collect(Collectors.toList());
-
-            return new BundleProduct(
-                    0,
-                    productDTO.getProductName(),
-                    productDTO.getProductDescription(),
-                    productDTO.getProductPrice(),
-                    productDTO.getProductQuantity(),
-                    ProductState.PRODUCT_INSERTED,
-                    products
-            );
-        }
-
-        // Altrimenti è un SingleProduct
-        return new SingleProduct(
-                0,
-                productDTO.getProductName(),
-                productDTO.getProductDescription(),
-                productDTO.getProductPrice(),
-                productDTO.getProductQuantity(),
-                ProductState.PRODUCT_INSERTED
-        );
-    }
 
 }

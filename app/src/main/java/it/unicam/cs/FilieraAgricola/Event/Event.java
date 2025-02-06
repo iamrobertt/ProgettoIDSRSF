@@ -21,10 +21,12 @@ import java.util.List;
     protected List<User> participants;
 
     public Event(
+            int eventID,
             int eventMaxParticipants,
             int currentParticipants,
             List<User> participants
     ){
+        this.eventID = eventID;
         this.eventMaxParticipants = eventMaxParticipants;
         this.currentParticipants = currentParticipants;
         this.participants = participants;

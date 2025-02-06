@@ -1,5 +1,6 @@
 package it.unicam.cs.FilieraAgricola.DTO;
 
+import it.unicam.cs.FilieraAgricola.Product.Product;
 import it.unicam.cs.FilieraAgricola.User.User;
 import lombok.Data;
 import lombok.Generated;
@@ -13,5 +14,6 @@ public class EventDTO {
     private int eventID;
     private int eventMaxParticipants;
     private int currentParticipants;
-    private List<User> participants;
+    private List<UserDTO> participants;
+    private List<ProductDTO> productList;
 }
