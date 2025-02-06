@@ -1,16 +1,14 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
 import it.unicam.cs.FilieraAgricola.User.User;
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
- public abstract class Event {
+@Entity
+ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +33,16 @@ import java.util.List;
         this.participants = participants;
     }
 
-    public Event (){
-
+    public Event() {
     }
 
+    public int getEventID() {return eventID;}
+    public int getEventMaxParticipants() {return eventMaxParticipants;}
+    public int getCurrentParticipants() {return currentParticipants;}
+    public List<User> getParticipants() {return participants;}
+
+    public void setEventID(int eventID) {this.eventID = eventID;}
+    public void setEventMaxParticipants(int eventMaxParticipants) {this.eventMaxParticipants = eventMaxParticipants;}
+    public void setCurrentParticipants(int currentParticipants) {this.currentParticipants = currentParticipants;}
+    public void setParticipants(List<User> participants) {this.participants = participants;}
 }
