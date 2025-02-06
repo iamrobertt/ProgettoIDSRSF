@@ -6,7 +6,6 @@ import lombok.Data;
 
 @Data
 @Table(name = "product")
-
 @Entity
 public abstract class Product {
 
@@ -30,14 +29,13 @@ public abstract class Product {
     //@Column(name = "productState")
     protected ProductState productState;
 
-    public Product(int productID,
+    public Product(
             String productName,
             String productDescription,
             double productPrice,
             int productQuantity,
             ProductState productState
     ) {
-        this.productID = productID;
         this.productName = productName;
         this.productDescription = productDescription;
         this.productPrice = productPrice;
