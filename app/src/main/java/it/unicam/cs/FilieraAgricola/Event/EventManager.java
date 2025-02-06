@@ -1,10 +1,12 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
+import it.unicam.cs.FilieraAgricola.CheckStrategy.BookEventStrategyCheck;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.CheckStrategy;
+import it.unicam.cs.FilieraAgricola.CheckStrategy.CreateEventCheckStrategy;
+import it.unicam.cs.FilieraAgricola.Command.BookEventCommand;
 import it.unicam.cs.FilieraAgricola.Command.Command;
 import it.unicam.cs.FilieraAgricola.Command.CommandInvoker;
-import it.unicam.cs.FilieraAgricola.Command.LoadProductCommand;
-import it.unicam.cs.FilieraAgricola.Product.Product;
+import it.unicam.cs.FilieraAgricola.Command.CreateEventCommand;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.stereotype.Service;
 
@@ -29,16 +31,16 @@ public class EventManager {
 
     public void bookEventRequest (User user, Event event){
 
-        CheckStrategy bookEventStrategy =  new BookEventStrategyChech (event) ;
+        CheckStrategy bookEventStrategy =  new BookEventStrategyCheck(event) ;
 
         if (!bookEventStrategy.validate())
             throw new IllegalArgumentException("The event is not on the book");
 
-        Command<Event> createEventCommand = new CreateEventCommand (user, event);
+        Command<Event> bookEventCommand = new BookEventCommand(user, event);
 
         CommandInvoker invoker = new CommandInvoker();
 
-        invoker.setCommand(createEventCommand);
+        invoker.setCommand(bookEventCommand);
         invoker.invoke();
     }
 }
