@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class EventLoaderFactory {
 
-    private static Map<Class<? extends Event>, EventLoader> eventLoaders = new HashMap<>();
+    private static final Map<Class<? extends Event>, EventLoader> eventLoaders = new HashMap<>();
 
     static {
         eventLoaders.put(Event.class, new SimpleEventLoader());
