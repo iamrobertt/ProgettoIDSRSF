@@ -11,7 +11,7 @@ public abstract class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productID")
+    @Column(name = "productid")
     protected int productID;
 
     //@Column(name = "productName")
