@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Entity
+
 
 public  class TastingEvent extends Event{
 
@@ -23,5 +23,7 @@ public  class TastingEvent extends Event{
     ){
         super(eventMaxParticipants,currentParticipants,participants);
         this.productList = productList;}
+
+    public TastingEvent(){}
 
 }
