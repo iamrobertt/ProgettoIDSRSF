@@ -2,17 +2,14 @@ package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserUtility;
+import org.springframework.stereotype.Component;
 
-public class RegisterUserCheckStrategy implements CheckStrategy {
+@Component
+public class RegisterUserCheckStrategy implements CheckStrategy<User> {
 
-    private final User user;
-
-    public RegisterUserCheckStrategy(User user) {
-        this.user = user;
-    }
 
     @Override
-    public boolean validate() {
+    public boolean validate(User user, User user1) {
         return UserUtility.checkUserInfo(user) && !UserUtility.checkExistUser(user);
     }
 

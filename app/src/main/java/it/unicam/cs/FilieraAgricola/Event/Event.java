@@ -1,7 +1,10 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
+import it.unicam.cs.FilieraAgricola.User.User;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -25,7 +28,8 @@ public abstract class Event {
     @Column(name = "eventcurrentparticipants")
     protected int currentParticipants;
 
-    //protected List<User> participants;
+    @Transient
+    protected List<User> participants;
 
     public Event(
             long eventID,

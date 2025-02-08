@@ -12,6 +12,6 @@ public class CommandInvoker {
 
 
     public void invoke(){
-        command.execute();
+        this.command.execute();
     }
 }

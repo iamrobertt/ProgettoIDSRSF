@@ -7,11 +7,13 @@ import lombok.Data;
 @Data
 @Table(name = "product")
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "producttype", discriminatorType = DiscriminatorType.STRING)
 public abstract class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productID")
+    @Column(name = "productid")
     protected long productID;
 
     @Column(name = "productname")
@@ -30,13 +32,18 @@ public abstract class Product {
     @Column(name = "productstate")
     protected ProductState productState;
 
+    @Enumerated(EnumType.STRING)
+    @Column(insertable = false, updatable = false, name = "producttype")
+    protected ProductType productType;
+
     public Product(
             long productID,
             String productName,
             String productDescription,
             double productPrice,
             int productQuantity,
-            ProductState productState
+            ProductState productState,
+            ProductType productType
     ) {
         this.productID = productID;
         this.productName = productName;
@@ -44,6 +51,7 @@ public abstract class Product {
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
         this.productState = productState;
+        this.productType = productType;
     }
 
     public Product() {

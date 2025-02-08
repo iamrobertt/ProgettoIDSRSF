@@ -6,45 +6,45 @@ import it.unicam.cs.FilieraAgricola.DTO.UserDTO;
 import it.unicam.cs.FilieraAgricola.Event.Event;
 import it.unicam.cs.FilieraAgricola.Event.SimpleEvent;
 import it.unicam.cs.FilieraAgricola.Event.TastingEvent;
-import it.unicam.cs.FilieraAgricola.Product.BundleProduct;
-import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.ProductState;
-import it.unicam.cs.FilieraAgricola.Product.SingleProduct;
+import it.unicam.cs.FilieraAgricola.Product.*;
 import it.unicam.cs.FilieraAgricola.User.User;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ControllerUtility {
 
     public Product convertToProduct(ProductDTO productDTO) {
 
-        if (productDTO.getBundleProducts() != null && !productDTO.getBundleProducts().isEmpty()) {
+        ProductState productState = ProductState.fromValue(productDTO.getProductState());
+        ProductType productType = ProductType.fromValue(productDTO.getProductType());
+
+        if (productType.getValue().equals("BUNDLE")) {
             List<Product> products = productDTO.getBundleProducts()
                     .stream()
                     .map(this::convertToProduct)
                     .toList();
 
             return new BundleProduct(
-                    0,
+                    productDTO.getProductID(),
                     productDTO.getProductName(),
                     productDTO.getProductDescription(),
                     productDTO.getProductPrice(),
                     productDTO.getProductQuantity(),
-                    ProductState.PRODUCT_INSERTED,
+                    productState,
+                    productType,
                     products
             );
         }
 
         // Altrimenti è un SingleProduct
         return new SingleProduct(
-                0,
+                productDTO.getProductID(),
                 productDTO.getProductName(),
                 productDTO.getProductDescription(),
                 productDTO.getProductPrice(),
                 productDTO.getProductQuantity(),
-                ProductState.PRODUCT_INSERTED
+                productState,
+                productType
         );
     }
 

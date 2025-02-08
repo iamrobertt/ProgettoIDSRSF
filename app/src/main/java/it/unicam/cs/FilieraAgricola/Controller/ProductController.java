@@ -1,6 +1,7 @@
 package it.unicam.cs.FilieraAgricola.Controller;
 
 import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
+import it.unicam.cs.FilieraAgricola.Manager.ProductManager;
 import it.unicam.cs.FilieraAgricola.Product.*;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/product")
@@ -20,8 +21,6 @@ public class ProductController {
     @Autowired
     private ProductManager productManager;
 
-    @Autowired
-    private ProductRepository productRepository;
 
     @PostMapping("/insertProduct")
     public String insertProduct(@RequestBody ProductDTO productDTO) {
@@ -45,20 +44,20 @@ public class ProductController {
 
         this.productManager.loadProductRequest(user, product);
 
-        return "ciao";
+        return "caio";
     }
 
 
-    @GetMapping("/findProduct/{productID}")
-    public String findProduct(@PathVariable long productID) {
-
-        Optional<Product> product1 = this.productRepository.findById(productID);
-
-        if(product1.isPresent())
-            return product1.get().getProductName();
-        else
-            return "ciao";
-    }
+//    @GetMapping("/findProduct/{productID}")
+//    public String findProduct(@PathVariable long productID) {
+//
+//        Optional<Product> product1 = this.productRepository.findById(productID);
+//
+//        if(product1.isPresent())
+//            return product1.get().getProductName();
+//        else
+//            return "ciao";
+//    }
 
 
 }

@@ -3,30 +3,29 @@ package it.unicam.cs.FilieraAgricola.CheckStrategy;
 import it.unicam.cs.FilieraAgricola.Product.Product;
 import it.unicam.cs.FilieraAgricola.Product.ProductState;
 import it.unicam.cs.FilieraAgricola.Product.ProductUtility;
+import it.unicam.cs.FilieraAgricola.User.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class SellProductCheckStrategy implements CheckStrategy {
+@Component
+public class SellProductCheckStrategy implements CheckStrategy<Product> {
 
-    private final Product product;
-
-    public SellProductCheckStrategy(Product product) {
-        this.product = product;
-    }
+    @Autowired
+    private ProductUtility productUtility;
 
     @Override
-    public boolean validate() {
+    public boolean validate(User user, Product product) {
 
         //if the product does not have the necessary data to be uniquely identified, return false
-        if (!ProductUtility.checkProductInfo(this.product))
+        if (!this.productUtility.checkProductInfo(product))
             return false;
 
-        //TODO aggiorna anche sequence diagram su questa funzione aggiungendo anche l'utente
-        //in questo modo non si controlla se il prodotto esiste per il dato utente, ma per qualsiasi utente
         //if the product does not exist, return false
-        if (!ProductUtility.checkExistProduct(this.product))
+        if (!this.productUtility.checkExistProduct(user,product))
             return false;
 
         //if the product isn't in a pre-sell state, return false
-        if(!this.product.getProductState().equals(ProductState.PRODUCT_INSERTED))
+        if(!product.getProductState().equals(ProductState.PRODUCT_INSERTED))
             return false;
 
         return true;

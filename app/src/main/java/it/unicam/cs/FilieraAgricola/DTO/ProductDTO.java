@@ -1,7 +1,6 @@
 package it.unicam.cs.FilieraAgricola.DTO;
 
 import lombok.Data;
-import lombok.Generated;
 
 import java.util.List;
 
@@ -12,5 +11,7 @@ public class ProductDTO {
     private String productDescription;
     private double productPrice;
     private int productQuantity;
+    private String productState;
+    private String productType;
     private List<ProductDTO> bundleProducts;
 }
