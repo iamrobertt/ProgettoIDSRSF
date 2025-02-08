@@ -4,6 +4,7 @@ import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
 import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
 import it.unicam.cs.FilieraAgricola.DTO.UserDTO;
 import it.unicam.cs.FilieraAgricola.Event.Event;
+import it.unicam.cs.FilieraAgricola.Event.SimpleEvent;
 import it.unicam.cs.FilieraAgricola.Event.TastingEvent;
 import it.unicam.cs.FilieraAgricola.Product.BundleProduct;
 import it.unicam.cs.FilieraAgricola.Product.Product;
@@ -67,8 +68,10 @@ public class ControllerUtility {
 
             return new TastingEvent(
                     eventDTO.getEventID(),
+                    eventDTO.getEventName(),
+                    eventDTO.getEventDescription(),
                     eventDTO.getEventMaxParticipants(),
-                    eventDTO.getCurrentParticipants(),
+                    eventDTO.getEventCurrentParticipants(),
                     participants,
                     products
             );
@@ -76,11 +79,12 @@ public class ControllerUtility {
         }
 
         //simple event
-        return new Event(
+        return new SimpleEvent(
                 eventDTO.getEventID(),
+                eventDTO.getEventName(),
+                eventDTO.getEventDescription(),
                 eventDTO.getEventMaxParticipants(),
-                eventDTO.getCurrentParticipants(),
-                participants
+                eventDTO.getEventCurrentParticipants()
         );
     }
 

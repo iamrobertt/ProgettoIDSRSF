@@ -10,6 +10,5 @@ public class EventLoaderFactory {
     static {
         eventLoaders.put(Event.class, new SimpleEventLoader());
         eventLoaders.put(TastingEvent.class, new TastingEventLoader());
-
     }
 }

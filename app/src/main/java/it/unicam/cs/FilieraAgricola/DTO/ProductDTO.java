@@ -7,8 +7,7 @@ import java.util.List;
 
 @Data
 public class ProductDTO {
-    @Generated
-    private int productID;
+    private long productID;
     private String productName;
     private String productDescription;
     private double productPrice;

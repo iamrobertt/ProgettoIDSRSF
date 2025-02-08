@@ -11,31 +11,34 @@ public abstract class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productid")
-    protected int productID;
+    @Column(name = "productID")
+    protected long productID;
 
-    //@Column(name = "productName")
+    @Column(name = "productname")
     protected String productName;
 
-    //@Column(name = "productDescription")
+    @Column(name = "productdescription")
     protected String productDescription;
 
-    //@Column(name = "productPrice")
+    @Column(name = "productprice")
     protected double productPrice;
 
-    //@Column(name = "productQuantity")
+    @Column(name = "productquantity")
     protected int productQuantity;
 
-    //@Column(name = "productState")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "productstate")
     protected ProductState productState;
 
     public Product(
+            long productID,
             String productName,
             String productDescription,
             double productPrice,
             int productQuantity,
             ProductState productState
     ) {
+        this.productID = productID;
         this.productName = productName;
         this.productDescription = productDescription;
         this.productPrice = productPrice;

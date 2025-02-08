@@ -11,8 +11,7 @@ import java.util.List;
 @Data
 public class UserDTO {
 
-    @Generated
-    private int userID;
+    private long userID;
     private String userName;
     private String userSurname;
     private String userEmail;

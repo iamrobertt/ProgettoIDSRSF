@@ -15,6 +15,7 @@ public class EventManager {
 
     private EventManager (){}
 
+
     public void createEventRequest( User user , Event event){
         CheckStrategy createEventStrategy = new CreateEventCheckStrategy(event);
 
@@ -28,6 +29,7 @@ public class EventManager {
         invoker.setCommand(createEventCommand);
         invoker.invoke();
     }
+
 
     public void bookEventRequest (User user, Event event){
 
