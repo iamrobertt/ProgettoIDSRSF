@@ -32,8 +32,7 @@ public class EventController {
         Event event = controllerUtility.convertToEvent(eventDTO);
 
 
-        List<UserRole> userRole = new ArrayList<UserRole>();
-        userRole.add(UserRole.PROMOTER);
+        UserRole userRole = UserRole.PROMOTER;
 
         User user = new User(
                         1,
