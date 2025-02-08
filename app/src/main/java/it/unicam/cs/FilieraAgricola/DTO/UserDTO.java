@@ -1,13 +1,7 @@
 package it.unicam.cs.FilieraAgricola.DTO;
 
-import it.unicam.cs.FilieraAgricola.User.UserRole;
-import it.unicam.cs.FilieraAgricola.User.UserState;
 import lombok.Data;
-import lombok.Generated;
 
-import java.util.List;
-
-//TODO da rivedere come fare
 @Data
 public class UserDTO {
 
@@ -17,7 +11,6 @@ public class UserDTO {
     private String userEmail;
     private String userPassword;
     private int companyVATNumber;
-    //TODO verifica questo come convertire
-    private List<UserRole> userRole;
-    private UserState userState;
+    private String userRole;
+    private String userState;
 }

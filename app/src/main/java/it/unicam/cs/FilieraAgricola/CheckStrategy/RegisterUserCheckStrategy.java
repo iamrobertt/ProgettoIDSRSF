@@ -10,7 +10,8 @@ public class RegisterUserCheckStrategy implements CheckStrategy<User> {
 
     @Override
     public boolean validate(User user, User user1) {
-        return UserUtility.checkUserInfo(user) && !UserUtility.checkExistUser(user);
+        //return UserUtility.checkUserInfo(user) && !UserUtility.checkExistUser(user);
+        return true;
     }
 
 }

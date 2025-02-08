@@ -9,11 +9,13 @@ import it.unicam.cs.FilieraAgricola.Command.Command;
 import it.unicam.cs.FilieraAgricola.Command.CommandInvoker;
 import it.unicam.cs.FilieraAgricola.Command.RegisterUserCommand;
 import it.unicam.cs.FilieraAgricola.Command.RoleRequestCommand;
+import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class UserManager {
 
     @Autowired
@@ -23,6 +25,8 @@ public class UserManager {
     @Autowired
     private RoleRequestCheckStrategy roleRequestCheckStrategy;
 
+    @Autowired
+    private UserRepository userRepository;
 
     public void authenticateUserRequest(User user, String userEmail, String userPassword) {
 
@@ -34,13 +38,13 @@ public class UserManager {
 
 
     //TODO RIVEDI
-    public void requestUserRequest(User user, User userToRegister) {
+    public void registerUserRequest(User user, User userToRegister) {
 
         if(!this.registerUserCheckStrategy.validate(user, userToRegister))
             throw new IllegalArgumentException("User non valid");
 
         // TODO: rivedi
-        Command<User> registerUserCommand = new RegisterUserCommand(user,null);
+        Command<User> registerUserCommand = new RegisterUserCommand(user,userToRegister,userRepository);
 
         CommandInvoker invoker = new CommandInvoker();
 

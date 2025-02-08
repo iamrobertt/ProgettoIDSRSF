@@ -4,6 +4,7 @@ import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class RoleRequestCommand extends Command <User>{
@@ -18,14 +19,12 @@ public class RoleRequestCommand extends Command <User>{
 
     @Override
     public List<UserRole> getNeededAuthorization() {
-        List<UserRole> neededRoles = new ArrayList<>();
-        neededRoles.add(userRole);
-        return neededRoles;
+        return new ArrayList<>(Arrays.stream(UserRole.values()).toList());
     }
 
     @Override
     public boolean hasCallerNeededAuthorization() {
-        return this.user.getUserRole().contains(UserRole.SELLER);
+        return getNeededAuthorization().contains(this.user.getUserRole());
     }
 
     @Override

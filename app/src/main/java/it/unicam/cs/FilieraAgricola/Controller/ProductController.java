@@ -28,8 +28,7 @@ public class ProductController {
         ControllerUtility controllerUtility = new ControllerUtility();
         Product product = controllerUtility.convertToProduct(productDTO);
 
-        List<UserRole> userRole = new ArrayList<UserRole>();
-        userRole.add(UserRole.SELLER);
+        UserRole userRole = UserRole.SELLER;
 
         User user = new User(
                 1,
