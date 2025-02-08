@@ -1,8 +1,6 @@
 package it.unicam.cs.FilieraAgricola.Command;
 
 import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.ProductLoader;
-import it.unicam.cs.FilieraAgricola.Product.ProductLoaderFactory;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
@@ -24,7 +22,7 @@ public class BuyProductCommand extends Command<Product> {
 
     @Override
     public boolean hasCallerNeededAuthorization() {
-        return this.user.getUserRole().contains(getNeededAuthorization());
+        return getNeededAuthorization().contains(this.user.getUserRole());
     }
 
     @Override
