@@ -1,83 +1,49 @@
 package it.unicam.cs.FilieraAgricola.Product;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+
+@Data
+@Table(name = "product")
+@Entity
 public abstract class Product {
 
-    private int productID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "productid")
+    protected int productID;
 
-    private String productName;
+    //@Column(name = "productName")
+    protected String productName;
 
-    private String productDescription;
+    //@Column(name = "productDescription")
+    protected String productDescription;
 
-    private double productPrice;
+    //@Column(name = "productPrice")
+    protected double productPrice;
 
-    private int productQuantity;
+    //@Column(name = "productQuantity")
+    protected int productQuantity;
 
-    private ProductState ProductState;
+    //@Column(name = "productState")
+    protected ProductState productState;
 
-    Product(int productID,
+    public Product(
             String productName,
             String productDescription,
             double productPrice,
             int productQuantity,
-            ProductState ProductState
+            ProductState productState
     ) {
-        this.productID = productID;
         this.productName = productName;
         this.productDescription = productDescription;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
-        this.ProductState = ProductState;
+        this.productState = productState;
     }
 
-    public int getProductID() {
-        return productID;
-    }
+    public Product() {
 
-    public String getProductName() {
-        return productName;
-    }
-
-    public String getProductDescription() {
-        return productDescription;
-    }
-
-    public double getProductPrice() {
-        return productPrice;
-    }
-
-    public int getProductQuantity() {
-        return productQuantity;
-    }
-
-    public ProductState getProductState() {
-        return ProductState;
-    }
-
-    public void setProductID(int productID) {
-        this.productID = productID;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public void setProductDescription(String productDescription) {
-        this.productDescription = productDescription;
-    }
-
-    public void setProductPrice(double productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public void setProductQuantity(int productQuantity) {
-        this.productQuantity = productQuantity;
-    }
-
-    public void setProductState(ProductState ProductState) {
-        this.ProductState = ProductState;
-    }
-
-    public boolean isBundle(){
-        return this instanceof BundleProduct;
     }
 }
