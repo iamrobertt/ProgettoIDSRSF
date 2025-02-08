@@ -1,21 +1,15 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
-import it.unicam.cs.FilieraAgricola.User.UserUtility;
 import it.unicam.cs.FilieraAgricola.User.User;
+import it.unicam.cs.FilieraAgricola.User.UserUtility;
+import org.springframework.stereotype.Component;
 
-public class AuthenticateUserCheckStrategy implements CheckStrategy {
+@Component
+public class AuthenticateUserCheckStrategy implements CustomCheckStrategy<String, String> {
 
-    private final String userEmail;
-    private final String userPassword;
-
-
-    public AuthenticateUserCheckStrategy(String userEmail, String userPassword) {
-        this.userEmail = userEmail;
-        this.userPassword = userPassword;
-    }
 
     @Override
-    public boolean validate() {
+    public boolean validate(User user , String userEmail, String userPassword) {
         // TODO : aggiungi getUser(),isAuthenticated()
         return UserUtility.checkCredentials(userEmail, userPassword);
     }

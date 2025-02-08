@@ -7,43 +7,52 @@ import lombok.Data;
 @Data
 @Table(name = "product")
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "producttype", discriminatorType = DiscriminatorType.STRING)
 public abstract class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productID")
-    protected int productID;
+    @Column(name = "productid")
+    protected long productID;
 
-    //@Column(name = "productName")
+    @Column(name = "productname")
     protected String productName;
 
-    //@Column(name = "productDescription")
+    @Column(name = "productdescription")
     protected String productDescription;
 
-    //@Column(name = "productPrice")
+    @Column(name = "productprice")
     protected double productPrice;
 
-    //@Column(name = "productQuantity")
+    @Column(name = "productquantity")
     protected int productQuantity;
 
-    //@Column(name = "productState")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "productstate")
     protected ProductState productState;
 
+    @Enumerated(EnumType.STRING)
+    @Column(insertable = false, updatable = false, name = "producttype")
+    protected ProductType productType;
+
     public Product(
+            long productID,
             String productName,
             String productDescription,
             double productPrice,
             int productQuantity,
-            ProductState productState
+            ProductState productState,
+            ProductType productType
     ) {
+        this.productID = productID;
         this.productName = productName;
         this.productDescription = productDescription;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
         this.productState = productState;
+        this.productType = productType;
     }
 
-    public Product() {
-
-    }
+    public Product() {}
 }

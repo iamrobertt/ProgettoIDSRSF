@@ -1,26 +1,53 @@
 package it.unicam.cs.FilieraAgricola.User;
 
-import java.util.List;
+import jakarta.persistence.*;
+import lombok.Data;
 
+
+@Data
+@Table(name = "\"user\"")
+@Entity
 public class User {
 
-    private int userID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userid")
+    private long userID;
+
+    @Column(name = "username")
     private String userName;
+
+    @Column(name = "usersurname")
     private String userSurname;
+
+    @Column(name = "useremail")
     private String userEmail;
+
+    @Column(name = "userpassword")
     private String userPassword;
-    private int companyVATNumber;
-    private List<UserRole> userRole;
+
+    @Column(name = "companyvatnumber")
+    private String companyVATNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "userrole")
+    private UserRole userRole;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "userstate")
     private UserState userState;
 
+
+    public User (){}
+
     public User(
-            int userID,
+            long userID,
             String userName,
             String userSurname,
             String userEmail,
             String userPassword,
-            int companyVATNumber,
-            List <UserRole> userRole,
+            String companyVATNumber,
+            UserRole userRole,
             UserState userState
     ) {
         this.userID = userID;
@@ -32,22 +59,4 @@ public class User {
         this.userRole = userRole;
         this.userState = userState;
     }
-
-    public int getUserID() { return userID;}
-    public String getUserName() { return userName;}
-    public String getUserSurname() { return userSurname;}
-    public String getUserEmail() { return userEmail;}
-    public String getUserPassword() { return userPassword;}
-    public int getCompanyVATNumber() { return companyVATNumber;}
-    public List <UserRole> getUserRole() { return userRole;}
-    public UserState getUserState() { return userState;}
-
-    public void setUserID(int userID) { this.userID = userID;}
-    public void setUserName(String userName) { this.userName = userName;}
-    public void setUserSurname(String userSurname) { this.userSurname = userSurname;}
-    public void setUserEmail(String userEmail) { this.userEmail = userEmail;}
-    public void setUserPassword(String userPassword) { this.userPassword = userPassword;}
-    public void setCompanyVATNumber(int companyVATNumber) { this.companyVATNumber = companyVATNumber;}
-    public void setUserRole(List <UserRole> userRole) { this.userRole = userRole;}
-    public void setUserState(UserState userState) { this.userState = userState;}
 }

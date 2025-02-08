@@ -4,6 +4,7 @@ import it.unicam.cs.FilieraAgricola.Event.Event;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CreateEventCommand extends Command<Event> {
@@ -13,12 +14,14 @@ public class CreateEventCommand extends Command<Event> {
 
     @Override
     public List<UserRole> getNeededAuthorization() {
-        return List.of();
+        List<UserRole> neededRoles = new ArrayList<>();
+        neededRoles.add(UserRole.PROMOTER);
+        return neededRoles;
     }
 
     @Override
     public boolean hasCallerNeededAuthorization() {
-        return false;
+        return getNeededAuthorization().contains(this.user.getUserRole());
     }
 
     @Override

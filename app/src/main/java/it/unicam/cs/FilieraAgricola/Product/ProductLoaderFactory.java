@@ -1,19 +1,25 @@
 package it.unicam.cs.FilieraAgricola.Product;
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class ProductLoaderFactory {
 
-    private static Map<Class<? extends Product>, ProductLoader> productLoaders = new HashMap<>();
+    private final Map<Class<? extends Product>, ProductLoader> productLoaders = new HashMap<>();
 
-    static {
-        productLoaders.put(SingleProduct.class, new SingleProductLoader());
-        productLoaders.put(BundleProduct.class, new BundleProductLoader());
+    @Autowired
+    public ProductLoaderFactory(SingleProductLoader singleProductLoader, BundleProductLoader bundleProductLoader) {
+        // Iniettiamo direttamente i loader specifici in questa classe
+        productLoaders.put(SingleProduct.class, singleProductLoader);
+        productLoaders.put(BundleProduct.class, bundleProductLoader);
     }
 
-    public static ProductLoader getProductLoader(Class<? extends Product> productClass) {
+    public ProductLoader getProductLoader(Class<? extends Product> productClass) {
         return productLoaders.get(productClass);
     }
 }

@@ -1,24 +1,37 @@
-package it.unicam.cs.FilieraAgricola.Product;
+package it.unicam.cs.FilieraAgricola.Manager;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
 import it.unicam.cs.FilieraAgricola.Command.*;
+import it.unicam.cs.FilieraAgricola.Product.Product;
+import it.unicam.cs.FilieraAgricola.Product.ProductLoaderFactory;
+import it.unicam.cs.FilieraAgricola.Product.ProductState;
 import it.unicam.cs.FilieraAgricola.User.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class ProductManager {
 
-    private ProductManager() {}
+    @Autowired
+    private LoadProductCheckStrategy loadProductCheckStrategy;
+    @Autowired
+    private SellProductCheckStrategy sellProductCheckStrategy;
+    @Autowired
+    private BuyProductCheckStrategy buyProductCheckStrategy;
+    @Autowired
+    private ValidateProductCheckStrategy validateProductCheckStrategy;
+    @Autowired
+    private ProductLoaderFactory productLoaderFactory;
 
     public void loadProductRequest(User user, Product product) {
 
-        CheckStrategy loadProductStrategy = new LoadProductCheckStrategy(product);
-
-        if(!loadProductStrategy.validate())
+        if(!this.loadProductCheckStrategy.validate(user, product))
             throw new IllegalArgumentException("Product non valid for loading");
 
-        Command<Product> loadProductCommand = new LoadProductCommand(user, product);
+        Command<Product> loadProductCommand = new LoadProductCommand(user, product, this.productLoaderFactory);
+
+        //if(loadProductCommand.hasCallerNeededAuthorization())
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -29,9 +42,7 @@ public class ProductManager {
 
     public void sellProductRequest(User user, Product product) {
 
-        CheckStrategy sellProductStrategy = new SellProductCheckStrategy(product);
-
-        if(!sellProductStrategy.validate())
+        if(!this.sellProductCheckStrategy.validate(user, product))
             throw new IllegalArgumentException("Product non valid for selling");
 
         Command<Product> sellProductCommand = new SellProductCommand(user, product);
@@ -45,9 +56,8 @@ public class ProductManager {
 
 
     public void buyProductRequest(User user, Product product) {
-        CheckStrategy buyProductStrategy = new BuyProductCheckStrategy(product);
 
-        if(!buyProductStrategy.validate())
+        if(!this.buyProductCheckStrategy.validate(user, product))
             throw new IllegalArgumentException("Product non valid for buying");
 
         Command<Product> buyProductCommand = new BuyProductCommand(user, product);
@@ -60,9 +70,8 @@ public class ProductManager {
 
 
     public void validateProductRequest(User user, Product product, ProductState newProductState) {
-        CheckStrategy validateProductStrategy = new ValidateProductCheckStrategy(product, newProductState);
 
-        if(!validateProductStrategy.validate())
+        if(!this.validateProductCheckStrategy.validate(user, product, newProductState))
             throw new IllegalArgumentException("Product non valid for buying");
 
         Command<Product> validateProductCommand = new ValidateProductCommand(user, product, newProductState);

@@ -24,7 +24,7 @@ public class ValidateProductCommand extends Command<Product> {
 
     @Override
     public boolean hasCallerNeededAuthorization() {
-        return this.user.getUserRole().contains(getNeededAuthorization());
+        return getNeededAuthorization().contains(this.user.getUserRole());
     }
 
     @Override
