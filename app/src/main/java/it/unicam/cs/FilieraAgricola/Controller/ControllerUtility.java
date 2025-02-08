@@ -8,6 +8,8 @@ import it.unicam.cs.FilieraAgricola.Event.SimpleEvent;
 import it.unicam.cs.FilieraAgricola.Event.TastingEvent;
 import it.unicam.cs.FilieraAgricola.Product.*;
 import it.unicam.cs.FilieraAgricola.User.User;
+import it.unicam.cs.FilieraAgricola.User.UserRole;
+import it.unicam.cs.FilieraAgricola.User.UserState;
 
 import java.util.List;
 
@@ -91,6 +93,9 @@ public class ControllerUtility {
 
     public User convertToUser(UserDTO userDTO){
 
+        UserRole userRole = UserRole.fromValue(userDTO.getUserRole());
+        UserState userState = UserState.fromValue(userDTO.getUserState());
+
         return new User(
                 userDTO.getUserID(),
                 userDTO.getUserName(),
@@ -98,8 +103,8 @@ public class ControllerUtility {
                 userDTO.getUserEmail(),
                 userDTO.getUserPassword(),
                 userDTO.getCompanyVATNumber(),
-                userDTO.getUserRole(),
-                userDTO.getUserState()
+                userRole,
+                userState
         );
     }
 }
