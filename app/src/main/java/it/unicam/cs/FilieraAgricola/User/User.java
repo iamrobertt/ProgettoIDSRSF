@@ -1,10 +1,19 @@
 package it.unicam.cs.FilieraAgricola.User;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.List;
 
+@Data
+@Table(name = "user")
+//@Entity
 public class User {
 
-    private int userID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userid")
+    private long userID;
     private String userName;
     private String userSurname;
     private String userEmail;
@@ -14,7 +23,7 @@ public class User {
     private UserState userState;
 
     public User(
-            int userID,
+            long userID,
             String userName,
             String userSurname,
             String userEmail,
@@ -32,22 +41,4 @@ public class User {
         this.userRole = userRole;
         this.userState = userState;
     }
-
-    public int getUserID() { return userID;}
-    public String getUserName() { return userName;}
-    public String getUserSurname() { return userSurname;}
-    public String getUserEmail() { return userEmail;}
-    public String getUserPassword() { return userPassword;}
-    public int getCompanyVATNumber() { return companyVATNumber;}
-    public List <UserRole> getUserRole() { return userRole;}
-    public UserState getUserState() { return userState;}
-
-    public void setUserID(int userID) { this.userID = userID;}
-    public void setUserName(String userName) { this.userName = userName;}
-    public void setUserSurname(String userSurname) { this.userSurname = userSurname;}
-    public void setUserEmail(String userEmail) { this.userEmail = userEmail;}
-    public void setUserPassword(String userPassword) { this.userPassword = userPassword;}
-    public void setCompanyVATNumber(int companyVATNumber) { this.companyVATNumber = companyVATNumber;}
-    public void setUserRole(List <UserRole> userRole) { this.userRole = userRole;}
-    public void setUserState(UserState userState) { this.userState = userState;}
 }

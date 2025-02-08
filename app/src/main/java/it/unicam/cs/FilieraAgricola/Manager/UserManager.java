@@ -1,4 +1,4 @@
-package it.unicam.cs.FilieraAgricola.User;
+package it.unicam.cs.FilieraAgricola.Manager;
 
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.AuthenticateUserCheckStrategy;
@@ -9,37 +9,38 @@ import it.unicam.cs.FilieraAgricola.Command.Command;
 import it.unicam.cs.FilieraAgricola.Command.CommandInvoker;
 import it.unicam.cs.FilieraAgricola.Command.RegisterUserCommand;
 import it.unicam.cs.FilieraAgricola.Command.RoleRequestCommand;
+import it.unicam.cs.FilieraAgricola.User.User;
+import it.unicam.cs.FilieraAgricola.User.UserRole;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class UserManager {
 
-    private static final UserManager instance = null;
+    @Autowired
+    private AuthenticateUserCheckStrategy authenticateUserCheckStrategy;
+    @Autowired
+    private RegisterUserCheckStrategy registerUserCheckStrategy;
+    @Autowired
+    private RoleRequestCheckStrategy roleRequestCheckStrategy;
 
-    private UserManager() {}
 
-    public static UserManager getInstance() {
-        if(instance == null) return new UserManager();
+    public void authenticateUserRequest(User user, String userEmail, String userPassword) {
 
-        return instance;
-    }
-
-    public void authenticateUserRequest(String userEmail, String password) {
-        CheckStrategy AuthenticateUserCheckStrategy = new AuthenticateUserCheckStrategy(userEmail,password);
-
-        if(!AuthenticateUserCheckStrategy.validate())
+        if(!this.authenticateUserCheckStrategy.validate(user, userEmail, userPassword))
             throw new IllegalArgumentException("User non valid");
 
         // TODO: implementa strategia per l'accesso
     }
 
-    public void requestUserRequest(User user, UserRole userRole) {
-        CheckStrategy registerUserCheckStrategy = new RegisterUserCheckStrategy(user);
 
-        if(!registerUserCheckStrategy.validate())
+    //TODO RIVEDI
+    public void requestUserRequest(User user, User userToRegister) {
+
+        if(!this.registerUserCheckStrategy.validate(user, userToRegister))
             throw new IllegalArgumentException("User non valid");
 
-        // TODO: ricontrolla
-        Command<User> registerUserCommand = new RegisterUserCommand(user,null, userRole);
+        // TODO: rivedi
+        Command<User> registerUserCommand = new RegisterUserCommand(user,null);
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -50,9 +51,8 @@ public class UserManager {
 
 
     public void newRoleRequest(User user, UserRole newRole) {
-        CheckStrategy roleRequestStrategy = new RoleRequestCheckStrategy(user, newRole);
 
-        if(!roleRequestStrategy.validate())
+        if(!this.roleRequestCheckStrategy.validate(user, newRole))
             throw new IllegalArgumentException("Request non valid");
 
         Command<User> roleRequestCommand = new RoleRequestCommand(user, null, newRole);

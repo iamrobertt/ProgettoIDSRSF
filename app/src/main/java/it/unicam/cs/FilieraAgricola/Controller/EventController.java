@@ -3,8 +3,8 @@ package it.unicam.cs.FilieraAgricola.Controller;
 
 import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
 import it.unicam.cs.FilieraAgricola.Event.Event;
-import it.unicam.cs.FilieraAgricola.Event.EventManager;
-import it.unicam.cs.FilieraAgricola.Event.EventRepository;
+import it.unicam.cs.FilieraAgricola.Manager.EventManager;
+import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
@@ -53,9 +53,9 @@ public class EventController {
 
     }
 
-    @GetMapping("/findEvent{eventID")
-    public int findEvent (@PathVariable("eventID") int eventID){
-        Optional<EventDTO> event1 = this.eventRepository.findById(eventID);
+    @GetMapping("/findEvent{eventID}")
+    public long findEvent (@PathVariable("eventID") long eventID){
+        Optional<Event> event1 = null; // this.eventRepository.findById(eventID);
 
         if(event1.isPresent())
             return event1.get().getEventID();

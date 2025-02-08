@@ -8,18 +8,16 @@ import java.util.List;
 
 public class RegisterUserCommand extends Command <User>{
 
-    private UserRole userRole;
 
-    public RegisterUserCommand(User user, User newUser, UserRole userRole) {
+    public RegisterUserCommand(User user, User newUser) {
         super(user, newUser);
-
-        this.userRole = userRole;
     }
 
+
+    //todo rivedi
     @Override
     public List<UserRole> getNeededAuthorization() {
         List<UserRole> neededRoles = new ArrayList<>();
-        neededRoles.add(userRole);
         return neededRoles;
     }
 
