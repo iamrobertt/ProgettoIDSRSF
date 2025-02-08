@@ -10,6 +10,7 @@ import java.util.List;
 
 public class RegisterUserCommand extends Command <User>{
 
+
     private final UserRepository userRepository;
 
     public RegisterUserCommand(User user, User newUser, UserRepository userRepository) {

@@ -5,7 +5,7 @@ import lombok.Data;
 
 
 @Data
-@Table(name = "user")
+@Table(name = "\"user\"")
 @Entity
 public class User {
 
@@ -27,7 +27,7 @@ public class User {
     private String userPassword;
 
     @Column(name = "companyvatnumber")
-    private int companyVATNumber;
+    private String companyVATNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "userrole")
@@ -46,7 +46,7 @@ public class User {
             String userSurname,
             String userEmail,
             String userPassword,
-            int companyVATNumber,
+            String companyVATNumber,
             UserRole userRole,
             UserState userState
     ) {

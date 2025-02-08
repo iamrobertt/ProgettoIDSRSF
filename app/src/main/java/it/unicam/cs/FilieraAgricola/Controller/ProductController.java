@@ -36,7 +36,7 @@ public class ProductController {
                 "ciao",
                 "ciao",
                 "ciao",
-                123456,
+                "123456",
                 userRole,
                 UserState.AUTHENTICATED
         );
