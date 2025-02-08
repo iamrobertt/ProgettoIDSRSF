@@ -10,7 +10,7 @@ public class UserDTO {
     private String userSurname;
     private String userEmail;
     private String userPassword;
-    private int companyVATNumber;
+    private String companyVATNumber;
     private String userRole;
     private String userState;
 }

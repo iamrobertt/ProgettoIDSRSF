@@ -54,7 +54,5 @@ public abstract class Product {
         this.productType = productType;
     }
 
-    public Product() {
-
-    }
+    public Product() {}
 }

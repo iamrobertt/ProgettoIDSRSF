@@ -44,7 +44,7 @@ public class UserManager {
             throw new IllegalArgumentException("User non valid");
 
         // TODO: rivedi
-        Command<User> registerUserCommand = new RegisterUserCommand(user,userToRegister,userRepository);
+        Command<User> registerUserCommand = new RegisterUserCommand(user,userToRegister, this.userRepository);
 
         CommandInvoker invoker = new CommandInvoker();
 
