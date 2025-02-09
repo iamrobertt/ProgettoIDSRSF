@@ -5,8 +5,6 @@ import it.unicam.cs.FilieraAgricola.Manager.UserManager;
 
 import it.unicam.cs.FilieraAgricola.User.User;
 
-import it.unicam.cs.FilieraAgricola.User.UserRole;
-import it.unicam.cs.FilieraAgricola.User.UserState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,26 +17,17 @@ public class UserController {
 
 
     @PostMapping("/insertUser")
-    public String insertUser(@RequestBody UserDTO userDTO) {
+    public void insertUser(@RequestBody UserDTO userDTO) {
 
         ControllerUtility controllerUtility = new ControllerUtility();
-        User user1 = controllerUtility.convertToUser(userDTO);
+        User user = controllerUtility.convertToUser(userDTO);
 
-        UserRole userRole = UserRole.SELLER;
+        this.userManager.registerUserRequest(user, user);
+    }
 
-        User user = new User(
-                1,
-                "ciao",
-                "ciao",
-                "ciao",
-                "ciao",
-                "123456",
-                userRole,
-                UserState.AUTHENTICATED
-        );
-
-        this.userManager.registerUserRequest(user, user1);
-        return "caio";
+    @PostMapping("/authenticate")
+    public void authenticateUser(@RequestParam String email,@RequestParam String password) {
+        this.userManager.authenticateUserRequest(email, password);
     }
 
 

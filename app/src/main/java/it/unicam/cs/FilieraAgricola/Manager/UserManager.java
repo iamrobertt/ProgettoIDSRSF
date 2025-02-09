@@ -2,7 +2,6 @@ package it.unicam.cs.FilieraAgricola.Manager;
 
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.AuthenticateUserCheckStrategy;
-import it.unicam.cs.FilieraAgricola.CheckStrategy.CheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RegisterUserCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RoleRequestCheckStrategy;
 import it.unicam.cs.FilieraAgricola.Command.Command;
@@ -28,22 +27,20 @@ public class UserManager {
     @Autowired
     private UserRepository userRepository;
 
-    public void authenticateUserRequest(User user, String userEmail, String userPassword) {
+    public void authenticateUserRequest(String userEmail, String userPassword) {
 
-        if(!this.authenticateUserCheckStrategy.validate(user, userEmail, userPassword))
+        if(!this.authenticateUserCheckStrategy.validate(userEmail, userPassword))
             throw new IllegalArgumentException("User non valid");
 
         // TODO: implementa strategia per l'accesso
     }
 
 
-    //TODO RIVEDI
     public void registerUserRequest(User user, User userToRegister) {
 
         if(!this.registerUserCheckStrategy.validate(user, userToRegister))
             throw new IllegalArgumentException("User non valid");
 
-        // TODO: rivedi
         Command<User> registerUserCommand = new RegisterUserCommand(user,userToRegister, this.userRepository);
 
         CommandInvoker invoker = new CommandInvoker();
