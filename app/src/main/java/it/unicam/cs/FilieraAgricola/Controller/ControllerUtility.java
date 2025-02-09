@@ -7,23 +7,34 @@ import it.unicam.cs.FilieraAgricola.Event.Event;
 import it.unicam.cs.FilieraAgricola.Event.SimpleEvent;
 import it.unicam.cs.FilieraAgricola.Event.TastingEvent;
 import it.unicam.cs.FilieraAgricola.Product.*;
+import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 
+@Component
 public class ControllerUtility {
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public Product convertToProduct(ProductDTO productDTO) {
 
         ProductState productState = ProductState.fromValue(productDTO.getProductState());
         ProductType productType = ProductType.fromValue(productDTO.getProductType());
 
-        if (productType.getValue().equals("BUNDLE")) {
+
+        if (Objects.requireNonNull(productType).getValue().equals("BUNDLE")) {
+
+            // Getting products from database, only the ID of the product is required
             List<Product> products = productDTO.getBundleProducts()
                     .stream()
-                    .map(this::convertToProduct)
+                    .map(product -> this.productRepository.findById(product.getProductID()).orElse(null))
                     .toList();
 
             return new BundleProduct(

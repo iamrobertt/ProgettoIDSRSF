@@ -7,9 +7,9 @@ import java.util.List;
 
 public abstract class Command<T> {
 
+    protected User user;
     protected T item;
 
-    protected User user;
 
     public Command (User user, T item){
         this.item = item;

@@ -13,7 +13,6 @@ public class ProductUtility {
     @Autowired
     private ProductRepository productRepository;
 
-
     public boolean checkProductInfo(Product product) {
         return product != null && product.getProductID() != 0;
     }
@@ -26,8 +25,4 @@ public class ProductUtility {
         return productToSearch.isPresent();
     }
 
-
-    public boolean checkIsProductBundle(Product product) {
-        return product instanceof BundleProduct;
-    }
 }

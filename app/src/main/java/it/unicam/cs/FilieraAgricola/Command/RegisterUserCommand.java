@@ -30,8 +30,6 @@ public class RegisterUserCommand extends Command <User>{
     }
 
     @Override
-    public void execute() {
-        this.userRepository.save(this.item);
-    }
+    public void execute() {this.userRepository.save(this.item);}
 
 }

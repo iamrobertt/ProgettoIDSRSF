@@ -26,6 +26,6 @@ public enum ProductType {
             if (type.getValue().equals(value))
                 return type;
 
-        throw new IllegalArgumentException("Valore non valido per ProductType: " + value);
+        return null;
     }
 }

@@ -10,8 +10,7 @@ import it.unicam.cs.FilieraAgricola.User.UserState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -21,12 +20,16 @@ public class ProductController {
     @Autowired
     private ProductManager productManager;
 
+    @Autowired
+    private ControllerUtility controllerUtility;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @PostMapping("/insertProduct")
     public String insertProduct(@RequestBody ProductDTO productDTO) {
 
-        ControllerUtility controllerUtility = new ControllerUtility();
-        Product product = controllerUtility.convertToProduct(productDTO);
+        Product product = this.controllerUtility.convertToProduct(productDTO);
 
         UserRole userRole = UserRole.SELLER;
 
@@ -47,16 +50,16 @@ public class ProductController {
     }
 
 
-//    @GetMapping("/findProduct/{productID}")
-//    public String findProduct(@PathVariable long productID) {
-//
-//        Optional<Product> product1 = this.productRepository.findById(productID);
-//
-//        if(product1.isPresent())
-//            return product1.get().getProductName();
-//        else
-//            return "ciao";
-//    }
+    @GetMapping("/findProduct/{productID}")
+    public String findProduct(@PathVariable long productID) {
+
+        Optional<Product> product1 = this.productRepository.findById(productID);
+
+        if(product1.isPresent())
+            return product1.get().getProductName();
+        else
+            return "ciao";
+    }
 
 
 }
