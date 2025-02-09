@@ -22,11 +22,10 @@ public enum ProductState {
 
     @JsonCreator
     public static ProductState fromValue(String value) {
-        for (ProductState state : ProductState.values()) {
-            if (state.getValue().equals(value)) {
+        for (ProductState state : ProductState.values())
+            if (state.getValue().equals(value))
                 return state;
-            }
-        }
-        throw new IllegalArgumentException("Valore non valido per ProductState: " + value);
+
+        return null;
     }
 }

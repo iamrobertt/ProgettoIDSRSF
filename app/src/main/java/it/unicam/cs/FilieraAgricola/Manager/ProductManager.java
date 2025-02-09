@@ -2,6 +2,7 @@ package it.unicam.cs.FilieraAgricola.Manager;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
 import it.unicam.cs.FilieraAgricola.Command.*;
+import it.unicam.cs.FilieraAgricola.Exception.InsufficientUserAuthorizationException;
 import it.unicam.cs.FilieraAgricola.Product.Product;
 import it.unicam.cs.FilieraAgricola.Product.ProductLoaderFactory;
 import it.unicam.cs.FilieraAgricola.Product.ProductState;
@@ -24,6 +25,7 @@ public class ProductManager {
     @Autowired
     private ProductLoaderFactory productLoaderFactory;
 
+
     public void loadProductRequest(User user, Product product) {
 
         if(!this.loadProductCheckStrategy.validate(user, product))
@@ -31,7 +33,8 @@ public class ProductManager {
 
         Command<Product> loadProductCommand = new LoadProductCommand(user, product, this.productLoaderFactory);
 
-        //if(loadProductCommand.hasCallerNeededAuthorization())
+        if(!loadProductCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to perform a loading product request");
 
         CommandInvoker invoker = new CommandInvoker();
 
