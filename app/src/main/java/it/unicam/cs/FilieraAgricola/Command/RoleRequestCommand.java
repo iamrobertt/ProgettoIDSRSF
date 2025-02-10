@@ -1,5 +1,6 @@
 package it.unicam.cs.FilieraAgricola.Command;
 
+import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
@@ -7,14 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class RoleRequestCommand extends Command <User>{
+public class RoleRequestCommand extends Command <UserRole>{
 
-    private UserRole userRole;
+    private final UserRepository userRepository;
 
-    public RoleRequestCommand(User user, User newUser, UserRole userRole) {
-        super(user, newUser);
 
-        this.userRole = userRole;
+    public RoleRequestCommand(User user, UserRole userRole, UserRepository userRepository) {
+        super(user, userRole);
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -29,6 +30,5 @@ public class RoleRequestCommand extends Command <User>{
 
     @Override
     public void execute() {
-        // TODO: aggiungi logica
     }
 }

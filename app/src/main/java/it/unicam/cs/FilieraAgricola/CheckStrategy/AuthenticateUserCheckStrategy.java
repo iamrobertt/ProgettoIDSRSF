@@ -12,10 +12,8 @@ public class AuthenticateUserCheckStrategy implements CustomAuthenticateCheckStr
     private UserUtility userUtility;
 
     @Override
-    public boolean validate(String userEmail, String userPassword) {
+    public User validate(String userEmail, String userPassword) {
         User user = this.userUtility.checkCredentials(userEmail, userPassword);
-        if(user == null)
-            return false;
-        return !this.userUtility.isUserAuthenticated(user);
+        return this.userUtility.isUserAuthenticated(user) ? null : user;
     }
 }
