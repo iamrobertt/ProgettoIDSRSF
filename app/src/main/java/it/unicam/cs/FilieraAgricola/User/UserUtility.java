@@ -14,6 +14,11 @@ public class UserUtility {
     @Autowired
     private UserRepository userRepository;
 
+    public User getUser(String email, String password) {
+        Optional<User> user = this.userRepository.findByUserEmailAndUserPassword(email, password);
+        return user.orElse(null);
+    }
+
     public static boolean checkUserInfo(User user) {
         return false;
     }

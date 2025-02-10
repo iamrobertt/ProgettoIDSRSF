@@ -4,10 +4,7 @@ package it.unicam.cs.FilieraAgricola.Manager;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.AuthenticateUserCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RegisterUserCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RoleRequestCheckStrategy;
-import it.unicam.cs.FilieraAgricola.Command.Command;
-import it.unicam.cs.FilieraAgricola.Command.CommandInvoker;
-import it.unicam.cs.FilieraAgricola.Command.RegisterUserCommand;
-import it.unicam.cs.FilieraAgricola.Command.RoleRequestCommand;
+import it.unicam.cs.FilieraAgricola.Command.*;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
@@ -29,10 +26,16 @@ public class UserManager {
 
     public void authenticateUserRequest(String userEmail, String userPassword) {
 
-        if(!this.authenticateUserCheckStrategy.validate(userEmail, userPassword))
-            throw new IllegalArgumentException("User non valid");
+        User user = this.authenticateUserCheckStrategy.validate(userEmail,userPassword);
+        if(user == null)
+            throw new IllegalArgumentException("User not found or already authenticated");
 
-        // TODO: implementa strategia per l'accesso
+        Command<User> authenticateUserCommand = new AuthenticateUserCommand(user, user, this.userRepository);
+
+        CommandInvoker invoker = new CommandInvoker();
+
+        invoker.setCommand(authenticateUserCommand);
+        invoker.invoke();
     }
 
 
@@ -54,14 +57,14 @@ public class UserManager {
     public void newRoleRequest(User user, UserRole newRole) {
 
         if(!this.roleRequestCheckStrategy.validate(user, newRole))
-            throw new IllegalArgumentException("Request non valid");
+            throw new IllegalArgumentException("User not found or new role not available");
 
-        Command<User> roleRequestCommand = new RoleRequestCommand(user, null, newRole);
-
-        CommandInvoker invoker = new CommandInvoker();
-
-        invoker.setCommand(roleRequestCommand);
-        invoker.invoke();
+//        Command<User> roleRequestCommand = new RoleRequestCommand(user, newRole, this.userRepository);
+//
+//        CommandInvoker invoker = new CommandInvoker();
+//
+//        invoker.setCommand(roleRequestCommand);
+//        invoker.invoke();
     }
 
 
