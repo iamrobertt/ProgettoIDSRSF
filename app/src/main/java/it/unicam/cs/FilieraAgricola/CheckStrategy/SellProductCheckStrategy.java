@@ -21,7 +21,7 @@ public class SellProductCheckStrategy implements CheckStrategy<Product> {
             return false;
 
         //if the product does not exist, return false
-        if (!this.productUtility.checkExistProduct(user,product))
+        if (!this.productUtility.checkExistProductWithUser(user,product))
             return false;
 
         //if the product isn't in a pre-sell state, return false

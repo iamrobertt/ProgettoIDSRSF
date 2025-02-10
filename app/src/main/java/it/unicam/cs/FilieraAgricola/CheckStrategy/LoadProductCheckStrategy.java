@@ -14,9 +14,7 @@ public class LoadProductCheckStrategy implements CheckStrategy<Product> {
 
     @Override
     public boolean validate(User user, Product product) {
-
-        //return this.productUtility.checkProductInfo(product) &&
-               // !this.productUtility.checkExistProduct(user, product);
-        return true;
+        return this.productUtility.checkProductInfoForLoading(product) &&
+               !this.productUtility.checkExistProductWithUser(user, product);
     }
 }

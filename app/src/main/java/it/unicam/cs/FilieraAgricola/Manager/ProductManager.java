@@ -5,10 +5,14 @@ import it.unicam.cs.FilieraAgricola.Command.*;
 import it.unicam.cs.FilieraAgricola.Exception.InsufficientUserAuthorizationException;
 import it.unicam.cs.FilieraAgricola.Product.Product;
 import it.unicam.cs.FilieraAgricola.Product.ProductLoaderFactory;
-import it.unicam.cs.FilieraAgricola.Product.ProductState;
+import it.unicam.cs.FilieraAgricola.Product.ProductValidationState;
+import it.unicam.cs.FilieraAgricola.Repository.OrderRepository;
+import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service
@@ -24,6 +28,10 @@ public class ProductManager {
     private ValidateProductCheckStrategy validateProductCheckStrategy;
     @Autowired
     private ProductLoaderFactory productLoaderFactory;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
 
     public void loadProductRequest(User user, Product product) {
@@ -43,12 +51,17 @@ public class ProductManager {
 
     }
 
+
+    //todo qualcosa non va, prende anche id che non esistono
     public void sellProductRequest(User user, Product product) {
 
         if(!this.sellProductCheckStrategy.validate(user, product))
             throw new IllegalArgumentException("Product non valid for selling");
 
-        Command<Product> sellProductCommand = new SellProductCommand(user, product);
+        Command<Product> sellProductCommand = new SellProductCommand(user, product, this.productRepository);
+
+        if (!sellProductCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to sell a product");
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -58,12 +71,16 @@ public class ProductManager {
     }
 
 
-    public void buyProductRequest(User user, Product product) {
+    public void buyProductRequest(User user, List<Product> productList) {
 
-        if(!this.buyProductCheckStrategy.validate(user, product))
-            throw new IllegalArgumentException("Product non valid for buying");
+        for (Product product : productList)
+            if(!this.buyProductCheckStrategy.validate(user, product))
+                throw new IllegalArgumentException("Product non valid for buying");
 
-        Command<Product> buyProductCommand = new BuyProductCommand(user, product);
+        Command<List<Product>> buyProductCommand = new BuyProductCommand(user, productList, this.orderRepository, this.productRepository);
+
+        if (!buyProductCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to buy product");
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -72,12 +89,15 @@ public class ProductManager {
     }
 
 
-    public void validateProductRequest(User user, Product product, ProductState newProductState) {
+    public void validateProductRequest(User user, Product product, ProductValidationState productValidationState) {
 
-        if(!this.validateProductCheckStrategy.validate(user, product, newProductState))
-            throw new IllegalArgumentException("Product non valid for buying");
+        if(!this.validateProductCheckStrategy.validate(user, product, productValidationState))
+            throw new IllegalArgumentException("Product non valid for validation");
 
-        Command<Product> validateProductCommand = new ValidateProductCommand(user, product, newProductState);
+        Command<Product> validateProductCommand = new ValidateProductCommand(user, product, productValidationState, this.productRepository);
+
+        if (!validateProductCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to perform a validation of product");
 
         CommandInvoker invoker = new CommandInvoker();
 

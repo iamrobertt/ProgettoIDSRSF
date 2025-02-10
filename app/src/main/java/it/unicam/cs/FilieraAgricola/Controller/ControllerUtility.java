@@ -1,5 +1,6 @@
 package it.unicam.cs.FilieraAgricola.Controller;
 
+import it.unicam.cs.FilieraAgricola.DTO.BuyProductDTO;
 import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
 import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
 import it.unicam.cs.FilieraAgricola.DTO.UserDTO;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class ControllerUtility {
@@ -117,5 +119,15 @@ public class ControllerUtility {
                 userRole,
                 userState
         );
+    }
+
+    //todo rivedi poi quando deve essere implementato
+    public Product convertToProduct(BuyProductDTO buyProductDTO) {
+
+        Optional<Product> product = this.productRepository.findById(buyProductDTO.getProductID());
+        if(product.isPresent())
+            product.get().setProductQuantity(buyProductDTO.getProductQuantity());
+
+        return product.get();
     }
 }

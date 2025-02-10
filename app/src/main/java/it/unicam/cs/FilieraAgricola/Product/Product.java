@@ -1,7 +1,10 @@
 package it.unicam.cs.FilieraAgricola.Product;
 
+import it.unicam.cs.FilieraAgricola.User.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Data
@@ -36,6 +39,12 @@ public abstract class Product {
     @Column(insertable = false, updatable = false, name = "producttype")
     protected ProductType productType;
 
+    @Setter
+    @Getter
+    @ManyToOne
+    @JoinColumn(name = "productuserid", referencedColumnName = "userid")
+    protected User productUser;
+
     public Product(
             long productID,
             String productName,
@@ -55,4 +64,11 @@ public abstract class Product {
     }
 
     public Product() {}
+
+    @Override
+    public String toString() {
+        return "Product [productID=" + productID + ", productName=" + productName + ", productDescription="
+                + productDescription + ", productPrice=" + productPrice + ", productQuantity=" + productQuantity
+                + ", productState=" + productState.getValue() + ", productType=" + productType.getValue() + "]";
+    }
 }
