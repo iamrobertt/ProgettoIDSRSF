@@ -1,7 +1,10 @@
 package it.unicam.cs.FilieraAgricola.User;
 
+import it.unicam.cs.FilieraAgricola.Product.Product;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 
 @Data
@@ -36,6 +39,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "userstate")
     private UserState userState;
+
+    //@OneToMany(mappedBy = "user")
+    //private List<Product> products;
 
 
     public User (){}

@@ -26,7 +26,9 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public void authenticateUser(@RequestParam String email,@RequestParam String password) {
+    public void authenticateUser(@RequestParam String email,
+                                 @RequestParam String password
+    ) {
         this.userManager.authenticateUserRequest(email, password);
     }
 

@@ -2,6 +2,8 @@ package it.unicam.cs.FilieraAgricola.Command;
 
 import it.unicam.cs.FilieraAgricola.Product.Product;
 import it.unicam.cs.FilieraAgricola.Product.ProductState;
+import it.unicam.cs.FilieraAgricola.Product.ProductValidationState;
+import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
@@ -9,11 +11,14 @@ import java.util.List;
 
 public class ValidateProductCommand extends Command<Product> {
 
-    private final ProductState productState;
+    private final ProductValidationState productValidationState;
+    private final ProductRepository productRepository;
 
-    public ValidateProductCommand(User user, Product product, ProductState newProductState) {
+
+    public ValidateProductCommand(User user, Product product, ProductValidationState productValidationState, ProductRepository productRepository) {
         super(user, product);
-        this.productState = newProductState;
+        this.productValidationState = productValidationState;
+        this.productRepository = productRepository;
     }
 
 
@@ -29,10 +34,10 @@ public class ValidateProductCommand extends Command<Product> {
 
     @Override
     public void execute() {
-        //TODO aggiorna stato
-        if (this.productState.equals(ProductState.PRODUCT_VALIDATED))
-                return;
+        if (this.productValidationState.equals(ProductValidationState.ACCEPTED))
+            this.productRepository.updateProductState(this.user.getUserID(), this.item.getProductID(), ProductState.PRODUCT_VALIDATED);
         else
-            return;
+            //the product state returns to default, so the product details can be modifid and validated again
+            this.productRepository.updateProductState(this.user.getUserID(), this.item.getProductID(), ProductState.PRODUCT_INSERTED);
     }
 }

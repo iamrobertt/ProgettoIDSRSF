@@ -17,12 +17,24 @@ public class ProductUtility {
         return product != null && product.getProductID() != 0;
     }
 
+    public boolean checkProductInfoForLoading(Product product) {
+        return product != null;
+    }
 
-    public boolean checkExistProduct(User user, Product product) {
-
-        Optional<Product> productToSearch = this.productRepository.findById(product.getProductID());
-
+    public boolean checkExistProductWithUser(User user, Product product) {
+        Optional<Product> productToSearch = this.productRepository.findByProductIDAndUser(user.getUserID(), product.getProductID());
         return productToSearch.isPresent();
+    }
+
+
+    public boolean checkExistProduct(Product product) {
+        Optional<Product> productToSearch = this.productRepository.findById(product.getProductID());
+        return productToSearch.isPresent();
+    }
+
+    public Product getProduct(long userID, long productID) {
+        Optional<Product> product = this.productRepository.findByProductIDAndUser(userID, productID);
+        return product.orElse(null);
     }
 
 }
