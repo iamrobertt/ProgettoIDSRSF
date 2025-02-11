@@ -22,9 +22,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("UPDATE Product p SET p.productState = :newState where p.productID = :productID and p.productUser.userID = :userID")
     void updateProductState(long userID, long productID, ProductState newState);
 
-
     @Modifying
     @Transactional
-    @Query("UPDATE Product p SET p.productQuantity = p.productQuantity - :orderItemQuantity WHERE p.productID = :productID")
-    void updateProductQuantity(int orderItemQuantity, long productID);
+    @Query("UPDATE WarehouseProduct wp SET wp.productQuantity = wp.productQuantity - :orderItemQuantity WHERE wp.product.productID = :productID")
+    void subProductQuantity(int orderItemQuantity, long productID);
 }

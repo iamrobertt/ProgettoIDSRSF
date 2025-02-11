@@ -9,6 +9,7 @@ import it.unicam.cs.FilieraAgricola.Product.ProductValidationState;
 import it.unicam.cs.FilieraAgricola.Repository.OrderRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
+import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,13 +72,13 @@ public class ProductManager {
     }
 
 
-    public void buyProductRequest(User user, List<Product> productList) {
+    public void buyProductRequest(User user, List<Pair<Product, Integer>> productList) {
 
-        for (Product product : productList)
-            if(!this.buyProductCheckStrategy.validate(user, product))
-                throw new IllegalArgumentException("Product non valid for buying");
+        //for (Pair<Product, Integer> product : productList)
+            //if(!this.buyProductCheckStrategy.validate(user, product.a))
+                //throw new IllegalArgumentException("Product  with id: " + product.a.getProductID() + " non valid for buying");
 
-        Command<List<Product>> buyProductCommand = new BuyProductCommand(user, productList, this.orderRepository, this.productRepository);
+        BuyProductCommand buyProductCommand = new BuyProductCommand(user, productList, this.orderRepository, this.productRepository);
 
         if (!buyProductCommand.hasCallerNeededAuthorization())
             throw new InsufficientUserAuthorizationException("Insufficient authorization to buy product");

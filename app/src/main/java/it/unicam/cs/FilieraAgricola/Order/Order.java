@@ -27,7 +27,6 @@ public class Order {
     @JoinColumn(name = "orderbuyer", referencedColumnName = "userid", nullable = false)
     private User orderBuyer;
 
-
     @OneToMany(mappedBy = "parentOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OrderItem> orderItems;
 
