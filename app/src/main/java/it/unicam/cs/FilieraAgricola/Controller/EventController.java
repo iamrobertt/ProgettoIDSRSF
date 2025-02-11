@@ -3,15 +3,19 @@ package it.unicam.cs.FilieraAgricola.Controller;
 
 import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
 import it.unicam.cs.FilieraAgricola.Event.Event;
+import it.unicam.cs.FilieraAgricola.Event.EventParticipant;
+import it.unicam.cs.FilieraAgricola.Event.SimpleEvent;
 import it.unicam.cs.FilieraAgricola.Manager.EventManager;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
+import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,29 +28,21 @@ public class EventController {
     private EventManager eventManager;
 
     @Autowired
-    private EventRepository eventRepository;
+    private ControllerUtility controllerUtility;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Transactional
     @PostMapping("/insertEvent")
     public String insertEvent(@RequestBody EventDTO eventDTO) {
-        ControllerUtility controllerUtility = new ControllerUtility();
-        Event event = controllerUtility.convertToEvent(eventDTO);
 
+        Event event = this.controllerUtility.convertToEvent(eventDTO);
 
-        UserRole userRole = UserRole.PROMOTER;
+        Optional<User> user = this.userRepository.findById(3L);
+        event.setEventCreator(user.get());
 
-        User user = new User(
-                        1,
-                        "ciao",
-                        "ciao",
-                        "ciao",
-                        "ciao",
-                        "123456",
-                        userRole,
-                        UserState.AUTHENTICATED
-        );
-
-
-        this.eventManager.createEventRequest(user, event);
+        this.eventManager.createEventRequest(user.get(), event);
 
         return "proviamo";
 

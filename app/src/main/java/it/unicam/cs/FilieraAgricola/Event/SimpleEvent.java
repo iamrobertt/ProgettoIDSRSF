@@ -1,16 +1,15 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 import java.util.List;
 
 
-@Table(name = "event")
 @Entity
+@DiscriminatorValue("SIMPLE")
 public class SimpleEvent extends Event {
-
 
     public SimpleEvent(
             long eventID,

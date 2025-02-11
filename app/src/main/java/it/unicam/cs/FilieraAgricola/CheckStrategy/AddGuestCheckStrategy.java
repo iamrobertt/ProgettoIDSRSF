@@ -22,7 +22,7 @@ public class AddGuestCheckStrategy implements CheckStrategy<Event>{
         if(!GuestUtility.checkExistParticipants(user, event))
             return false;
 
-        List<User> participants = event.getParticipants();
+       // List<User> participants = event.getParticipants();
 
 //        // add the partcipants a this event
 //        for (User user1 : participants)
