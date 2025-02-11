@@ -1,11 +1,16 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
 
-import it.unicam.cs.FilieraAgricola.User.User;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.util.List;
 
+
+@Table(name = "event")
+@Entity
 public class SimpleEvent extends Event {
+
 
     public SimpleEvent(
             long eventID,
@@ -13,9 +18,10 @@ public class SimpleEvent extends Event {
             String eventDescription,
             int eventMaxParticipants,
             int currentParticipants,
-            List<User> participants
+            EventType eventType,
+            List<EventParticipant> participants
     ){
-        super(eventID, eventName, eventDescription, eventMaxParticipants, currentParticipants, participants);
+        super(eventID, eventName, eventDescription, eventMaxParticipants, currentParticipants, eventType, participants);
     }
 
     public SimpleEvent() {}

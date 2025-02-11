@@ -12,6 +12,7 @@ public class EventDTO {
     private String eventDescription;
     private int eventMaxParticipants;
     private int eventCurrentParticipants;
-    private List<UserDTO> participants;
-    private List<ProductDTO> productList;
+    private String eventType;
+    private List<EventParticipantDTO> participants;
+    private List<EventProductDTO> productList;
 }

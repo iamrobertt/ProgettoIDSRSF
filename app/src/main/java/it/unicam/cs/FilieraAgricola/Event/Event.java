@@ -9,6 +9,8 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "event")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "eventtype", discriminatorType = DiscriminatorType.STRING)
 public abstract class Event {
 
     @Id
@@ -28,8 +30,12 @@ public abstract class Event {
     @Column(name = "eventcurrentparticipants")
     protected int currentParticipants;
 
-    @Transient
-    protected List<User> participants;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "eventtype")
+    protected EventType eventType;
+
+    @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<EventParticipant> participants;
 
     @ManyToOne
     @JoinColumn(name = "eventcreator", referencedColumnName = "userid", nullable = false)
@@ -41,7 +47,8 @@ public abstract class Event {
             String eventDescription,
             int eventMaxParticipants,
             int currentParticipants,
-            List<User> participants
+            EventType eventType,
+            List<EventParticipant> participants
     ){
         this.eventID = eventID;
         this.eventName = eventName;

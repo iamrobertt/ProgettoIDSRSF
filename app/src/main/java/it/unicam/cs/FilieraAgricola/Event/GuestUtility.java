@@ -10,7 +10,6 @@ public class GuestUtility {
         if(user == null || event == null)
             return false;
 
-        List<User> participants = event.participants;
         return true;
     }
 }

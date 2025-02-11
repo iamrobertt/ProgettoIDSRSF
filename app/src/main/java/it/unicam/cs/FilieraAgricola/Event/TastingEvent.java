@@ -1,13 +1,13 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
 import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.User.User;
+import jakarta.persistence.Entity;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-
+@Entity
 public  class TastingEvent extends Event{
 
 
@@ -19,10 +19,11 @@ public  class TastingEvent extends Event{
             String eventDescription,
             int eventMaxParticipants,
             int currentParticipants,
-            List<User> participants,
+            EventType eventType,
+            List<EventParticipant> participants,
             List<Product> productList
     ){
-        super(eventID, eventName, eventDescription, eventMaxParticipants, currentParticipants, participants);
+        super(eventID, eventName, eventDescription, eventMaxParticipants, currentParticipants, eventType, participants);
         this.productList = productList;
     }
 
