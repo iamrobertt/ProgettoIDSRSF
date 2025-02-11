@@ -9,8 +9,7 @@ public class MarketPlaceUtility {
         //TODO prendi le quantitò del prodotto dal database
         int productQuantityDB = 0;
 
-
-        return productQuantityDB >= product.getProductQuantity();
+        return productQuantityDB >= product.getWarehouseProduct().getProductQuantity();
     }
 
 }

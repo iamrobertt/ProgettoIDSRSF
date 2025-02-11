@@ -3,12 +3,14 @@ package it.unicam.cs.FilieraAgricola.Controller;
 import it.unicam.cs.FilieraAgricola.DTO.BuyProductDTO;
 import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
 import it.unicam.cs.FilieraAgricola.Manager.ProductManager;
+import it.unicam.cs.FilieraAgricola.Order.OrderState;
 import it.unicam.cs.FilieraAgricola.Product.*;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
+import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +44,6 @@ public class ProductController {
         Product product = this.controllerUtility.convertToProduct(productDTO);
 
         UserRole userRole = UserRole.SELLER;
-
 
         User user = new User(
                 3,
@@ -110,19 +111,33 @@ public class ProductController {
     }
 
     @PostMapping("/buyProduct")
-    public String buyProduct(@RequestBody List<BuyProductDTO> buyProductDTOList) {
+    public int buyProduct(@RequestBody List<BuyProductDTO> buyProductDTOList) {
 
-        List<Product> productsToBuy = new ArrayList<>();
+        List<Pair<Product, Integer>> productsToBuy = new ArrayList<>();
 
-        for (BuyProductDTO buyProductDTO : buyProductDTOList)
-            productsToBuy.add(this.controllerUtility.convertToProduct(buyProductDTO));
+        for (BuyProductDTO buyProductDTO : buyProductDTOList) {
+            Pair<Product, Integer> product = this.controllerUtility.convertToProduct(buyProductDTO);
+            if(product == null)
+                throw new IllegalArgumentException("A product was not found");
+            productsToBuy.add(product);
+        }
 
         Optional<User> user = this.userRepository.findById(3L);
 
         this.productManager.buyProductRequest(user.get(), productsToBuy);
 
-        return "caio";
+        return 0;
     }
 
+
+    @PostMapping("manageOrderState")
+    public String manageOrderState(@RequestParam long orderID,
+                                   @RequestParam String newOrderState) {
+
+        OrderState orderState = OrderState.valueOf(newOrderState);
+        Optional<User> user = this.userRepository.findById(3L);
+
+
+    }
 
 }

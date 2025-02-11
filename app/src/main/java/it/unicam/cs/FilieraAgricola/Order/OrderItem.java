@@ -10,11 +10,9 @@ import lombok.Data;
 @IdClass(OrderItem.class)
 public class OrderItem {
 
-
     @Column(name = "itemquantity")
     private int orderItemQuantity;
 
-    @Id
     @Column(name = "itemprice")
     private double orderItemPrice;
 
@@ -24,6 +22,7 @@ public class OrderItem {
     private Order parentOrder;
 
     @ManyToOne
+    @Id
     @JoinColumn(name = "itemproductid", referencedColumnName = "productid", nullable = false)
     private Product orderItemProduct;
 

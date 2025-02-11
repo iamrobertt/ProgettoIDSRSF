@@ -21,7 +21,6 @@ public class EventManager {
     @Autowired
     private BookEventStrategyCheck bookEventStrategyCheck;
 
-
     public void createEventRequest( User user , Event event){
 
         if (!this.createEventCheckStrategy.validate(user, event))

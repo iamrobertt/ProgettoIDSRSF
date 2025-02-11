@@ -28,8 +28,8 @@ public abstract class Product {
     @Column(name = "productprice")
     protected double productPrice;
 
-    @Column(name = "productquantity")
-    protected int productQuantity;
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, optional = false)
+    private WarehouseProduct warehouseProduct;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "productstate")
@@ -45,6 +45,7 @@ public abstract class Product {
     @JoinColumn(name = "productuserid", referencedColumnName = "userid")
     protected User productUser;
 
+
     public Product(
             long productID,
             String productName,
@@ -58,9 +59,10 @@ public abstract class Product {
         this.productName = productName;
         this.productDescription = productDescription;
         this.productPrice = productPrice;
-        this.productQuantity = productQuantity;
         this.productState = productState;
         this.productType = productType;
+        this.warehouseProduct = new WarehouseProduct(this, productQuantity);
+
     }
 
     public Product() {}
@@ -68,7 +70,7 @@ public abstract class Product {
     @Override
     public String toString() {
         return "Product [productID=" + productID + ", productName=" + productName + ", productDescription="
-                + productDescription + ", productPrice=" + productPrice + ", productQuantity=" + productQuantity
+                + productDescription + ", productPrice=" + productPrice + ", productQuantity=" + warehouseProduct.getProductQuantity()
                 + ", productState=" + productState.getValue() + ", productType=" + productType.getValue() + "]";
     }
 }

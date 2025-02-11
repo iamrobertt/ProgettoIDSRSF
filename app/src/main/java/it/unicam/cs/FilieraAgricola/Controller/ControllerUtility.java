@@ -12,6 +12,7 @@ import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
+import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +30,6 @@ public class ControllerUtility {
 
         ProductState productState = ProductState.fromValue(productDTO.getProductState());
         ProductType productType = ProductType.fromValue(productDTO.getProductType());
-
 
         if (Objects.requireNonNull(productType).getValue().equals("BUNDLE")) {
 
@@ -51,6 +51,8 @@ public class ControllerUtility {
             );
         }
 
+        if(productDTO.getBundleProducts() != null)
+            throw new IllegalStateException("Bundle product defined as SINGLE");
         // Altrimenti è un SingleProduct
         return new SingleProduct(
                 productDTO.getProductID(),
@@ -64,6 +66,7 @@ public class ControllerUtility {
     }
 
     public Event convertToEvent(EventDTO eventDTO){
+
 
         //TODO da fare convertToUser
         List<User> participants = eventDTO.getParticipants()
@@ -99,7 +102,8 @@ public class ControllerUtility {
                 eventDTO.getEventName(),
                 eventDTO.getEventDescription(),
                 eventDTO.getEventMaxParticipants(),
-                eventDTO.getEventCurrentParticipants()
+                eventDTO.getEventCurrentParticipants(),
+                participants
         );
     }
 
@@ -121,13 +125,15 @@ public class ControllerUtility {
         );
     }
 
-    //todo rivedi poi quando deve essere implementato
-    public Product convertToProduct(BuyProductDTO buyProductDTO) {
+
+    public Pair<Product, Integer> convertToProduct(BuyProductDTO buyProductDTO) {
 
         Optional<Product> product = this.productRepository.findById(buyProductDTO.getProductID());
-        if(product.isPresent())
-            product.get().setProductQuantity(buyProductDTO.getProductQuantity());
 
-        return product.get();
+        if(product.isPresent())
+            return new Pair<>(product.get(), buyProductDTO.getProductQuantity());
+
+
+        return null;
     }
 }

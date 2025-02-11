@@ -31,18 +31,24 @@ public abstract class Event {
     @Transient
     protected List<User> participants;
 
+    @ManyToOne
+    @JoinColumn(name = "eventcreator", referencedColumnName = "userid", nullable = false)
+    protected User eventCreator;
+
     public Event(
             long eventID,
             String eventName,
             String eventDescription,
             int eventMaxParticipants,
-            int currentParticipants
+            int currentParticipants,
+            List<User> participants
     ){
         this.eventID = eventID;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
         this.eventMaxParticipants = eventMaxParticipants;
         this.currentParticipants = currentParticipants;
+        this.participants = participants;
     }
 
     public Event() {

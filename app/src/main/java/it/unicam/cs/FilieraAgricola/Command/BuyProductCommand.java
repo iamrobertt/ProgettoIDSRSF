@@ -9,22 +9,24 @@ import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import jakarta.transaction.Transactional;
+import org.antlr.v4.runtime.misc.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuyProductCommand extends Command<List<Product>> {
+
+public class BuyProductCommand extends Command<List<Pair<Product, Integer>>> {
+
+    private final OrderRepository orderRepository;
+    private final ProductRepository productRepository;
 
 
-    private OrderRepository orderRepository;
-    private ProductRepository productRepository;
-
-
-    public BuyProductCommand(User user, List<Product> productsToBuy, OrderRepository orderRepository, ProductRepository productRepository) {
+    public BuyProductCommand(User user, List<Pair<Product, Integer>> productsToBuy, OrderRepository orderRepository, ProductRepository productRepository) {
         super(user, productsToBuy);
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
     }
+
 
     @Override
     public List<UserRole> getNeededAuthorization() {
@@ -39,7 +41,6 @@ public class BuyProductCommand extends Command<List<Product>> {
         return getNeededAuthorization().contains(this.user.getUserRole());
     }
 
-
     @Transactional
     @Override
     public void execute() {
@@ -51,20 +52,32 @@ public class BuyProductCommand extends Command<List<Product>> {
         order.setOrderBuyer(this.user);
         order.setOrderState(OrderState.ORDER_RECEIVED);
 
-        for(Product product : this.item) {
-            OrderItem orderItem = new OrderItem();
-            orderItem.setParentOrder(order);
-            orderItem.setOrderItemProduct(product);
-            orderItem.setOrderItemPrice(product.getProductPrice());
-            orderItem.setOrderItemQuantity(product.getProductQuantity()); //todo rivedi cosa passare per mettere quantita
+        for(Pair<Product, Integer> product : this.item) {
+            int actualQuantity = product.a.getWarehouseProduct().getProductQuantity();
+            int newProductQuantity = actualQuantity - product.b;
+
+            OrderItem orderItem = createOrderItem(order, product.a, product.b);
             itemList.add(orderItem);
-            totalOrderPrice += product.getProductPrice();
+            product.a.getWarehouseProduct().setProductQuantity(newProductQuantity);
+
+            totalOrderPrice += product.a.getProductPrice();
         }
+
 
         order.setOrderItems(itemList);
         order.setTotalOrderPrice(totalOrderPrice);
 
         this.orderRepository.save(order);
 
+    }
+
+
+    private OrderItem createOrderItem(Order order, Product product, int quantity) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.setParentOrder(order);
+        orderItem.setOrderItemProduct(product);
+        orderItem.setOrderItemPrice(product.getProductPrice());
+        orderItem.setOrderItemQuantity(quantity);
+        return orderItem;
     }
 }
