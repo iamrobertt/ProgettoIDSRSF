@@ -3,6 +3,7 @@ package it.unicam.cs.FilieraAgricola.Command;
 import it.unicam.cs.FilieraAgricola.Event.Event;
 import it.unicam.cs.FilieraAgricola.Event.EventLoader;
 import it.unicam.cs.FilieraAgricola.Event.EventLoaderFactory;
+import it.unicam.cs.FilieraAgricola.Event.EventParticipant;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
@@ -33,6 +34,8 @@ public class CreateEventCommand extends Command<Event> {
     @Override
     public void execute() {
         EventLoader eventLoader = this.eventLoaderFactory.getEventLoader(this.item.getClass());
+        for(EventParticipant eventParticipant : this.item.getParticipants())
+            eventParticipant.setParentEvent(this.item);
         eventLoader.loadEvent(this.item);
     }
 }

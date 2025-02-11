@@ -157,17 +157,14 @@ public class ControllerUtility {
 
     public EventParticipant convertToParticipant(EventParticipantDTO eventParticipantDTO){
 
-        Optional<Event> event = this.eventRepository.findById(eventParticipantDTO.getEventID());
         Optional<User> participant = this.userRepository.findById(eventParticipantDTO.getParticipantID());
+        EventParticipant eventParticipant = new EventParticipant();
 
-        if(event.isPresent() &&
-                participant.isPresent())
-        {
-            return new EventParticipant(
-                    event.get(),
-                    participant.get()
-            );
+        if(participant.isPresent()){
+            eventParticipant.setParticipant(participant.get());
+            return eventParticipant;
         }
+
 
         return null;
     }

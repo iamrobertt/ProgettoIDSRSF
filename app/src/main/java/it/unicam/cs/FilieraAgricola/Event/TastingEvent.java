@@ -1,16 +1,19 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
 import it.unicam.cs.FilieraAgricola.Product.Product;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Transient;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@DiscriminatorValue("TASTING")
 public  class TastingEvent extends Event{
 
-
+    @Transient
     protected List<Product> productList;
 
     public TastingEvent(

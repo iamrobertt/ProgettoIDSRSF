@@ -31,7 +31,7 @@ public abstract class Event {
     protected int currentParticipants;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "eventtype")
+    @Column(name = "eventtype", insertable=false, updatable=false)
     protected EventType eventType;
 
     @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -55,6 +55,7 @@ public abstract class Event {
         this.eventDescription = eventDescription;
         this.eventMaxParticipants = eventMaxParticipants;
         this.currentParticipants = currentParticipants;
+        this.eventType = eventType;
         this.participants = participants;
     }
 
