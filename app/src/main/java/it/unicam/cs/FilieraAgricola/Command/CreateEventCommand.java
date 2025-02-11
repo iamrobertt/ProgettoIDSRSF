@@ -1,6 +1,8 @@
 package it.unicam.cs.FilieraAgricola.Command;
 
 import it.unicam.cs.FilieraAgricola.Event.Event;
+import it.unicam.cs.FilieraAgricola.Event.EventLoader;
+import it.unicam.cs.FilieraAgricola.Event.EventLoaderFactory;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
@@ -8,8 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateEventCommand extends Command<Event> {
-    public CreateEventCommand(User user, Event event) {
+
+    private EventLoaderFactory eventLoaderFactory;
+
+    public CreateEventCommand(User user, Event event, EventLoaderFactory eventLoaderFactory) {
         super(user,event);
+        this.eventLoaderFactory = eventLoaderFactory;
     }
 
     @Override
@@ -26,6 +32,7 @@ public class CreateEventCommand extends Command<Event> {
 
     @Override
     public void execute() {
-
+        EventLoader eventLoader = this.eventLoaderFactory.getEventLoader(this.item.getClass());
+        eventLoader.loadEvent(this.item);
     }
 }

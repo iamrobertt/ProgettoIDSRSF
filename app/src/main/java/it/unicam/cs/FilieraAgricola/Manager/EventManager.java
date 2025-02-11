@@ -8,6 +8,7 @@ import it.unicam.cs.FilieraAgricola.Command.Command;
 import it.unicam.cs.FilieraAgricola.Command.CommandInvoker;
 import it.unicam.cs.FilieraAgricola.Command.CreateEventCommand;
 import it.unicam.cs.FilieraAgricola.Event.Event;
+import it.unicam.cs.FilieraAgricola.Event.EventLoaderFactory;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,16 @@ public class EventManager {
     private CreateEventCheckStrategy createEventCheckStrategy;
     @Autowired
     private BookEventStrategyCheck bookEventStrategyCheck;
+    @Autowired
+    private EventLoaderFactory eventLoaderFactory;
 
-    public void createEventRequest( User user , Event event){
+    public void createEventRequest(User user, Event event){
 
-        if (!this.createEventCheckStrategy.validate(user, event))
-            throw new IllegalArgumentException("Event non valid for creation");
+        //TODO PROVALO SENZA, poi se funziona fallo funzionare col controllo
+        //if (!this.createEventCheckStrategy.validate(user, event))
+            //throw new IllegalArgumentException("Event non valid for creation");
 
-        Command<Event> createEventCommand = new CreateEventCommand(user, event);
+        Command<Event> createEventCommand = new CreateEventCommand(user, event, this.eventLoaderFactory);
 
         CommandInvoker invoker = new CommandInvoker();
 

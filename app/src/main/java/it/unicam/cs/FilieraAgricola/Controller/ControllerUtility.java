@@ -1,14 +1,11 @@
 package it.unicam.cs.FilieraAgricola.Controller;
 
-import it.unicam.cs.FilieraAgricola.DTO.BuyProductDTO;
-import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
-import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
-import it.unicam.cs.FilieraAgricola.DTO.UserDTO;
-import it.unicam.cs.FilieraAgricola.Event.Event;
-import it.unicam.cs.FilieraAgricola.Event.SimpleEvent;
-import it.unicam.cs.FilieraAgricola.Event.TastingEvent;
+import it.unicam.cs.FilieraAgricola.DTO.*;
+import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.Product.*;
+import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
+import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
@@ -25,6 +22,10 @@ public class ControllerUtility {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private EventRepository eventRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public Product convertToProduct(ProductDTO productDTO) {
 
@@ -67,16 +68,21 @@ public class ControllerUtility {
 
     public Event convertToEvent(EventDTO eventDTO){
 
-
-        //TODO da fare convertToUser
-        List<User> participants = eventDTO.getParticipants()
+        List<EventParticipant> participants = eventDTO.getParticipants()
                 .stream()
-                .map(this::convertToUser)
+                .map(this::convertToParticipant)
                 .toList();
 
+        EventType eventType = EventType.fromValue(eventDTO.getEventType());
+
+        if(participants.isEmpty() || eventType == null)
+            return null;
 
         //tasting event
-        if(eventDTO.getProductList() != null && !eventDTO.getProductList().isEmpty()){
+        if(eventDTO.getEventType().equals("TASTING") &&
+                eventDTO.getProductList() != null &&
+                !eventDTO.getProductList().isEmpty()
+        ){
 
             List<Product> products = eventDTO.getProductList()
                     .stream()
@@ -90,6 +96,7 @@ public class ControllerUtility {
                     eventDTO.getEventDescription(),
                     eventDTO.getEventMaxParticipants(),
                     eventDTO.getEventCurrentParticipants(),
+                    eventType,
                     participants,
                     products
             );
@@ -103,8 +110,30 @@ public class ControllerUtility {
                 eventDTO.getEventDescription(),
                 eventDTO.getEventMaxParticipants(),
                 eventDTO.getEventCurrentParticipants(),
+                eventType,
                 participants
         );
+    }
+
+    public Pair<Product, Integer> convertToProduct(BuyProductDTO buyProductDTO) {
+
+        Optional<Product> product = this.productRepository.findById(buyProductDTO.getProductID());
+
+        if(product.isPresent())
+            return new Pair<>(product.get(), buyProductDTO.getProductQuantity());
+
+
+        return null;
+    }
+
+    public Product convertToProduct(EventProductDTO eventProductDTO) {
+
+        Optional<Product> product = this.productRepository.findById(eventProductDTO.getProductID());
+
+        if(product.isPresent())
+            return product.get();
+
+        return null;
     }
 
 
@@ -126,14 +155,21 @@ public class ControllerUtility {
     }
 
 
-    public Pair<Product, Integer> convertToProduct(BuyProductDTO buyProductDTO) {
+    public EventParticipant convertToParticipant(EventParticipantDTO eventParticipantDTO){
 
-        Optional<Product> product = this.productRepository.findById(buyProductDTO.getProductID());
+        Optional<Event> event = this.eventRepository.findById(eventParticipantDTO.getEventID());
+        Optional<User> participant = this.userRepository.findById(eventParticipantDTO.getParticipantID());
 
-        if(product.isPresent())
-            return new Pair<>(product.get(), buyProductDTO.getProductQuantity());
-
+        if(event.isPresent() &&
+                participant.isPresent())
+        {
+            return new EventParticipant(
+                    event.get(),
+                    participant.get()
+            );
+        }
 
         return null;
     }
+
 }

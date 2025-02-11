@@ -14,7 +14,6 @@ public class ProductLoaderFactory {
 
     @Autowired
     public ProductLoaderFactory(SingleProductLoader singleProductLoader, BundleProductLoader bundleProductLoader) {
-        // Iniettiamo direttamente i loader specifici in questa classe
         productLoaders.put(SingleProduct.class, singleProductLoader);
         productLoaders.put(BundleProduct.class, bundleProductLoader);
     }
