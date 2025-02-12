@@ -6,14 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AuthenticateUserCheckStrategy implements CustomAuthenticateCheckStrategy<String, String> {
+public class AuthenticateUserCheckStrategy implements CheckStrategy<String> {
 
     @Autowired
     private UserUtility userUtility;
 
     @Override
-    public User validate(String userEmail, String userPassword) {
-        User user = this.userUtility.checkCredentials(userEmail, userPassword);
-        return this.userUtility.isUserAuthenticated(user) ? null : user;
+    public boolean validate(User user, String userPassword) {
+        return this.userUtility.verifyUser(user, userPassword);
     }
 }

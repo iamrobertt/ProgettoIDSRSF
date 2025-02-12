@@ -5,10 +5,12 @@ import it.unicam.cs.FilieraAgricola.CheckStrategy.AuthenticateUserCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RegisterUserCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RoleRequestCheckStrategy;
 import it.unicam.cs.FilieraAgricola.Command.*;
+import it.unicam.cs.FilieraAgricola.JWT.JWTService;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -20,17 +22,18 @@ public class UserManager {
     private RegisterUserCheckStrategy registerUserCheckStrategy;
     @Autowired
     private RoleRequestCheckStrategy roleRequestCheckStrategy;
-
+    @Autowired
+    private JWTService jwtService;
     @Autowired
     private UserRepository userRepository;
 
-    public void authenticateUserRequest(String userEmail, String userPassword) {
+    public void authenticateUserRequest(User user, String userPassword) {
 
-        User user = this.authenticateUserCheckStrategy.validate(userEmail,userPassword);
-        if(user == null)
-            throw new IllegalArgumentException("User not found or already authenticated");
 
-        Command<User> authenticateUserCommand = new AuthenticateUserCommand(user, user, this.userRepository);
+        if (!this.authenticateUserCheckStrategy.validate(user,userPassword))
+            throw new UsernameNotFoundException("User not found or already authenticated");
+
+        Command<User> authenticateUserCommand = new AuthenticateUserCommand(user, user, this.userRepository, this.jwtService);
 
         CommandInvoker invoker = new CommandInvoker();
 
