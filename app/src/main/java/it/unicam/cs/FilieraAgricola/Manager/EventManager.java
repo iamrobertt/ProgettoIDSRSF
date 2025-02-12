@@ -9,6 +9,7 @@ import it.unicam.cs.FilieraAgricola.Command.CommandInvoker;
 import it.unicam.cs.FilieraAgricola.Command.CreateEventCommand;
 import it.unicam.cs.FilieraAgricola.Event.Event;
 import it.unicam.cs.FilieraAgricola.Event.EventLoaderFactory;
+import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class EventManager {
     private BookEventStrategyCheck bookEventStrategyCheck;
     @Autowired
     private EventLoaderFactory eventLoaderFactory;
+
+    @Autowired
+    private EventRepository eventRepository;
 
     public void createEventRequest(User user, Event event){
 
@@ -41,10 +45,10 @@ public class EventManager {
 
     public void bookEventRequest (User user, Event event){
 
-        if (!this.bookEventStrategyCheck.validate(user, event))
-            throw new IllegalArgumentException("The event is not on the book");
+        //if (!this.bookEventStrategyCheck.validate(user, event))
+            //throw new IllegalArgumentException("The event is not on the book");
 
-        Command<Event> bookEventCommand = new BookEventCommand(user, event);
+        Command<Event> bookEventCommand = new BookEventCommand(user, event, this.eventRepository);
 
         CommandInvoker invoker = new CommandInvoker();
 

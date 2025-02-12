@@ -1,10 +1,8 @@
 package it.unicam.cs.FilieraAgricola.User;
 
-import it.unicam.cs.FilieraAgricola.Product.Product;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
 
 
 @Data
@@ -14,30 +12,30 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userid")
+    @Column(name = "user_id")
     private long userID;
 
-    @Column(name = "username")
+    @Column(name = "user_name")
     private String userName;
 
-    @Column(name = "usersurname")
+    @Column(name = "user_surname")
     private String userSurname;
 
-    @Column(name = "useremail")
+    @Column(name = "user_email")
     private String userEmail;
 
-    @Column(name = "userpassword")
+    @Column(name = "user_password")
     private String userPassword;
 
-    @Column(name = "companyvatnumber")
+    @Column(name = "company_vat_number")
     private String companyVATNumber;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "userrole")
+    @Column(name = "user_role")
     private UserRole userRole;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "userstate")
+    @Column(name = "user_state")
     private UserState userState;
 
     //@OneToMany(mappedBy = "user")

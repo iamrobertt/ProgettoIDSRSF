@@ -1,6 +1,6 @@
 package it.unicam.cs.FilieraAgricola.Controller;
 
-import it.unicam.cs.FilieraAgricola.DTO.BuyProductDTO;
+import it.unicam.cs.FilieraAgricola.DTO.ProductWithQuantityDTO;
 import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
 import it.unicam.cs.FilieraAgricola.Manager.ProductManager;
 import it.unicam.cs.FilieraAgricola.Order.OrderState;
@@ -111,11 +111,11 @@ public class ProductController {
     }
 
     @PostMapping("/buyProduct")
-    public int buyProduct(@RequestBody List<BuyProductDTO> buyProductDTOList) {
+    public int buyProduct(@RequestBody List<ProductWithQuantityDTO> buyProductDTOList) {
 
         List<Pair<Product, Integer>> productsToBuy = new ArrayList<>();
 
-        for (BuyProductDTO buyProductDTO : buyProductDTOList) {
+        for (ProductWithQuantityDTO buyProductDTO : buyProductDTOList) {
             Pair<Product, Integer> product = this.controllerUtility.convertToProduct(buyProductDTO);
             if(product == null)
                 throw new IllegalArgumentException("A product was not found");
