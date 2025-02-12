@@ -4,7 +4,6 @@ import it.unicam.cs.FilieraAgricola.User.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.annotation.processing.Generated;
 import java.util.List;
 
 @Data
@@ -35,7 +34,7 @@ public abstract class Event {
     @Column(name = "eventtype", insertable=false, updatable=false)
     protected EventType eventType;
 
-    @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<EventParticipant> participants;
 
     @ManyToOne

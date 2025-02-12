@@ -1,6 +1,8 @@
 package it.unicam.cs.FilieraAgricola.Command;
 
 import it.unicam.cs.FilieraAgricola.Event.Event;
+import it.unicam.cs.FilieraAgricola.Event.EventParticipant;
+import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
@@ -8,8 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookEventCommand extends Command<Event> {
-    public BookEventCommand(User user, Event event) {
+
+    private EventRepository eventRepository;
+
+    public BookEventCommand(User user, Event event, EventRepository eventRepository) {
         super(user,event);
+        this.eventRepository = eventRepository;
     }
 
     @Override
@@ -26,6 +32,9 @@ public class BookEventCommand extends Command<Event> {
 
     @Override
     public void execute() {
-
+        EventParticipant newEventParticipant = new EventParticipant(this.item, this.user);
+        this.item.getParticipants().add(newEventParticipant);
+        this.item.setCurrentParticipants(this.item.getCurrentParticipants() + 1);
+        this.eventRepository.save(this.item);
     }
 }

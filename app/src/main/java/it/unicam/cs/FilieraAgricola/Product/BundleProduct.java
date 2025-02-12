@@ -1,6 +1,6 @@
 package it.unicam.cs.FilieraAgricola.Product;
 
-import it.unicam.cs.FilieraAgricola.User.User;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +14,7 @@ import java.util.List;
 @Data
 public class BundleProduct extends Product{
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany
     @JoinTable(
             name = "bundle",
             joinColumns = @JoinColumn(name = "bundleid"),

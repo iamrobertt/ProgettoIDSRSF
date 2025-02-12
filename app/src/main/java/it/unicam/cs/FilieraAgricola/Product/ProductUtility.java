@@ -37,4 +37,13 @@ public class ProductUtility {
         return product.orElse(null);
     }
 
+    public boolean checkProductAvailability(Product product, int neededQuantity){
+
+        Optional<Product> productToCheck = this.productRepository.findById(product.getProductID());
+        if(!productToCheck.isPresent())
+            return false;
+
+        return productToCheck.get().getWarehouseProduct().getProductQuantity() >= neededQuantity;
+    }
+
 }

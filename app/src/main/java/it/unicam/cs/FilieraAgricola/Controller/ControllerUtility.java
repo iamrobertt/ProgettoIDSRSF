@@ -34,11 +34,17 @@ public class ControllerUtility {
 
         if (Objects.requireNonNull(productType).getValue().equals("BUNDLE")) {
 
-            // Getting products from database, only the ID of the product is required
             List<Product> products = productDTO.getBundleProducts()
                     .stream()
-                    .map(product -> this.productRepository.findById(product.getProductID()).orElse(null))
-                    .toList();
+                    .map(productWithQuantityDTO -> {
+                        Product product = this.productRepository.findById(productWithQuantityDTO.getProductID())
+                                .orElse(null);
+
+                        if(product != null)
+                            product.getWarehouseProduct().setProductQuantity(productWithQuantityDTO.getProductQuantity());
+
+                        return product;
+                    }).toList();
 
             return new BundleProduct(
                     productDTO.getProductID(),
@@ -115,12 +121,12 @@ public class ControllerUtility {
         );
     }
 
-    public Pair<Product, Integer> convertToProduct(BuyProductDTO buyProductDTO) {
+    public Pair<Product, Integer> convertToProduct(ProductWithQuantityDTO productWithQuantityDTO) {
 
-        Optional<Product> product = this.productRepository.findById(buyProductDTO.getProductID());
+        Optional<Product> product = this.productRepository.findById(productWithQuantityDTO.getProductID());
 
         if(product.isPresent())
-            return new Pair<>(product.get(), buyProductDTO.getProductQuantity());
+            return new Pair<>(product.get(), productWithQuantityDTO.getProductQuantity());
 
 
         return null;
@@ -138,6 +144,7 @@ public class ControllerUtility {
 
         return null;
     }
+
 
 
     public User convertToUser(UserDTO userDTO){

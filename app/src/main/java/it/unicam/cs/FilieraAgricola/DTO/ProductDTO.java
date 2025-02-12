@@ -13,5 +13,5 @@ public class ProductDTO {
     private int productQuantity;
     private String productState;
     private String productType;
-    private List<ProductDTO> bundleProducts;
+    private List<ProductWithQuantityDTO> bundleProducts;
 }
