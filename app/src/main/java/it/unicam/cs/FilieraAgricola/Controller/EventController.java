@@ -2,11 +2,11 @@ package it.unicam.cs.FilieraAgricola.Controller;
 
 
 import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
-import it.unicam.cs.FilieraAgricola.Event.Event;
-import it.unicam.cs.FilieraAgricola.Event.EventParticipant;
-import it.unicam.cs.FilieraAgricola.Event.SimpleEvent;
+import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.Manager.EventManager;
+import it.unicam.cs.FilieraAgricola.Product.Product;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
+import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,11 +34,19 @@ public class EventController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private EventRepository eventRepository;
+    @Autowired
+    private ProductRepository productRepository;
+
     @Transactional
     @PostMapping("/insertEvent")
     public String insertEvent(@RequestBody EventDTO eventDTO) {
 
         Event event = this.controllerUtility.convertToEvent(eventDTO);
+        if (event == null) {
+            throw new IllegalArgumentException("Errore nella conversione dell'evento.");
+        }
 
         Optional<User> user = this.userRepository.findById(3L);
         event.setEventCreator(user.get());
@@ -45,8 +54,54 @@ public class EventController {
         this.eventManager.createEventRequest(user.get(), event);
 
         return "proviamo";
-
     }
+
+    @Transactional
+    @PostMapping("/addProductToTastingEvent")
+    public String addProductToTastingEvent(@RequestParam Long eventId,
+                                           @RequestParam Long productId) {
+
+        // Recupera l'evento dal database
+        Optional<Event> eventOptional = this.eventRepository.findById(eventId);
+        if (eventOptional.isEmpty()) {
+            throw new IllegalArgumentException("Errore: Evento non trovato.");
+        }
+        Event event = eventOptional.get();
+        // Controlla che sia un TastingEvent
+        if (!(event instanceof TastingEvent tastingEvent)) {
+            throw new IllegalArgumentException("Errore: L'evento specificato non è un TastingEvent.");
+        }
+        // Recupera il prodotto dal database
+        Optional<Product> productOptional = this.productRepository.findById(productId);
+        if (productOptional.isEmpty()) {
+            throw new IllegalArgumentException("Errore: Prodotto non trovato.");
+        }
+
+        // Aggiunge il prodotto all'evento e salva le modifiche
+
+        this.eventRepository.save(tastingEvent);
+
+        return "Prodotto aggiunto con successo all'evento di degustazione!";
+    }
+
+
+    /*@Transactional
+    @PostMapping("/insertTastingEvent")
+    public String insertTastingEvent(@RequestBody EventDTO eventDTO) {
+        if (!EventType.TASTING.equals(EventType.valueOf(eventDTO.getEventType()))) {
+            return "Errore: il tipo di evento non è una degustazione!";
+        }
+
+        TastingEvent tastingEvent = (TastingEvent) this.controllerUtility.convertToEvent(eventDTO);
+        Optional<User> user = this.userRepository.findById(3l);
+        if (user.isPresent()) {
+            tastingEvent.setEventCreator(user.get());
+            eventManager.createEventRequest(user.get(), tastingEvent);
+            return "TastingEvent creato con successo!";
+        } else {
+            return "Errore: utente non trovato!";
+        }
+    }*/
 
     @GetMapping("/findEvent{eventID}")
     public long findEvent (@PathVariable("eventID") long eventID){

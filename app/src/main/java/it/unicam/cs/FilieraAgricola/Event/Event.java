@@ -4,6 +4,7 @@ import it.unicam.cs.FilieraAgricola.User.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import javax.annotation.processing.Generated;
 import java.util.List;
 
 @Data

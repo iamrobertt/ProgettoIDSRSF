@@ -1,9 +1,7 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
 import it.unicam.cs.FilieraAgricola.Product.Product;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
@@ -13,7 +11,12 @@ import java.util.List;
 @DiscriminatorValue("TASTING")
 public  class TastingEvent extends Event{
 
-    @Transient
+    @ManyToMany
+    @JoinTable(
+            name = "event_products",
+            joinColumns = @JoinColumn(name = "productid"),
+            inverseJoinColumns = @JoinColumn(name = "productid", insertable = false, updatable = false)
+    )
     protected List<Product> productList;
 
     public TastingEvent(
