@@ -10,20 +10,20 @@ import lombok.Data;
 @IdClass(OrderItem.class)
 public class OrderItem {
 
-    @Column(name = "itemquantity")
+    @Column(name = "item_quantity")
     private int orderItemQuantity;
 
-    @Column(name = "itemprice")
+    @Column(name = "item_price")
     private double orderItemPrice;
 
     @ManyToOne
     @Id
-    @JoinColumn(name = "parentorderid", referencedColumnName = "orderid", nullable = false)
+    @JoinColumn(name = "parent_order_id", referencedColumnName = "order_id", nullable = false)
     private Order parentOrder;
 
     @ManyToOne
     @Id
-    @JoinColumn(name = "itemproductid", referencedColumnName = "productid", nullable = false)
+    @JoinColumn(name = "item_product_id", referencedColumnName = "product_id", nullable = false)
     private Product orderItemProduct;
 
 

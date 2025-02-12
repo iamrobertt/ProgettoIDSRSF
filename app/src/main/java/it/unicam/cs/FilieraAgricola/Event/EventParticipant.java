@@ -12,12 +12,12 @@ public class EventParticipant {
 
     @ManyToOne
     @Id
-    @JoinColumn(name = "parenteventid", referencedColumnName = "eventid", nullable = false)
+    @JoinColumn(name = "parent_event_id", referencedColumnName = "event_id", nullable = false)
     private Event parentEvent;
 
     @ManyToOne
     @Id
-    @JoinColumn(name = "participantid", referencedColumnName = "userid", nullable = false)
+    @JoinColumn(name = "participant_id", referencedColumnName = "user_id", nullable = false)
     private User participant;
 
     public EventParticipant(Event parentEvent, User participant) {
