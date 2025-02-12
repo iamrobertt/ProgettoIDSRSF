@@ -5,19 +5,16 @@ import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
 import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.Manager.EventManager;
 import it.unicam.cs.FilieraAgricola.Product.Product;
+import it.unicam.cs.FilieraAgricola.Product.SingleProduct;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
-import it.unicam.cs.FilieraAgricola.User.UserRole;
-import it.unicam.cs.FilieraAgricola.User.UserState;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -103,7 +100,7 @@ public class EventController {
         }
     }*/
 
-    @GetMapping("/findEvent{eventID}")
+    @GetMapping("/findEvent/{eventID}")
     public long findEvent (@PathVariable("eventID") long eventID){
         Optional<Event> event1 = null; // this.eventRepository.findById(eventID);
 
@@ -113,6 +110,21 @@ public class EventController {
             return -1;
     }
 
+
+    @PostMapping("/bookEvent")
+    public long bookEvent(@RequestParam long eventID) {
+
+        Optional<Event> event = this.eventRepository.findById(eventID);
+
+        if (!event.isPresent())
+            throw new IllegalArgumentException("Event with id" + eventID + " not found.");
+
+        Optional<User> user = this.userRepository.findById(3L);
+
+        this.eventManager.bookEventRequest(user.get(), event.get());
+
+        return 0;
+    }
 
 
 }

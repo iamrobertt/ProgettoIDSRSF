@@ -36,6 +36,7 @@ public class CreateEventCommand extends Command<Event> {
         EventLoader eventLoader = this.eventLoaderFactory.getEventLoader(this.item.getClass());
         for(EventParticipant eventParticipant : this.item.getParticipants())
             eventParticipant.setParentEvent(this.item);
+        this.item.setCurrentParticipants(this.item.getParticipants().size());
         eventLoader.loadEvent(this.item);
     }
 }

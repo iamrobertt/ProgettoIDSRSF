@@ -1,7 +1,8 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
-import it.unicam.cs.FilieraAgricola.Product.Product;
+
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
@@ -9,15 +10,11 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @DiscriminatorValue("TASTING")
+@Data
 public  class TastingEvent extends Event{
 
-    @ManyToMany
-    @JoinTable(
-            name = "event_products",
-            joinColumns = @JoinColumn(name = "productid"),
-            inverseJoinColumns = @JoinColumn(name = "productid", insertable = false, updatable = false)
-    )
-    protected List<Product> productList;
+    @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    protected List<EventProduct> productList;
 
     public TastingEvent(
             long eventID,
@@ -27,7 +24,7 @@ public  class TastingEvent extends Event{
             int currentParticipants,
             EventType eventType,
             List<EventParticipant> participants,
-            List<Product> productList
+            List<EventProduct> productList
     ){
         super(eventID, eventName, eventDescription, eventMaxParticipants, currentParticipants, eventType, participants);
         this.productList = productList;

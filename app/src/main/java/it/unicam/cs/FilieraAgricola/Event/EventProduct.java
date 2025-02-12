@@ -8,21 +8,20 @@ import lombok.Data;
 @Table(name = "event_product")
 @Entity
 @Data
-
 public class EventProduct {
 
     @ManyToOne
     @Id
-    @JoinColumn(name = "parentproductid", referencedColumnName = "eventid", nullable = false)
-    private Event parentProduct;
+    @JoinColumn(name = "parenteventid", referencedColumnName = "eventid", nullable = false)
+    private Event parentEvent;
 
     @ManyToOne
     @Id
-    @JoinColumn(name = "productid", referencedColumnName = "productid", nullable = false)
+    @JoinColumn(name = "eventproductid", referencedColumnName = "productid", nullable = false)
     private Product product;
 
-    public EventProduct(Event parentProduct, Product product){
-        this.parentProduct = parentProduct;
+    public EventProduct(Event parentEvent, Product product){
+        this.parentEvent = parentEvent;
         this.product = product;
     }
 
