@@ -13,18 +13,18 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
+    @Column(name = "order_id")
     private long orderID;
 
-    @Column(name = "ordertotalprice")
+    @Column(name = "order_total_price")
     private double totalOrderPrice;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "orderstate")
+    @Column(name = "order_state")
     private OrderState orderState;
 
     @ManyToOne
-    @JoinColumn(name = "orderbuyer", referencedColumnName = "userid", nullable = false)
+    @JoinColumn(name = "order_buyer", referencedColumnName = "user_id", nullable = false)
     private User orderBuyer;
 
     @OneToMany(mappedBy = "parentOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

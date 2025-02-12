@@ -10,35 +10,35 @@ import java.util.List;
 @Entity
 @Table(name = "event")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "eventtype", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "event_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "eventid")
+    @Column(name = "event_id")
     protected long eventID;
 
-    @Column(name = "eventname")
+    @Column(name = "event_name")
     protected String eventName;
 
-    @Column(name = "eventdescription")
+    @Column(name = "event_description")
     protected String eventDescription;
 
-    @Column(name = "eventmaxparticipants")
+    @Column(name = "event_max_participants")
     protected int eventMaxParticipants;
 
-    @Column(name = "eventcurrentparticipants")
+    @Column(name = "event_current_participants")
     protected int currentParticipants;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "eventtype", insertable=false, updatable=false)
+    @Column(name = "event_type", insertable=false, updatable=false)
     protected EventType eventType;
 
     @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<EventParticipant> participants;
 
     @ManyToOne
-    @JoinColumn(name = "eventcreator", referencedColumnName = "userid", nullable = false)
+    @JoinColumn(name = "event_creator", referencedColumnName = "user_id", nullable = false)
     protected User eventCreator;
 
     public Event(

@@ -11,38 +11,38 @@ import lombok.Setter;
 @Table(name = "product")
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "producttype", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "product_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "productid")
+    @Column(name = "product_id")
     protected long productID;
 
-    @Column(name = "productname")
+    @Column(name = "product_name")
     protected String productName;
 
-    @Column(name = "productdescription")
+    @Column(name = "product_description")
     protected String productDescription;
 
-    @Column(name = "productprice")
+    @Column(name = "product_price")
     protected double productPrice;
 
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL, optional = false)
     private WarehouseProduct warehouseProduct;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "productstate")
+    @Column(name = "product_state")
     protected ProductState productState;
 
     @Enumerated(EnumType.STRING)
-    @Column(insertable = false, updatable = false, name = "producttype")
+    @Column(insertable = false, updatable = false, name = "product_type")
     protected ProductType productType;
 
     @Setter
     @Getter
     @ManyToOne
-    @JoinColumn(name = "productuserid", referencedColumnName = "userid")
+    @JoinColumn(name = "product_user_id", referencedColumnName = "user_id")
     protected User productUser;
 
 

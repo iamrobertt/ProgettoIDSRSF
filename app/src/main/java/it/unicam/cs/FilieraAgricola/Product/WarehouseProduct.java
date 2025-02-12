@@ -8,13 +8,13 @@ import lombok.Data;
 @Entity
 public class WarehouseProduct {
 
-    @Column(name = "productquantity")
+    @Column(name = "product_quantity")
     private int productQuantity;
 
     @Id
     @OneToOne
     @MapsId
-    @JoinColumn(name = "warehouseproductid")
+    @JoinColumn(name = "warehouse_product_id")
     private Product product;
 
     public WarehouseProduct() {}

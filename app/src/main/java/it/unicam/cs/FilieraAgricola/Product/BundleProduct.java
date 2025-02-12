@@ -17,8 +17,8 @@ public class BundleProduct extends Product{
     @OneToMany
     @JoinTable(
             name = "bundle",
-            joinColumns = @JoinColumn(name = "bundleid"),
-            inverseJoinColumns = @JoinColumn(name = "bundleproductid")
+            joinColumns = @JoinColumn(name = "bundle_id"),
+            inverseJoinColumns = @JoinColumn(name = "bundle_product_id")
     )
     private List<Product> bundleProducts = new ArrayList<>();
 
