@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 public  class TastingEvent extends Event{
 
+
     @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     protected List<EventProduct> productList;
 
