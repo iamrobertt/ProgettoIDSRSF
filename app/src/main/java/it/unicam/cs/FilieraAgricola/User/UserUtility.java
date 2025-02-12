@@ -2,11 +2,13 @@ package it.unicam.cs.FilieraAgricola.User;
 
 
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
-import it.unicam.cs.FilieraAgricola.User.User;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 public class UserUtility {
@@ -14,9 +16,11 @@ public class UserUtility {
     @Autowired
     private UserRepository userRepository;
 
-    public User getUser(String email, String password) {
-        Optional<User> user = this.userRepository.findByUserEmailAndUserPassword(email, password);
-        return user.orElse(null);
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    public User getUser(String email) {
+        return this.userRepository.findByUserEmail(email);
     }
 
     public static boolean checkUserInfo(User user) {
@@ -28,12 +32,13 @@ public class UserUtility {
         return false;
     }
 
-    public User checkCredentials(String email, String password) {
-        return this.userRepository.findByUserEmailAndUserPassword(email, password).orElse(null);
-    }
+    public boolean verifyUser(User user, String userPassword) {
 
-    public boolean isUserAuthenticated(User user) {
-        return user.getUserState().equals(UserState.AUTHENTICATED);
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUserEmail(), userPassword));
+
+        return authentication.isAuthenticated();
+
     }
 
     public static boolean checkExistRole(UserRole role) { return false;}
