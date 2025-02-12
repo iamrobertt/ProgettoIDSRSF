@@ -5,6 +5,7 @@ import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
 import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.Manager.EventManager;
 import it.unicam.cs.FilieraAgricola.Product.Product;
+import it.unicam.cs.FilieraAgricola.Product.SingleProduct;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
@@ -61,25 +62,15 @@ public class EventController {
     public String addProductToTastingEvent(@RequestParam Long eventId,
                                            @RequestParam Long productId) {
 
-        // Recupera l'evento dal database
-        Optional<Event> eventOptional = this.eventRepository.findById(eventId);
-        if (eventOptional.isEmpty()) {
-            throw new IllegalArgumentException("Errore: Evento non trovato.");
-        }
-        Event event = eventOptional.get();
-        // Controlla che sia un TastingEvent
-        if (!(event instanceof TastingEvent tastingEvent)) {
-            throw new IllegalArgumentException("Errore: L'evento specificato non è un TastingEvent.");
-        }
-        // Recupera il prodotto dal database
-        Optional<Product> productOptional = this.productRepository.findById(productId);
-        if (productOptional.isEmpty()) {
-            throw new IllegalArgumentException("Errore: Prodotto non trovato.");
-        }
+        Optional<Event> event = this.eventRepository.findById(3L);
+        Optional<Product> productEvent = this.productRepository.findById(productId);
 
-        // Aggiunge il prodotto all'evento e salva le modifiche
+        TastingEvent tastingEvent = (TastingEvent) event.get();
+        Product product = productEvent.get();
 
+        tastingEvent.getProductList().add(product);
         this.eventRepository.save(tastingEvent);
+
 
         return "Prodotto aggiunto con successo all'evento di degustazione!";
     }

@@ -14,7 +14,7 @@ public  class TastingEvent extends Event{
     @ManyToMany
     @JoinTable(
             name = "event_products",
-            joinColumns = @JoinColumn(name = "productid"),
+            joinColumns = @JoinColumn(name = "eventid"),
             inverseJoinColumns = @JoinColumn(name = "productid", insertable = false, updatable = false)
     )
     protected List<Product> productList;
