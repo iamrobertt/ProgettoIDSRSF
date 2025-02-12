@@ -84,7 +84,7 @@ public class ControllerUtility {
                 !eventDTO.getProductList().isEmpty()
         ){
 
-            List<Product> products = eventDTO.getProductList()
+            List<EventProduct> products = eventDTO.getProductList()
                     .stream()
                     .map(this::convertToProduct)
                     .toList();
@@ -126,12 +126,15 @@ public class ControllerUtility {
         return null;
     }
 
-    public Product convertToProduct(EventProductDTO eventProductDTO) {
+    public EventProduct convertToProduct(EventProductDTO eventProductDTO) {
 
         Optional<Product> product = this.productRepository.findById(eventProductDTO.getProductID());
+        EventProduct eventProduct = new EventProduct();
 
-        if(product.isPresent())
-            return product.get();
+        if(product.isPresent()){
+            eventProduct.setProduct(product.get());
+            return eventProduct;
+        }
 
         return null;
     }
