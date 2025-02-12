@@ -51,8 +51,7 @@ public class UserController {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         UserRole newUserRole = UserRole.valueOf(role);
         User user = this.userRepository.getUser(userEmail);
-        System.out.println("User: " + userEmail);
-        //this.userManager.newRoleRequest(newUserRole);
+        this.userManager.newRoleRequest(user, newUserRole);
     }
 
 

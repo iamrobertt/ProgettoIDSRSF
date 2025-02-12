@@ -15,8 +15,8 @@ public class AddGuestCheckStrategy implements CheckStrategy<Event>{
     public boolean validate(User user, Event event) {
 
         // if the info aren't complete
-        if(!UserUtility.checkUserInfo(user))
-            return false;
+       // if(!UserUtility.checkUserInfo(user))
+         //   return false;
 
         //if not exist participants for this event.
         if(!GuestUtility.checkExistParticipants(user, event))

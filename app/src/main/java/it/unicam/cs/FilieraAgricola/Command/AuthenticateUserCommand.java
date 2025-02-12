@@ -39,7 +39,7 @@ public class AuthenticateUserCommand  extends Command <User>{
     public void execute() {
         String jwt = jwtService.generateToken(this.item);
         System.out.println("JWT: " + jwt);
-        this.userRepository.updateUserState(UserState.AUTHENTICATED, this.item.getUserEmail());
+        this.userRepository.updateUserState(UserState.AUTHENTICATED, this.item.getUserID());
     }
 
 

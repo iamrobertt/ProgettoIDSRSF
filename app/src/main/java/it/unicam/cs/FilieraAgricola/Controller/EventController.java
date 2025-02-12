@@ -64,7 +64,7 @@ public class EventController {
         TastingEvent tastingEvent = (TastingEvent) event.get();
         Product product = productEvent.get();
 
-        tastingEvent.getProductList().add(product);
+        //tastingEvent.getProductList().add(product);
         this.eventRepository.save(tastingEvent);
 
 
