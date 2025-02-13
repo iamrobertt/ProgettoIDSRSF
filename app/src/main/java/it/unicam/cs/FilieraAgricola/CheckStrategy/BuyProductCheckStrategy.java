@@ -15,27 +15,44 @@ public class BuyProductCheckStrategy implements CustomCheckStrategy<Product, Int
     @Override
     public boolean validate(User user, Product product, Integer neededQuantity) {
 
-        //if the product does not have the necessary data to be uniquely identified, return false
+
         if (!this.productUtility.checkProductInfo(product))
-            return false;
+            throw new IllegalArgumentException("Error retrieving product information.");
 
-        //if the product does not exist, return false
+
         if (!this.productUtility.checkExistProduct(product))
-            return false;
+            throw new IllegalArgumentException("Product does not exist.");
 
-        //if the product isn't in a sell state, return false
+
         if(!product.getProductState().equals(ProductState.PRODUCT_VALIDATED))
-            return false;
+            throw new IllegalArgumentException("Product with id " + product.getProductID() + " is not validated.");
 
-        if(product instanceof SingleProduct singleProduct)
-            return this.productUtility.checkProductAvailability(singleProduct, neededQuantity.intValue());
 
-        //if the product is a bundle, check if al the products inside the bundle are available
+        if(!this.productUtility.checkProductAvailability(product, neededQuantity))
+            throw new IllegalArgumentException("Product with id " + product.getProductID() + " is not available.");
+
+
+        if(product instanceof SingleProduct)
+            return true;
+
+
+        /*
+          Due to how the bundles are created, there is no need to check recursively in other bundles
+          I only need to check the first "layer" quantity and state
+         */
         BundleProduct bundleProduct = (BundleProduct) product;
-        for(BundleItem bundleItem : bundleProduct.getBundleItems())
-            if(!this.productUtility.checkProductAvailability(bundleItem.getProduct(), bundleItem.getProductQuantityPerBundle()))
-                return false;
+
+        for(BundleItem bundleItem : bundleProduct.getBundleItems()) {
+
+            if (!this.productUtility.checkProductAvailability(bundleItem.getProduct(), bundleItem.getProductQuantityPerBundle()))
+                throw new IllegalArgumentException("Product with id " + bundleItem.getProduct().getProductID() + " is not available.");
+
+            if(!bundleItem.getProduct().getProductState().equals(ProductState.PRODUCT_VALIDATED))
+                throw new IllegalArgumentException("Product with id " + bundleItem.getProduct().getProductID() + " is not validated.");
+        }
 
         return true;
     }
+
+
 }
