@@ -12,6 +12,8 @@ import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class ProductController {
     @PostMapping("/insertProduct")
     public String insertProduct(@RequestBody ProductDTO productDTO) {
 
+
         Product product = this.controllerUtility.convertToProduct(productDTO);
 
         UserRole userRole = UserRole.SELLER;
@@ -57,7 +60,15 @@ public class ProductController {
         );
 
         product.setProductUser(user);
-        this.productManager.loadProductRequest(user, product);
+
+        try {
+            this.productManager.loadProductRequest(user, product);
+        }
+        catch (RuntimeException e) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+
 
         return "caio";
     }
@@ -124,7 +135,13 @@ public class ProductController {
 
         Optional<User> user = this.userRepository.findById(3L);
 
-        this.productManager.buyProductRequest(user.get(), productsToBuy);
+        try {
+            this.productManager.buyProductRequest(user.get(), productsToBuy);
+        }
+        catch (RuntimeException e) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
 
         return 0;
     }

@@ -37,6 +37,11 @@ public class ProductUtility {
         return product.orElse(null);
     }
 
+    public Product getProduct(long productID) {
+        Optional<Product> product = this.productRepository.findById(productID);
+        return product.orElse(null);
+    }
+
     public boolean checkProductAvailability(Product product, int neededQuantity){
 
         Optional<Product> productToCheck = this.productRepository.findById(product.getProductID());
