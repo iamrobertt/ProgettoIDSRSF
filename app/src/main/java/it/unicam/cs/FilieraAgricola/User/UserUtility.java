@@ -34,7 +34,6 @@ public class UserUtility {
         Optional<User> userToSearch = this.userRepository.findById(user.getUserID());
         return userToSearch.isPresent();
 
-        return false;
     }
 
     public boolean verifyUser(User user, String userPassword) {

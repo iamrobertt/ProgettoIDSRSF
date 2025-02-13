@@ -71,7 +71,7 @@ public class ControllerUtility {
                     BundleItem bundleItem = new BundleItem();
                     bundleItem.setParentBundle(bundleProduct);
                     bundleItem.setProduct(product);
-                    bundleItem.setProductQuantity(productWithQuantityDTO.getProductQuantity());
+                    bundleItem.setProductQuantityPerBundle(productWithQuantityDTO.getProductQuantity());
 
                     return bundleItem;
 

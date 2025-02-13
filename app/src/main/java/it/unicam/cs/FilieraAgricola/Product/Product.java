@@ -69,7 +69,7 @@ public abstract class Product {
     @Override
     public String toString() {
         return "Product [productID=" + productID + ", productName=" + productName + ", productDescription="
-                + productDescription + ", productPrice=" + productPrice + ", productQuantity=" + warehouseProduct.getProductQuantity()
+                + productDescription + ", productPrice=" + productPrice + ", productQuantityPerBundle=" + warehouseProduct.getProductQuantity()
                 + ", productState=" + productState.getValue() + ", productType=" + productType.getValue() + "]";
     }
 }

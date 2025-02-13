@@ -3,7 +3,10 @@ package it.unicam.cs.FilieraAgricola.Command;
 import it.unicam.cs.FilieraAgricola.Order.Order;
 import it.unicam.cs.FilieraAgricola.Order.OrderItem;
 import it.unicam.cs.FilieraAgricola.Order.OrderState;
+import it.unicam.cs.FilieraAgricola.Product.BundleItem;
+import it.unicam.cs.FilieraAgricola.Product.BundleProduct;
 import it.unicam.cs.FilieraAgricola.Product.Product;
+import it.unicam.cs.FilieraAgricola.Product.SingleProduct;
 import it.unicam.cs.FilieraAgricola.Repository.OrderRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
@@ -52,15 +55,17 @@ public class BuyProductCommand extends Command<List<Pair<Product, Integer>>> {
         order.setOrderBuyer(this.user);
         order.setOrderState(OrderState.ORDER_RECEIVED);
 
-        for(Pair<Product, Integer> product : this.item) {
-            int actualQuantity = product.a.getWarehouseProduct().getProductQuantity();
-            int newProductQuantity = actualQuantity - product.b;
 
-            OrderItem orderItem = createOrderItem(order, product.a, product.b);
+        for (Pair<Product, Integer> productPair : this.item){
+
+            OrderItem orderItem = createOrderItem(order, productPair.a, productPair.b);
+            Product realProduct = this.productRepository.findById(productPair.a.getProductID()).orElse(null);
+
+            int actualQuantity = realProduct.getWarehouseProduct().getProductQuantity();
+            int newProductQuantity = actualQuantity - productPair.b;
+
+            realProduct.getWarehouseProduct().setProductQuantity(newProductQuantity);
             itemList.add(orderItem);
-            product.a.getWarehouseProduct().setProductQuantity(newProductQuantity);
-
-            totalOrderPrice += product.a.getProductPrice();
         }
 
         order.setOrderItems(itemList);
