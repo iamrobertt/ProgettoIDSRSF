@@ -26,24 +26,18 @@ public class UserUtility {
     }
 
     public boolean checkUserInfo(User user) {
-
         return user != null && user.getUserID() != 0;
     }
 
     public boolean checkExistUser(User user) {
         Optional<User> userToSearch = this.userRepository.findById(user.getUserID());
         return userToSearch.isPresent();
-
-        return false;
     }
 
     public boolean verifyUser(User user, String userPassword) {
-
         Authentication authentication =
                 authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUserEmail(), userPassword));
-
         return authentication.isAuthenticated();
-
     }
 
     public boolean checkExistRole(UserRole role) {
@@ -53,6 +47,5 @@ public class UserUtility {
         }
         return false;
     }
-
 
 }

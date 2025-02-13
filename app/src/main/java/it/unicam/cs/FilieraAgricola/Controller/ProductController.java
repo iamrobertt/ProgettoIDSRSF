@@ -53,7 +53,7 @@ public class ProductController {
                 "ciao",
                 "123456",
                 userRole,
-                UserState.AUTHENTICATED
+                UserState.VALIDATED
         );
 
         product.setProductUser(user);
