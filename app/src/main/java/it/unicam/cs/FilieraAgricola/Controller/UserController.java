@@ -7,7 +7,7 @@ import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 
 import it.unicam.cs.FilieraAgricola.User.UserRole;
-import it.unicam.cs.FilieraAgricola.User.UserRoleRequestValidationState;
+import it.unicam.cs.FilieraAgricola.User.UserValidationState;
 import it.unicam.cs.FilieraAgricola.User.UserUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,17 +56,16 @@ public class UserController {
         this.userManager.newRoleRequest(user, newUserRole);
     }
 
-    @PostMapping("/manageRequestRole")
-    public void manageRequestRole(@RequestParam long userID, @RequestParam String validationState) {
+    @PostMapping("/manageUserValidation")
+    public void manageUserValidation(@RequestParam long userID, @RequestParam String validationState) {
 
-        UserRoleRequestValidationState userRoleRequestValidationState = UserRoleRequestValidationState.valueOf(validationState);
+        UserValidationState userValidationState = UserValidationState.valueOf(validationState);
 
         User user = this.userRepository.findById(userID)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        this.userManager.manageRequestRole(user, userRoleRequestValidationState);
+        this.userManager.manageUserValidation(user, userValidationState);
     }
-
 
 
 }

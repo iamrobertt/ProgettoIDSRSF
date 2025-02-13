@@ -3,18 +3,18 @@ package it.unicam.cs.FilieraAgricola.Command;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
-import it.unicam.cs.FilieraAgricola.User.UserRoleRequestValidationState;
+import it.unicam.cs.FilieraAgricola.User.UserValidationState;
 import it.unicam.cs.FilieraAgricola.User.UserState;
 
 import java.util.List;
 
-public class ManageRoleRequestCommand extends Command<UserRoleRequestValidationState>{
+public class ManageUserValidationCommand extends Command<UserValidationState>{
 
 
     private final UserRepository userRepository;
 
-    public ManageRoleRequestCommand(User user, UserRoleRequestValidationState userRoleRequestValidationState, UserRepository userRepository) {
-        super(user, userRoleRequestValidationState);
+    public ManageUserValidationCommand(User user, UserValidationState userValidationState, UserRepository userRepository) {
+        super(user, userValidationState);
         this.userRepository = userRepository;
     }
 
@@ -30,7 +30,7 @@ public class ManageRoleRequestCommand extends Command<UserRoleRequestValidationS
 
     @Override
     public void execute() {
-        if (this.item.equals(UserRoleRequestValidationState.ACCEPTED))
+        if (this.item.equals(UserValidationState.ACCEPTED))
             this.userRepository.updateUserState(UserState.VALIDATED, this.user.getUserID());
 
     }
