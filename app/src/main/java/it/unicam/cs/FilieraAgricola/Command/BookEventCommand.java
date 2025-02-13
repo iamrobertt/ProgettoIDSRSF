@@ -11,7 +11,7 @@ import java.util.List;
 
 public class BookEventCommand extends Command<Event> {
 
-    private EventRepository eventRepository;
+    private final EventRepository eventRepository;
 
     public BookEventCommand(User user, Event event, EventRepository eventRepository) {
         super(user,event);
