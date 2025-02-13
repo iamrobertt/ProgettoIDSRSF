@@ -3,14 +3,18 @@ package it.unicam.cs.FilieraAgricola.Controller;
 import it.unicam.cs.FilieraAgricola.DTO.ProductWithQuantityDTO;
 import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
 import it.unicam.cs.FilieraAgricola.Manager.ProductManager;
+import it.unicam.cs.FilieraAgricola.Order.Order;
+import it.unicam.cs.FilieraAgricola.Order.OrderManager;
 import it.unicam.cs.FilieraAgricola.Order.OrderState;
 import it.unicam.cs.FilieraAgricola.Product.*;
+import it.unicam.cs.FilieraAgricola.Repository.OrderRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
 import org.antlr.v4.runtime.misc.Pair;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +33,10 @@ public class ProductController {
     private ProductManager productManager;
 
     @Autowired
-    private ControllerUtility controllerUtility;
+    private OrderManager orderManager;
 
     @Autowired
-    private ProductRepository productRepository;
+    private ControllerUtility controllerUtility;
 
     @Autowired
     private ProductUtility productUtility;
@@ -40,24 +44,15 @@ public class ProductController {
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping("/insertProduct")
-    public String insertProduct(@RequestBody ProductDTO productDTO) {
+    @Autowired
+    private OrderRepository orderRepository;
 
+    @PostMapping("/insertProduct")
+    public ResponseEntity<String> insertProduct(@RequestBody ProductDTO productDTO) {
 
         Product product = this.controllerUtility.convertToProduct(productDTO);
 
-        UserRole userRole = UserRole.SELLER;
-
-        User user = new User(
-                3,
-                "ciao",
-                "ciao",
-                "ciao",
-                "ciao",
-                "123456",
-                userRole,
-                UserState.VALIDATED
-        );
+        User user = this.userRepository.findById(3L).orElse(null);
 
         product.setProductUser(user);
 
@@ -65,96 +60,90 @@ public class ProductController {
             this.productManager.loadProductRequest(user, product);
         }
         catch (RuntimeException e) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
-
-
-        return "caio";
+        return ResponseEntity.ok().body("Product loaded successfully.");
     }
 
-
-    @GetMapping("/findProduct/{productID}")
-    public String findProduct(@PathVariable long productID) {
-
-        Optional<Product> product1 = this.productRepository.findById(productID);
-
-        if(product1.isPresent())
-            return product1.get().getProductName();
-        else
-            return "ciao";
-    }
 
     @PostMapping("/sellProduct")
-    public String sellProduct(@RequestParam long productID) {
+    public ResponseEntity<String> sellProduct(@RequestParam long productID) {
 
         Optional<User> user = this.userRepository.findById(3L);
 
-        //todo rivedi con vero utente
         Product product = this.productUtility.getProduct(user.get().getUserID(), productID);
 
-        if(product == null)
-            return "Product not found associated with your user";
+        try{
+            this.productManager.sellProductRequest(user.get(), product);
+        }catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
 
-        product.setProductUser(user.get());
-        this.productManager.sellProductRequest(user.get(), product);
-
-        return "caio";
+        return ResponseEntity.ok().body("Sell request for product" + product.getProductName() + " done successfully.");
     }
 
     @PostMapping("/validateProduct")
-    public String validateProduct(@RequestParam long productID, @RequestParam String validationState) {
+    public ResponseEntity<String> validateProduct(@RequestParam long productID, @RequestParam String validationState) {
 
         ProductValidationState productValidationState = ProductValidationState.valueOf(validationState);
 
         Optional<User> user = this.userRepository.findById(3L);
 
-        //todo rivedi con vero utente
         Product product = this.productUtility.getProduct(user.get().getUserID(), productID);
 
-        if(product == null)
-            return "Product not found associated with your user";
-
-        //todo rivedi se funziona
-        this.productManager.validateProductRequest(user.get(), product, productValidationState);
-
-        return "caio";
-    }
-
-    @PostMapping("/buyProduct")
-    public int buyProduct(@RequestBody List<ProductWithQuantityDTO> buyProductDTOList) {
-
-        List<Pair<Product, Integer>> productsToBuy = new ArrayList<>();
-
-        for (ProductWithQuantityDTO buyProductDTO : buyProductDTOList) {
-            Pair<Product, Integer> product = this.controllerUtility.convertToProduct(buyProductDTO);
-            if(product == null)
-                throw new IllegalArgumentException("A product was not found");
-            productsToBuy.add(product);
+        try{
+            //todo rivedi se funziona
+            this.productManager.validateProductRequest(user.get(), product, productValidationState);
+        }catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
-        Optional<User> user = this.userRepository.findById(3L);
+        return ResponseEntity.ok().body("Product with id" + product.getProductID() + " validated successfully.");
+    }
+
+
+    @PostMapping("/buyProduct")
+    public ResponseEntity<String> buyProduct(@RequestBody List<ProductWithQuantityDTO> buyProductDTOList) {
 
         try {
+            List<Pair<Product, Integer>> productsToBuy = new ArrayList<>();
+
+            //pairing every product with the quantity to buy
+            for (ProductWithQuantityDTO buyProductDTO : buyProductDTOList) {
+                Pair<Product, Integer> product = this.controllerUtility.convertToProduct(buyProductDTO);
+                productsToBuy.add(product);
+            }
+
+            Optional<User> user = this.userRepository.findById(3L);
+
             this.productManager.buyProductRequest(user.get(), productsToBuy);
         }
         catch (RuntimeException e) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
-
-        return 0;
+        return ResponseEntity.ok().body("All the products have been bought successfully.");
     }
 
 
-    @PostMapping("manageOrderState")
-    public String manageOrderState(@RequestParam long orderID,
+    @PostMapping("/manageOrderState")
+    public ResponseEntity<String> manageOrderState(@RequestParam long orderID,
                                    @RequestParam String newOrderState) {
 
-        OrderState orderState = OrderState.valueOf(newOrderState);
-        Optional<User> user = this.userRepository.findById(3L);
 
-        return "ciao";
+        OrderState orderState = OrderState.valueOf(newOrderState);
+
+        User user = this.userRepository.findById(3L).orElse(null);
+
+        Order order = this.orderRepository.findByOrderIDAndUser(orderID, user.getUserID()).orElse(null);
+        try {
+            this.orderManager.updateOrderState(user, order, orderState);
+        }
+        catch (RuntimeException e) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return ResponseEntity.ok().body("Order state with id" + orderID + " done successfully.");
     }
 
 }

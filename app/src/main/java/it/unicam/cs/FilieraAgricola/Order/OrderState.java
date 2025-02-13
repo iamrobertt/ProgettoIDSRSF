@@ -13,14 +13,17 @@ public enum OrderState {
 
     private final String value;
 
+
     OrderState(String value) {
         this.value = value;
     }
+
 
     @JsonValue
     public String getValue() {
         return value;
     }
+
 
     @JsonCreator
     public static OrderState fromValue(String value) {
@@ -30,4 +33,15 @@ public enum OrderState {
 
         return null;
     }
+
+
+    public boolean canTransitionTo(OrderState newState) {
+        return switch (this) {
+            case ORDER_RECEIVED -> newState == ORDER_READY || newState == ORDER_SHIPPED || newState == ORDER_DELIVERED;
+            case ORDER_READY -> newState == ORDER_SHIPPED || newState == ORDER_DELIVERED;
+            case ORDER_SHIPPED -> newState == ORDER_DELIVERED;
+            case ORDER_DELIVERED -> false;
+        };
+    }
+
 }

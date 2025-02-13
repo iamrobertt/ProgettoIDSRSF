@@ -53,7 +53,6 @@ public class ProductManager {
     }
 
 
-    //todo qualcosa non va, prende anche id che non esistono
     public void sellProductRequest(User user, Product product) {
 
         if(!this.sellProductCheckStrategy.validate(user, product))
@@ -74,9 +73,9 @@ public class ProductManager {
 
     public void buyProductRequest(User user, List<Pair<Product, Integer>> productList) {
 
-        //for (Pair<Product, Integer> product : productList)
-            //if(!this.buyProductCheckStrategy.validate(user, product.a))
-                //throw new IllegalArgumentException("Product  with id: " + product.a.getProductID() + " non valid for buying");
+        for (Pair<Product, Integer> product : productList)
+            if(!this.buyProductCheckStrategy.validate(user, product.a, product.b))
+                throw new IllegalArgumentException("Product  with id: " + product.a.getProductID() + " non valid for buying");
 
         BuyProductCommand buyProductCommand = new BuyProductCommand(user, productList, this.orderRepository, this.productRepository);
 
