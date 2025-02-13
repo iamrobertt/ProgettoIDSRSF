@@ -23,7 +23,7 @@ public class UserUtility {
         return this.userRepository.findByUserEmail(email);
     }
 
-    public static boolean checkUserInfo(User user) {
+    public  boolean checkUserInfo(User user) {
         return false;
     }
 
