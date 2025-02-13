@@ -19,13 +19,13 @@ public class BundleItem {
     @JoinColumn(name = "bundle_product_id", referencedColumnName = "product_id")
     private Product product;
 
-    @Column(name = "bundle_product_quantity")
-    int productQuantity;
+    @Column(name = "product_quantity_per_bundle")
+    int productQuantityPerBundle;
 
     public BundleItem(BundleProduct parentBundle, Product product, int productQuantity) {
         this.parentBundle = parentBundle;
         this.product = product;
-        this.productQuantity = productQuantity;
+        this.productQuantityPerBundle = productQuantity;
     }
 
     public BundleItem() {

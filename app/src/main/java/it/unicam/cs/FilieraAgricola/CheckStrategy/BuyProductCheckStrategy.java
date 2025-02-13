@@ -33,7 +33,7 @@ public class BuyProductCheckStrategy implements CustomCheckStrategy<Product, Int
         //if the product is a bundle, check if al the products inside the bundle are available
         BundleProduct bundleProduct = (BundleProduct) product;
         for(BundleItem bundleItem : bundleProduct.getBundleItems())
-            if(!this.productUtility.checkProductAvailability(bundleItem.getProduct(), bundleItem.getProductQuantity()))
+            if(!this.productUtility.checkProductAvailability(bundleItem.getProduct(), bundleItem.getProductQuantityPerBundle()))
                 return false;
 
         return true;
