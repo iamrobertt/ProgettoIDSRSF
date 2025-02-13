@@ -2,6 +2,7 @@ package it.unicam.cs.FilieraAgricola.Manager;
 
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.AuthenticateUserCheckStrategy;
+import it.unicam.cs.FilieraAgricola.CheckStrategy.ManageUserValidationCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RegisterUserCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RoleRequestCheckStrategy;
 import it.unicam.cs.FilieraAgricola.Command.*;
@@ -9,6 +10,7 @@ import it.unicam.cs.FilieraAgricola.JWT.JWTService;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
+import it.unicam.cs.FilieraAgricola.User.UserValidationState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,10 @@ public class UserManager {
     private RegisterUserCheckStrategy registerUserCheckStrategy;
     @Autowired
     private RoleRequestCheckStrategy roleRequestCheckStrategy;
+
+    @Autowired
+    private ManageUserValidationCheckStrategy manageUserValidationCheckStrategy;
+
     @Autowired
     private JWTService jwtService;
     @Autowired
@@ -29,11 +35,10 @@ public class UserManager {
 
     public void authenticateUserRequest(User user, String userPassword) {
 
-
         if (!this.authenticateUserCheckStrategy.validate(user,userPassword))
             throw new UsernameNotFoundException("User not found or already authenticated");
 
-        Command<User> authenticateUserCommand = new AuthenticateUserCommand(user, user, this.userRepository, this.jwtService);
+        Command<User> authenticateUserCommand = new AuthenticateUserCommand(user, user, this.jwtService);
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -70,5 +75,17 @@ public class UserManager {
         invoker.invoke();
     }
 
+    public void manageUserValidation(User user, UserValidationState userValidationState) {
+
+        if(!this.manageUserValidationCheckStrategy.validate(user, userValidationState))
+            throw new IllegalArgumentException("User not found or new role not available");
+
+        Command<UserValidationState> manageUserValidationCommand = new ManageUserValidationCommand(user, userValidationState, this.userRepository);
+
+        CommandInvoker invoker = new CommandInvoker();
+
+        invoker.setCommand(manageUserValidationCommand);
+        invoker.invoke();
+    }
 
 }
