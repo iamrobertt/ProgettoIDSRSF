@@ -1,8 +1,6 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
-import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.ProductState;
-import it.unicam.cs.FilieraAgricola.Product.ProductUtility;
+import it.unicam.cs.FilieraAgricola.Product.*;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,8 +27,14 @@ public class BuyProductCheckStrategy implements CustomCheckStrategy<Product, Int
         if(!product.getProductState().equals(ProductState.PRODUCT_VALIDATED))
             return false;
 
-        if(!this.productUtility.checkProductAvailability(product, neededQuantity.intValue()))
-            return false;
+        if(product instanceof SingleProduct singleProduct)
+            return this.productUtility.checkProductAvailability(singleProduct, neededQuantity.intValue());
+
+        //if the product is a bundle, check if al the products inside the bundle are available
+        BundleProduct bundleProduct = (BundleProduct) product;
+        for(BundleItem bundleItem : bundleProduct.getBundleItems())
+            if(!this.productUtility.checkProductAvailability(bundleItem.getProduct(), bundleItem.getProductQuantity()))
+                return false;
 
         return true;
     }

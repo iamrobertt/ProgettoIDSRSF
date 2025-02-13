@@ -1,6 +1,7 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
 import it.unicam.cs.FilieraAgricola.Event.Event;
+import it.unicam.cs.FilieraAgricola.Event.EventParticipant;
 import it.unicam.cs.FilieraAgricola.Event.EventUtility;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
@@ -17,17 +18,19 @@ public class CreateEventCheckStrategy implements CheckStrategy<Event>{
 
 
     @Override
-    public boolean validate(User guest, Event event) {
+    public boolean validate(User user, Event event) {
 
         if(!this.eventUtility.checkEventInfo(event)){
             return false;
         }
-        if(!this.eventUtility.checkExistEvent(event)){
+        if(this.eventUtility.checkExistEvent(event)){
             return false;
         }
-        if(!addGuestCheckStrategy.validate(guest,event)){
-            return false;
-        }
+
+        for(EventParticipant eventParticipant : event.getParticipants())
+            if(!addGuestCheckStrategy.validate(eventParticipant.getParticipant(),event))
+                return false;
+
         return false;
     }
 }

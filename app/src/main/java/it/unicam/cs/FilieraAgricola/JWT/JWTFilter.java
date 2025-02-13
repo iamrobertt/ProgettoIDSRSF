@@ -30,7 +30,9 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (request.getRequestURI().equals("/api/user/authenticate")) {
+        if (request.getRequestURI().equals("/api/user/authenticate") ||
+            request.getRequestURI().equals("/api/product/insertProduct")
+        ) {
             filterChain.doFilter(request, response);
             return;
         }

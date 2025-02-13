@@ -16,12 +16,6 @@ public class TastingEventLoader implements EventLoader{
     @Transactional
     @Override
     public void loadEvent(Event event) {
-
-        TastingEvent tastingEvent = (TastingEvent) event;
-
-        for(EventProduct eventProduct : tastingEvent.getProductList())
-            eventProduct.setParentEvent(event);
-
         this.eventRepository.save(event);
     }
 }

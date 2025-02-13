@@ -62,7 +62,6 @@ public abstract class Product {
         this.productState = productState;
         this.productType = productType;
         this.warehouseProduct = new WarehouseProduct(this, productQuantity);
-
     }
 
     public Product() {}

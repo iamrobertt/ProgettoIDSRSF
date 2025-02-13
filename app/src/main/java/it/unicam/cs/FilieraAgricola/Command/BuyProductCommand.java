@@ -63,7 +63,6 @@ public class BuyProductCommand extends Command<List<Pair<Product, Integer>>> {
             totalOrderPrice += product.a.getProductPrice();
         }
 
-
         order.setOrderItems(itemList);
         order.setTotalOrderPrice(totalOrderPrice);
 
