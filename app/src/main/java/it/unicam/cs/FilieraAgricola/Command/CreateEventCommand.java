@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CreateEventCommand extends Command<Event> {
 
-    private EventLoaderFactory eventLoaderFactory;
+    private final EventLoaderFactory eventLoaderFactory;
 
     public CreateEventCommand(User user, Event event, EventLoaderFactory eventLoaderFactory) {
         super(user,event);
@@ -34,8 +34,10 @@ public class CreateEventCommand extends Command<Event> {
     @Override
     public void execute() {
         EventLoader eventLoader = this.eventLoaderFactory.getEventLoader(this.item.getClass());
+
         for(EventParticipant eventParticipant : this.item.getParticipants())
             eventParticipant.setParentEvent(this.item);
+
         this.item.setCurrentParticipants(this.item.getParticipants().size());
         eventLoader.loadEvent(this.item);
     }

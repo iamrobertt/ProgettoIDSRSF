@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public abstract class TastingEventCheckStrategy implements CheckStrategy <Event>{
+public abstract class CreateTastingEventCheckStrategy implements CheckStrategy <Event>{
 
     @Autowired
     private EventUtility eventUtility;

@@ -20,8 +20,10 @@ public class EventManager {
 
     @Autowired
     private CreateEventCheckStrategy createEventCheckStrategy;
+
     @Autowired
     private BookEventStrategyCheck bookEventStrategyCheck;
+
     @Autowired
     private EventLoaderFactory eventLoaderFactory;
 

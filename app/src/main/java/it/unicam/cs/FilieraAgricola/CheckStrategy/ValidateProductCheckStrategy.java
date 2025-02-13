@@ -25,7 +25,7 @@ public class ValidateProductCheckStrategy implements CustomCheckStrategy<Product
             throw new IllegalArgumentException("Error retrieving product information.");
 
 
-        if(this.productUtility.checkExistProduct(product))
+        if(!this.productUtility.checkExistProduct(product))
             throw new IllegalArgumentException("Product does not exist.");
 
         if(product instanceof SingleProduct)

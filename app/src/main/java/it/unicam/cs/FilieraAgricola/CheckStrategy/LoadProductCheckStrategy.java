@@ -59,6 +59,8 @@ public class LoadProductCheckStrategy implements CheckStrategy<Product> {
 
             if(!this.productUtility.checkProductAvailability(realProduct, neededQuantity))
                 throw new IllegalArgumentException("Product with id" + realProduct.getProductID() + " does not have enough stock for the bundle.");
+            if(!realProduct.getProductState().equals(ProductState.PRODUCT_VALIDATED))
+                throw new IllegalArgumentException("Product  with id" + realProduct.getProductID() + " is not validated.");
 
         }
 
