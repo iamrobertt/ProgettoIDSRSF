@@ -3,7 +3,7 @@ package it.unicam.cs.FilieraAgricola.User;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum UserRoleRequestValidationState {
+public enum UserValidationState {
 
     ACCEPTED("ACCEPTED"),
 
@@ -11,7 +11,7 @@ public enum UserRoleRequestValidationState {
 
     private final String value;
 
-    UserRoleRequestValidationState(String value) {
+    UserValidationState(String value) {
         this.value = value;
     }
 
@@ -21,8 +21,8 @@ public enum UserRoleRequestValidationState {
     }
 
     @JsonCreator
-    public static UserRoleRequestValidationState fromValue(String value) {
-        for (UserRoleRequestValidationState state : UserRoleRequestValidationState.values())
+    public static UserValidationState fromValue(String value) {
+        for (UserValidationState state : UserValidationState.values())
             if (state.getValue().equals(value))
                 return state;
 

@@ -2,7 +2,7 @@ package it.unicam.cs.FilieraAgricola.Manager;
 
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.AuthenticateUserCheckStrategy;
-import it.unicam.cs.FilieraAgricola.CheckStrategy.ManageRequestRoleCheckStrategy;
+import it.unicam.cs.FilieraAgricola.CheckStrategy.ManageUserValidationCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RegisterUserCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.RoleRequestCheckStrategy;
 import it.unicam.cs.FilieraAgricola.Command.*;
@@ -10,7 +10,7 @@ import it.unicam.cs.FilieraAgricola.JWT.JWTService;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
-import it.unicam.cs.FilieraAgricola.User.UserRoleRequestValidationState;
+import it.unicam.cs.FilieraAgricola.User.UserValidationState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class UserManager {
     private RoleRequestCheckStrategy roleRequestCheckStrategy;
 
     @Autowired
-    private ManageRequestRoleCheckStrategy manageRequestRoleCheckStrategy;
+    private ManageUserValidationCheckStrategy manageUserValidationCheckStrategy;
 
     @Autowired
     private JWTService jwtService;
@@ -75,16 +75,16 @@ public class UserManager {
         invoker.invoke();
     }
 
-    public void manageRequestRole(User user, UserRoleRequestValidationState userRoleRequestValidationState) {
+    public void manageUserValidation(User user, UserValidationState userValidationState) {
 
-        if(!this.manageRequestRoleCheckStrategy.validate(user, userRoleRequestValidationState))
+        if(!this.manageUserValidationCheckStrategy.validate(user, userValidationState))
             throw new IllegalArgumentException("User not found or new role not available");
 
-        Command<UserRoleRequestValidationState> manageRoleRequestCommand = new ManageRoleRequestCommand(user, userRoleRequestValidationState, this.userRepository);
+        Command<UserValidationState> manageUserValidationCommand = new ManageUserValidationCommand(user, userValidationState, this.userRepository);
 
         CommandInvoker invoker = new CommandInvoker();
 
-        invoker.setCommand(manageRoleRequestCommand);
+        invoker.setCommand(manageUserValidationCommand);
         invoker.invoke();
     }
 
