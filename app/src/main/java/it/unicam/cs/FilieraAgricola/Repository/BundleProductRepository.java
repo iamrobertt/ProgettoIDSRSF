@@ -13,6 +13,6 @@ public interface BundleProductRepository extends JpaRepository<BundleProduct, Lo
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO bundle (bundleid, productid) VALUES (:bundleId, :productId)", nativeQuery = true)
+    @Query(value = "INSERT INTO bundle (bundle_id, product_id) VALUES (:bundleId, :productId)", nativeQuery = true)
     void insertBundleRelation(long bundleId, long productId);
 }

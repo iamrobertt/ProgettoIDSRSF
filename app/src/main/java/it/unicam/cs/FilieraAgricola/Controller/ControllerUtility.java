@@ -32,44 +32,54 @@ public class ControllerUtility {
         ProductState productState = ProductState.fromValue(productDTO.getProductState());
         ProductType productType = ProductType.fromValue(productDTO.getProductType());
 
-        if (Objects.requireNonNull(productType).getValue().equals("BUNDLE")) {
 
-            List<Product> products = productDTO.getBundleProducts()
-                    .stream()
-                    .map(productWithQuantityDTO -> {
-                        Product product = this.productRepository.findById(productWithQuantityDTO.getProductID())
-                                .orElse(null);
-
-                        if(product != null)
-                            product.getWarehouseProduct().setProductQuantity(productWithQuantityDTO.getProductQuantity());
-
-                        return product;
-                    }).toList();
-
-            return new BundleProduct(
+        if (Objects.requireNonNull(productType).getValue().equals("SINGLE"))
+            return new SingleProduct(
                     productDTO.getProductID(),
                     productDTO.getProductName(),
                     productDTO.getProductDescription(),
                     productDTO.getProductPrice(),
                     productDTO.getProductQuantity(),
                     productState,
-                    productType,
-                    products
+                    productType
             );
-        }
 
-        if(productDTO.getBundleProducts() != null)
-            throw new IllegalStateException("Bundle product defined as SINGLE");
-        // Altrimenti è un SingleProduct
-        return new SingleProduct(
+
+
+        //is a bundle product
+
+        BundleProduct bundleProduct = new BundleProduct(
                 productDTO.getProductID(),
                 productDTO.getProductName(),
                 productDTO.getProductDescription(),
                 productDTO.getProductPrice(),
                 productDTO.getProductQuantity(),
                 productState,
-                productType
+                productType,
+                null
         );
+
+        List<BundleItem> bundleItems = productDTO.getBundleProducts()
+                .stream()
+                .map(productWithQuantityDTO -> {
+                    Product product = this.productRepository.findById(productWithQuantityDTO.getProductID())
+                            .orElse(null);
+
+                    if (product == null)
+                        return null;
+
+                    BundleItem bundleItem = new BundleItem();
+                    bundleItem.setParentBundle(bundleProduct);
+                    bundleItem.setProduct(product);
+                    bundleItem.setProductQuantity(productWithQuantityDTO.getProductQuantity());
+
+                    return bundleItem;
+
+                })
+                .toList();
+
+        bundleProduct.setBundleItems(bundleItems);
+        return bundleProduct;
     }
 
     public Event convertToEvent(EventDTO eventDTO){
@@ -84,42 +94,55 @@ public class ControllerUtility {
         if(participants.isEmpty() || eventType == null)
             return null;
 
-        //tasting event
-        if(eventDTO.getEventType().equals("TASTING") &&
-                eventDTO.getProductList() != null &&
-                !eventDTO.getProductList().isEmpty()
-        ){
 
-            List<EventProduct> products = eventDTO.getProductList()
-                    .stream()
-                    .map(this::convertToProduct)
-                    .toList();
-
-
-            return new TastingEvent(
+        if(eventDTO.getEventType().equals("SINGLE"))
+            return new SimpleEvent(
                     eventDTO.getEventID(),
                     eventDTO.getEventName(),
                     eventDTO.getEventDescription(),
                     eventDTO.getEventMaxParticipants(),
                     eventDTO.getEventCurrentParticipants(),
                     eventType,
-                    participants,
-                    products
+                    participants
             );
 
-        }
 
-        //simple event
-        return new SimpleEvent(
+
+        //tasting event
+
+        TastingEvent tastingEvent = new TastingEvent(
                 eventDTO.getEventID(),
                 eventDTO.getEventName(),
                 eventDTO.getEventDescription(),
                 eventDTO.getEventMaxParticipants(),
                 eventDTO.getEventCurrentParticipants(),
                 eventType,
-                participants
+                participants,
+                null
         );
+
+
+        List<EventProduct> products = eventDTO.getProductList()
+                .stream()
+                .map(eventProductDTO -> {
+                    Product product = this.productRepository.findById(eventProductDTO.getProductID())
+                            .orElse(null);
+
+                    if (product == null)
+                        return null;
+
+                    EventProduct eventProduct = new EventProduct();
+                    eventProduct.setProduct(product);
+                    eventProduct.setParentEvent(tastingEvent);
+                    return eventProduct;
+
+                })
+                .toList();
+
+        tastingEvent.setProductList(products);
+        return tastingEvent;
     }
+
 
     public Pair<Product, Integer> convertToProduct(ProductWithQuantityDTO productWithQuantityDTO) {
 
@@ -131,20 +154,6 @@ public class ControllerUtility {
 
         return null;
     }
-
-    public EventProduct convertToProduct(EventProductDTO eventProductDTO) {
-
-        Optional<Product> product = this.productRepository.findById(eventProductDTO.getProductID());
-        EventProduct eventProduct = new EventProduct();
-
-        if(product.isPresent()){
-            eventProduct.setProduct(product.get());
-            return eventProduct;
-        }
-
-        return null;
-    }
-
 
 
     public User convertToUser(UserDTO userDTO){
@@ -174,7 +183,6 @@ public class ControllerUtility {
             eventParticipant.setParticipant(participant.get());
             return eventParticipant;
         }
-
 
         return null;
     }

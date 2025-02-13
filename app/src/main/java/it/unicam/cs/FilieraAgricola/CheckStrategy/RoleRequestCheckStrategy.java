@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class RoleRequestCheckStrategy  implements CheckStrategy<UserRole>{
 
     @Autowired
-    UserUtility userUtility;
+    private UserUtility userUtility;
 
     @Override
     public boolean validate(User user, UserRole userRole) {

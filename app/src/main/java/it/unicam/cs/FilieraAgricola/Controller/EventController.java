@@ -5,7 +5,6 @@ import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
 import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.Manager.EventManager;
 import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.SingleProduct;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
@@ -33,6 +32,7 @@ public class EventController {
 
     @Autowired
     private EventRepository eventRepository;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -53,51 +53,26 @@ public class EventController {
         return "proviamo";
     }
 
+
     @Transactional
     @PostMapping("/addProductToTastingEvent")
     public String addProductToTastingEvent(@RequestParam Long eventId,
                                            @RequestParam Long productId) {
 
-        Optional<Event> event = this.eventRepository.findById(3L);
+        Optional<Event> event = this.eventRepository.findById(eventId);
         Optional<Product> productEvent = this.productRepository.findById(productId);
 
         TastingEvent tastingEvent = (TastingEvent) event.get();
         Product product = productEvent.get();
 
-        //tastingEvent.getProductList().add(product);
+
+
+        EventProduct eventProduct = new EventProduct(tastingEvent, product);
+        tastingEvent.getProductList().add(eventProduct);
+
         this.eventRepository.save(tastingEvent);
 
-
         return "Prodotto aggiunto con successo all'evento di degustazione!";
-    }
-
-
-    /*@Transactional
-    @PostMapping("/insertTastingEvent")
-    public String insertTastingEvent(@RequestBody EventDTO eventDTO) {
-        if (!EventType.TASTING.equals(EventType.valueOf(eventDTO.getEventType()))) {
-            return "Errore: il tipo di evento non è una degustazione!";
-        }
-
-        TastingEvent tastingEvent = (TastingEvent) this.controllerUtility.convertToEvent(eventDTO);
-        Optional<User> user = this.userRepository.findById(3l);
-        if (user.isPresent()) {
-            tastingEvent.setEventCreator(user.get());
-            eventManager.createEventRequest(user.get(), tastingEvent);
-            return "TastingEvent creato con successo!";
-        } else {
-            return "Errore: utente non trovato!";
-        }
-    }*/
-
-    @GetMapping("/findEvent/{eventID}")
-    public long findEvent (@PathVariable("eventID") long eventID){
-        Optional<Event> event1 = null; // this.eventRepository.findById(eventID);
-
-        if(event1.isPresent())
-            return event1.get().getEventID();
-        else
-            return -1;
     }
 
 
@@ -112,7 +87,6 @@ public class EventController {
         Optional<User> user = this.userRepository.findById(3L);
 
         this.eventManager.bookEventRequest(user.get(), event.get());
-
         return 0;
     }
 
