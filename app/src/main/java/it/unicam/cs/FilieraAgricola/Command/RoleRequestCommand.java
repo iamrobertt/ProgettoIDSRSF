@@ -30,5 +30,6 @@ public class RoleRequestCommand extends Command <UserRole>{
 
     @Override
     public void execute() {
+        this.userRepository.updateUserRole(this.item,user.getUserID());
     }
 }

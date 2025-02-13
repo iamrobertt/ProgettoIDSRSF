@@ -62,12 +62,12 @@ public class UserManager {
         if(!this.roleRequestCheckStrategy.validate(user, newRole))
             throw new IllegalArgumentException("User not found or new role not available");
 
-//        Command<User> roleRequestCommand = new RoleRequestCommand(user, newRole, this.userRepository);
-//
-//        CommandInvoker invoker = new CommandInvoker();
-//
-//        invoker.setCommand(roleRequestCommand);
-//        invoker.invoke();
+        Command<UserRole> roleRequestCommand = new RoleRequestCommand(user, newRole, this.userRepository);
+
+        CommandInvoker invoker = new CommandInvoker();
+
+        invoker.setCommand(roleRequestCommand);
+        invoker.invoke();
     }
 
 

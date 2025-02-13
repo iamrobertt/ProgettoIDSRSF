@@ -9,6 +9,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class UserUtility {
@@ -24,10 +26,13 @@ public class UserUtility {
     }
 
     public boolean checkUserInfo(User user) {
-        return false;
+
+        return user != null && user.getUserID() != 0;
     }
 
     public boolean checkExistUser(User user) {
+        Optional<User> userToSearch = this.userRepository.findById(user.getUserID());
+        return userToSearch.isPresent();
 
         return false;
     }
@@ -41,7 +46,13 @@ public class UserUtility {
 
     }
 
-    public static boolean checkExistRole(UserRole role) { return false;}
+    public boolean checkExistRole(UserRole role) {
+        for (UserRole existingRole : UserRole.values()) {
+            if (existingRole == role)
+                return true;
+        }
+        return false;
+    }
 
 
 }

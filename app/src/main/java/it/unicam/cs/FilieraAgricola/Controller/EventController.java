@@ -65,8 +65,11 @@ public class EventController {
         TastingEvent tastingEvent = (TastingEvent) event.get();
         Product product = productEvent.get();
 
+
+
         EventProduct eventProduct = new EventProduct(tastingEvent, product);
         tastingEvent.getProductList().add(eventProduct);
+
         this.eventRepository.save(tastingEvent);
 
         return "Prodotto aggiunto con successo all'evento di degustazione!";
