@@ -23,11 +23,11 @@ public class UserUtility {
         return this.userRepository.findByUserEmail(email);
     }
 
-    public  boolean checkUserInfo(User user) {
+    public boolean checkUserInfo(User user) {
         return false;
     }
 
-    public static boolean checkExistUser(User user) {
+    public boolean checkExistUser(User user) {
 
         return false;
     }
@@ -42,8 +42,6 @@ public class UserUtility {
     }
 
     public static boolean checkExistRole(UserRole role) { return false;}
-
-
 
 
 }

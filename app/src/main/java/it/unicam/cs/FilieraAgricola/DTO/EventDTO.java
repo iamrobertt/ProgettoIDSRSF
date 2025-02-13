@@ -6,7 +6,6 @@ import java.util.List;
 
 @Data
 public class EventDTO {
-
     private long eventID;
     private String eventName;
     private String eventDescription;

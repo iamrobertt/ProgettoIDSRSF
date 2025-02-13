@@ -11,12 +11,12 @@ import java.util.List;
 public class GuestUtility {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     public  boolean checkExistParticipants (User user,Event event) {
         if(user == null || event == null)
             return false;
 
-        return true;
+        return this.userRepository.findById(user.getUserID()).isPresent();
     }
 }
