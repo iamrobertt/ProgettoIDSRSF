@@ -2,12 +2,10 @@ package it.unicam.cs.FilieraAgricola.User;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import it.unicam.cs.FilieraAgricola.Product.ProductState;
 
 public enum UserState {
     WAITING_FOR_VALIDATION("WAITING_FOR_VALIDATION"),
-    AUTHENTICATED("AUTHENTICATED"),
-    NON_AUTHENTICATED("NON_AUTHENTICATED");
+    VALIDATED("VALIDATED");
 
     private final String value;
 
