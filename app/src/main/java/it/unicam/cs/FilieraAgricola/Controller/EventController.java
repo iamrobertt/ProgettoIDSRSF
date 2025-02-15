@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -44,14 +45,13 @@ public class EventController {
 
         try {
             Event event = this.controllerUtility.convertToEvent(eventDTO);
-            if (event == null) {
-                throw new IllegalArgumentException("Errore nella conversione dell'evento.");
-            }
 
-            Optional<User> user = this.userRepository.findById(3L);
-            event.setEventCreator(user.get());
+            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = this.userRepository.findByUserEmail(userEmail);
 
-            this.eventManager.createEventRequest(user.get(), event);
+            event.setEventCreator(user);
+
+            this.eventManager.createEventRequest(user, event);
 
         }catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -93,14 +93,12 @@ public class EventController {
     public ResponseEntity<String> bookEvent(@RequestParam long eventID) {
 
         try {
-            Optional<Event> event = this.eventRepository.findById(eventID);
+            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = this.userRepository.findByUserEmail(userEmail);
 
-            if (!event.isPresent())
-                throw new IllegalArgumentException("Event with id" + eventID + " not found.");
+            Event event = this.eventRepository.findById(eventID).orElse(null);
 
-            Optional<User> user = this.userRepository.findById(3L);
-
-            this.eventManager.bookEventRequest(user.get(), event.get());
+            this.eventManager.bookEventRequest(user, event);
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

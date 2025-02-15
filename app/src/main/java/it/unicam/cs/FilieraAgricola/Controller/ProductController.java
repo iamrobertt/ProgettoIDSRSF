@@ -18,6 +18,7 @@ import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -53,7 +54,8 @@ public class ProductController {
 
         Product product = this.controllerUtility.convertToProduct(productDTO);
 
-        User user = this.userRepository.findById(3L).orElse(null);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
 
         product.setProductUser(user);
 
@@ -71,12 +73,13 @@ public class ProductController {
     @PostMapping("/sellProduct")
     public ResponseEntity<String> sellProduct(@RequestParam long productID) {
 
-        Optional<User> user = this.userRepository.findById(3L);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
 
-        Product product = this.productUtility.getProduct(user.get().getUserID(), productID);
+        Product product = this.productUtility.getProduct(user.getUserID(), productID);
 
         try{
-            this.productManager.sellProductRequest(user.get(), product);
+            this.productManager.sellProductRequest(user, product);
         }catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -89,12 +92,13 @@ public class ProductController {
 
         ProductValidationState productValidationState = ProductValidationState.valueOf(validationState);
 
-        Optional<User> user = this.userRepository.findById(3L);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
 
-        Product product = this.productUtility.getProduct(user.get().getUserID(), productID);
+        Product product = this.productUtility.getProduct(user.getUserID(), productID);
 
         try{
-            this.productManager.validateProductRequest(user.get(), product, productValidationState);
+            this.productManager.validateProductRequest(user, product, productValidationState);
         }catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -115,9 +119,10 @@ public class ProductController {
                 productsToBuy.add(product);
             }
 
-            Optional<User> user = this.userRepository.findById(3L);
+            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = this.userRepository.findByUserEmail(userEmail);
 
-            this.productManager.buyProductRequest(user.get(), productsToBuy);
+            this.productManager.buyProductRequest(user, productsToBuy);
         }
         catch (RuntimeException e) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -131,10 +136,10 @@ public class ProductController {
     public ResponseEntity<String> manageOrderState(@RequestParam long orderID,
                                    @RequestParam String newOrderState) {
 
-
         OrderState orderState = OrderState.valueOf(newOrderState);
 
-        User user = this.userRepository.findById(3L).orElse(null);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
 
         Order order = this.orderRepository.findByOrderIDAndUser(orderID, user.getUserID()).orElse(null);
         try {
