@@ -132,7 +132,7 @@ public class ControllerUtility {
 
                     EventProduct eventProduct = new EventProduct();
                     eventProduct.setProduct(product);
-                    eventProduct.getProduct().getWarehouseProduct().setProductQuantity(productWithQuantityDTO.getProductQuantity());
+                    eventProduct.setProductQuantity(productWithQuantityDTO.getProductQuantity());
                     eventProduct.setParentEvent(tastingEvent);
                     return eventProduct;
 

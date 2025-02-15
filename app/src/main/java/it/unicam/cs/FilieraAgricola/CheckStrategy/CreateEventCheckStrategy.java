@@ -2,8 +2,6 @@ package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
 
 import it.unicam.cs.FilieraAgricola.Event.*;
-import it.unicam.cs.FilieraAgricola.Product.BundleProduct;
-import it.unicam.cs.FilieraAgricola.Product.Product;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,12 +29,8 @@ public class CreateEventCheckStrategy implements CheckStrategy<Event>{
             throw new IllegalArgumentException("Error retrieving user information.");
 
 
-        if(!this.eventUtility.checkEventInfo(event))
+        if(!this.eventUtility.checkEventInfoForLoading(event))
             throw new IllegalArgumentException("Error retrieving event information.");
-
-
-        if(!this.eventUtility.checkExistEvent(event))
-            throw new IllegalArgumentException("Event does not exist.");
 
 
         //check for all the guests in the event

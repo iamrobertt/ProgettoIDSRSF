@@ -20,9 +20,15 @@ public class EventProduct {
     @JoinColumn(name = "event_product_id", referencedColumnName = "product_id", nullable = false)
     private Product product;
 
-    public EventProduct(Event parentEvent, Product product){
+
+    @Column(name = "event_product_quantity")
+    private int productQuantity;
+
+
+    public EventProduct(Event parentEvent, Product product, int productQuantity){
         this.parentEvent = parentEvent;
         this.product = product;
+        this.productQuantity = productQuantity;
     }
 
     public EventProduct(){}

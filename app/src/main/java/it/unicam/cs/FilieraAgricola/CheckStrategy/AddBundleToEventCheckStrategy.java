@@ -19,8 +19,10 @@ public class AddBundleToEventCheckStrategy implements CheckStrategy<Event> {
 
     @Override
     public boolean validate(User user, Event event) {
+
         if(event instanceof SimpleEvent)
             throw new IllegalArgumentException("Event must be a tasting event to add bundles to it");
+
 
         TastingEvent tastingEvent = (TastingEvent) event;
         for(EventProduct eventProduct : tastingEvent.getProductList()){
@@ -36,9 +38,8 @@ public class AddBundleToEventCheckStrategy implements CheckStrategy<Event> {
                 throw new IllegalArgumentException("Product with id " + product.getProductID() + "is not a bundle.");
 
             Product realProduct = this.productUtility.getProduct(product.getProductID());
-            int neededQuantity = product.getWarehouseProduct().getProductQuantity();
 
-            if(!this.productUtility.checkProductAvailability(realProduct, neededQuantity))
+            if(!this.productUtility.checkProductAvailability(realProduct, eventProduct.getProductQuantity()))
                 throw new IllegalArgumentException("Product with id " + product.getProductID() + "is not available.");
 
         }
