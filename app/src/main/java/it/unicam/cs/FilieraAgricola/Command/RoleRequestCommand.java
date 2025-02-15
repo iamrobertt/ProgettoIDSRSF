@@ -1,6 +1,7 @@
 package it.unicam.cs.FilieraAgricola.Command;
 
-import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
+import it.unicam.cs.FilieraAgricola.Repository.RoleRequestRepository;
+import it.unicam.cs.FilieraAgricola.User.RoleRequest;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
@@ -10,12 +11,11 @@ import java.util.List;
 
 public class RoleRequestCommand extends Command <UserRole>{
 
-    private final UserRepository userRepository;
+    private final RoleRequestRepository roleRequestRepository;
 
-
-    public RoleRequestCommand(User user, UserRole userRole, UserRepository userRepository) {
+    public RoleRequestCommand(User user, UserRole userRole, RoleRequestRepository roleRequestRepository) {
         super(user, userRole);
-        this.userRepository = userRepository;
+        this.roleRequestRepository = roleRequestRepository;
     }
 
     @Override
@@ -30,6 +30,7 @@ public class RoleRequestCommand extends Command <UserRole>{
 
     @Override
     public void execute() {
-        this.userRepository.updateUserRole(this.item,user.getUserID());
+        RoleRequest roleRequest = new RoleRequest(user,this.item);
+        this.roleRequestRepository.save(roleRequest);
     }
 }

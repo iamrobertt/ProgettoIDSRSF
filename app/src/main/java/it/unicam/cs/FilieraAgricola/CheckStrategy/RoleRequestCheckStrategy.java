@@ -18,7 +18,8 @@ public class RoleRequestCheckStrategy  implements CheckStrategy<UserRole>{
         return this.userUtility.checkUserInfo(user) &&
                 this.userUtility.checkExistUser(user) &&
                 user.getUserState().equals(UserState.VALIDATED) &&
-                this.userUtility.checkExistRole(userRole) ;
+                this.userUtility.checkExistRole(userRole) &&
+                !this.userUtility.checkExistRoleRequest(user);
     }
 
 }
