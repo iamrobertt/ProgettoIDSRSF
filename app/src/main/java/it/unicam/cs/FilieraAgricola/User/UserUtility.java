@@ -57,4 +57,13 @@ public class UserUtility {
         return requestToSearch.isPresent();
     }
 
+    public boolean checkUserIsValidated(User user) {
+        return user.getUserState().equals(UserState.VALIDATED);
+    }
+
+    public boolean checkIsSameRole(User user, UserRole role) {
+        return user.getUserRole().equals(role);
+    }
+
+
 }

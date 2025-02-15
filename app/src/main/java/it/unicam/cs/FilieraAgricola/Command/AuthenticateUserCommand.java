@@ -12,9 +12,8 @@ import java.util.List;
 
 public class AuthenticateUserCommand  extends Command <User>{
 
-
-
     private final JWTService jwtService;
+    private String jwtToken;
 
     public AuthenticateUserCommand(User user, User userToAuthenticate, JWTService jwtService) {
         super(user, userToAuthenticate);
@@ -34,9 +33,12 @@ public class AuthenticateUserCommand  extends Command <User>{
 
     @Override
     public void execute() {
-        String jwt = jwtService.generateToken(this.item);
-        System.out.println("JWT: " + jwt);
+       // System.out.println("JWT: " + jwt);
+        this.jwtToken = jwtService.generateToken(this.item);
     }
 
+    public String getJwtToken() {
+        return this.jwtToken;
+    }
 
 }
