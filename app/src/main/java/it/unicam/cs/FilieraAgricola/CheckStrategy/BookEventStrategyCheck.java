@@ -19,27 +19,26 @@ public class BookEventStrategyCheck implements CheckStrategy<Event> {
     private UserUtility userUtility;
 
     @Autowired
-    private GuestUtility guestUtility;
-
-    @Autowired
     private AddGuestCheckStrategy addGuestCheckStrategy;
 
     @Override
     public boolean validate(User user, Event event) {
 
         if(!this.userUtility.checkUserInfo(user))
-            return false;
+           throw new IllegalArgumentException("Failed to retrieve user information.");
 
-        if(!this.eventUtility.checkExistEvent(event)){
-            return false;
-        }
 
-        if(this.guestUtility.checkExistParticipants(user, event))
-            return false;
+        if(!this.eventUtility.checkExistEvent(event))
+            throw new IllegalArgumentException("Event does not exist.");
 
-        if(this.eventUtility.isEventFull(event)){
-            return false;
-        }
+
+        if(this.eventUtility.isEventFull(event))
+            throw new IllegalArgumentException("Event is currently full, no booking are available.");
+
+
+        if(!this.addGuestCheckStrategy.validate(user, event))
+            throw new IllegalArgumentException("Failed to book the event.");
+
 
         return true;
     }

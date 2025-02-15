@@ -45,7 +45,6 @@ public class ControllerUtility {
             );
 
 
-
         //is a bundle product
 
         BundleProduct bundleProduct = new BundleProduct(
@@ -124,8 +123,8 @@ public class ControllerUtility {
 
         List<EventProduct> products = eventDTO.getProductList()
                 .stream()
-                .map(eventProductDTO -> {
-                    Product product = this.productRepository.findById(eventProductDTO.getProductID())
+                .map(productWithQuantityDTO -> {
+                    Product product = this.productRepository.findById(productWithQuantityDTO.getProductID())
                             .orElse(null);
 
                     if (product == null)
@@ -133,6 +132,7 @@ public class ControllerUtility {
 
                     EventProduct eventProduct = new EventProduct();
                     eventProduct.setProduct(product);
+                    eventProduct.getProduct().getWarehouseProduct().setProductQuantity(productWithQuantityDTO.getProductQuantity());
                     eventProduct.setParentEvent(tastingEvent);
                     return eventProduct;
 

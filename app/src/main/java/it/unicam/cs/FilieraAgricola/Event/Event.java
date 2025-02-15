@@ -11,6 +11,8 @@ import java.util.List;
 @Table(name = "event")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "event_type", discriminatorType = DiscriminatorType.STRING)
+//TODO EVENTI
+//TODO AGGIORNARE QUANTITA BUNDLE AGGIUNTI AD UN EVENTO + controllo disponibilità
 public abstract class Event {
 
     @Id
@@ -59,7 +61,6 @@ public abstract class Event {
         this.participants = participants;
     }
 
-    public Event() {
-    }
+    public Event() {}
 
 }

@@ -19,13 +19,13 @@ public class AddGuestCheckStrategy implements CheckStrategy<Event>{
 
     public boolean validate(User guest, Event event) {
 
-        if(!this.userUtility.checkUserInfo(guest)){
-            return false;
-        }
+        if(!this.userUtility.checkUserInfo(guest))
+            throw new IllegalArgumentException("Failed to retrieve guest information");
 
-        if(this.guestUtility.checkExistParticipants(guest,event)){
-            return false;
-        }
+
+        if(this.guestUtility.checkExistParticipants(guest,event))
+            throw new IllegalArgumentException("Already signed to the event.");
+
         return true;
 
     }
