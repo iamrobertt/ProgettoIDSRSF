@@ -47,6 +47,7 @@ public class ProductController {
     @Autowired
     private OrderRepository orderRepository;
 
+
     @PostMapping("/insertProduct")
     public ResponseEntity<String> insertProduct(@RequestBody ProductDTO productDTO) {
 
@@ -93,7 +94,6 @@ public class ProductController {
         Product product = this.productUtility.getProduct(user.get().getUserID(), productID);
 
         try{
-            //todo rivedi se funziona
             this.productManager.validateProductRequest(user.get(), product, productValidationState);
         }catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
