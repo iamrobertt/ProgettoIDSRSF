@@ -57,7 +57,7 @@ public class EventController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
-        return ResponseEntity.ok().body("Product created successfully.");
+        return ResponseEntity.ok().body("Event created successfully.");
     }
 
 
@@ -92,19 +92,20 @@ public class EventController {
     @PostMapping("/bookEvent")
     public ResponseEntity<String> bookEvent(@RequestParam long eventID) {
 
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
+
+        Event event = this.eventRepository.findById(eventID).orElse(null);
+
         try {
-            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = this.userRepository.findByUserEmail(userEmail);
-
-            Event event = this.eventRepository.findById(eventID).orElse(null);
-
             this.eventManager.bookEventRequest(user, event);
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
-        return ResponseEntity.ok().body("Product added to event " + eventID + "successfully.");
+        return ResponseEntity.ok().body("Booked to event " + event.getEventName() + "successfully.");
     }
 
 
