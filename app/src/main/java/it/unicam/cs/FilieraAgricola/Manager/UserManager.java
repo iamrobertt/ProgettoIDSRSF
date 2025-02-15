@@ -1,12 +1,10 @@
 package it.unicam.cs.FilieraAgricola.Manager;
 
 
-import it.unicam.cs.FilieraAgricola.CheckStrategy.AuthenticateUserCheckStrategy;
-import it.unicam.cs.FilieraAgricola.CheckStrategy.ManageUserValidationCheckStrategy;
-import it.unicam.cs.FilieraAgricola.CheckStrategy.RegisterUserCheckStrategy;
-import it.unicam.cs.FilieraAgricola.CheckStrategy.RoleRequestCheckStrategy;
+import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
 import it.unicam.cs.FilieraAgricola.Command.*;
 import it.unicam.cs.FilieraAgricola.JWT.JWTService;
+import it.unicam.cs.FilieraAgricola.Repository.RoleRequestRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
@@ -24,14 +22,16 @@ public class UserManager {
     private RegisterUserCheckStrategy registerUserCheckStrategy;
     @Autowired
     private RoleRequestCheckStrategy roleRequestCheckStrategy;
-
     @Autowired
     private ManageUserValidationCheckStrategy manageUserValidationCheckStrategy;
-
+    @Autowired
+    private ManageUserRequestRoleCheckStrategy manageUserRequestRoleCheckStrategy;
     @Autowired
     private JWTService jwtService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRequestRepository roleRequestRepository;
 
     public void authenticateUserRequest(User user, String userPassword) {
 
@@ -67,7 +67,7 @@ public class UserManager {
         if(!this.roleRequestCheckStrategy.validate(user, newRole))
             throw new IllegalArgumentException("User not found or new role not available");
 
-        Command<UserRole> roleRequestCommand = new RoleRequestCommand(user, newRole, this.userRepository);
+        Command<UserRole> roleRequestCommand = new RoleRequestCommand(user, newRole, this.roleRequestRepository);
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -78,13 +78,26 @@ public class UserManager {
     public void manageUserValidation(User user, UserValidationState userValidationState) {
 
         if(!this.manageUserValidationCheckStrategy.validate(user, userValidationState))
-            throw new IllegalArgumentException("User not found or new role not available");
+            throw new IllegalArgumentException("User not found or validation state not available");
 
         Command<UserValidationState> manageUserValidationCommand = new ManageUserValidationCommand(user, userValidationState, this.userRepository);
 
         CommandInvoker invoker = new CommandInvoker();
 
         invoker.setCommand(manageUserValidationCommand);
+        invoker.invoke();
+    }
+
+    public void manageRequestRole(User user, UserValidationState userValidationState) {
+
+        if(!this.manageUserRequestRoleCheckStrategy.validate(user, userValidationState))
+            throw new IllegalArgumentException("Request not found or validation state not available");
+
+        Command<UserValidationState> manageRequestRoleCommand = new ManageRequestRoleCommand(user, userValidationState, this.userRepository, this.roleRequestRepository);
+
+        CommandInvoker invoker = new CommandInvoker();
+
+        invoker.setCommand(manageRequestRoleCommand);
         invoker.invoke();
     }
 

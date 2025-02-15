@@ -67,5 +67,17 @@ public class UserController {
         this.userManager.manageUserValidation(user, userValidationState);
     }
 
+    @PostMapping("/manageRequestRole")
+    public void manageRequestRole(@RequestParam long userID, @RequestParam String validationState) {
+
+
+        UserValidationState userValidationState = UserValidationState.valueOf(validationState);
+
+        User user = this.userRepository.findById(userID)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        this.userManager.manageRequestRole(user, userValidationState);
+    }
+
 
 }
