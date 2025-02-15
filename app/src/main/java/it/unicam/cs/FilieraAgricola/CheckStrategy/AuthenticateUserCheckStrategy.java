@@ -1,7 +1,6 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
 import it.unicam.cs.FilieraAgricola.User.User;
-import it.unicam.cs.FilieraAgricola.User.UserState;
 import it.unicam.cs.FilieraAgricola.User.UserUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +13,9 @@ public class AuthenticateUserCheckStrategy implements CheckStrategy<String> {
 
     @Override
     public boolean validate(User user, String userPassword) {
-        return user.getUserState().equals(UserState.VALIDATED) && this.userUtility.verifyUser(user, userPassword);
+        return this.userUtility.checkUserInfo(user) &&
+                this.userUtility.checkExistUser(user) &&
+                this.userUtility.checkUserIsValidated(user) &&
+                this.userUtility.verifyUser(user, userPassword);
     }
 }

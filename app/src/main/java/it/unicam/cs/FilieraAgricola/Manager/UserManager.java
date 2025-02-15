@@ -33,7 +33,7 @@ public class UserManager {
     @Autowired
     private RoleRequestRepository roleRequestRepository;
 
-    public void authenticateUserRequest(User user, String userPassword) {
+    public String authenticateUserRequest(User user, String userPassword) {
 
         if (!this.authenticateUserCheckStrategy.validate(user,userPassword))
             throw new UsernameNotFoundException("User not found or already authenticated");
@@ -44,6 +44,8 @@ public class UserManager {
 
         invoker.setCommand(authenticateUserCommand);
         invoker.invoke();
+        AuthenticateUserCommand authenticateUserCommandCast = (AuthenticateUserCommand) authenticateUserCommand;
+        return authenticateUserCommandCast.getJwtToken();
     }
 
 

@@ -13,7 +13,7 @@ public class ManageUserRequestRoleCheckStrategy implements CheckStrategy<UserVal
     public boolean validate(User user, UserValidationState userValidationState ) {
         return this.userUtility.checkUserInfo(user) &&
                 this.userUtility.checkExistUser(user) &&
-                user.getUserState().equals(UserState.VALIDATED) &&
+                this.userUtility.checkUserIsValidated(user) &&
                 this.userUtility.checkExistRoleRequest(user) &&
                 (userValidationState.equals(UserValidationState.ACCEPTED) ||
                         userValidationState.equals(UserValidationState.DENIED));

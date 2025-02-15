@@ -10,6 +10,8 @@ import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserValidationState;
 import it.unicam.cs.FilieraAgricola.User.UserUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,53 +33,80 @@ public class UserController {
 
 
     @PostMapping("/insertUser")
-    public void insertUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<String> insertUser(@RequestBody UserDTO userDTO) {
 
         ControllerUtility controllerUtility = new ControllerUtility();
         User user = controllerUtility.convertToUser(userDTO);
 
-        this.userManager.registerUserRequest(user, user);
+        try {
+            this.userManager.registerUserRequest(user, user);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body("User registered successfully.");
     }
 
     @PostMapping("/authenticate")
-    public void authenticate(@RequestParam String email, @RequestParam String password) {
+    public String authenticate(@RequestParam String email, @RequestParam String password) {
         User user = this.userUtility.getUser(email);
         if (user == null)
             throw new IllegalArgumentException("User Not Found");
-        this.userManager.authenticateUserRequest(user, password);
+        return this.userManager.authenticateUserRequest(user, password);
     }
 
     @PostMapping("/requestRole")
-    public void requestNewRole(@RequestParam String role) {
+    public ResponseEntity<String> requestNewRole(@RequestParam String role) {
 
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         UserRole newUserRole = UserRole.valueOf(role);
         User user = this.userUtility.getUser(userEmail);
-        this.userManager.newRoleRequest(user, newUserRole);
+
+        try {
+            this.userManager.newRoleRequest(user, newUserRole);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body("New Role Request created succesfully.");
     }
 
     @PostMapping("/manageUserValidation")
-    public void manageUserValidation(@RequestParam long userID, @RequestParam String validationState) {
+    public ResponseEntity<String> manageUserValidation(@RequestParam long userID, @RequestParam String validationState) {
 
         UserValidationState userValidationState = UserValidationState.valueOf(validationState);
 
         User user = this.userRepository.findById(userID)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        this.userManager.manageUserValidation(user, userValidationState);
+        try {
+            this.userManager.manageUserValidation(user, userValidationState);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body("User validation status updated successfully.");
     }
 
     @PostMapping("/manageRequestRole")
-    public void manageRequestRole(@RequestParam long userID, @RequestParam String validationState) {
-
+    public ResponseEntity<String> manageRequestRole(@RequestParam long userID, @RequestParam String validationState) {
 
         UserValidationState userValidationState = UserValidationState.valueOf(validationState);
 
         User user = this.userRepository.findById(userID)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        this.userManager.manageRequestRole(user, userValidationState);
-    }
+        try {
+            this.userManager.manageRequestRole(user, userValidationState);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
 
+        return ResponseEntity.ok().body("User role updated successfully.");
+    }
 
 }

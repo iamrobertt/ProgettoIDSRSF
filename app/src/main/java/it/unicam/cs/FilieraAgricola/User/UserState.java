@@ -25,6 +25,6 @@ public enum UserState {
                 return state;
             }
         }
-        throw new IllegalArgumentException("Valore non valido per UserState: " + value);
+        throw new IllegalArgumentException("UserState not valid: " + value);
     }
 }
