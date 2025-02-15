@@ -10,9 +10,11 @@ import lombok.Data;
 public class RoleRequest {
 
     @Id
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "user_id")
+    @Column(name = "user_id")
+    private long userID;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
     private User user;
 
     @Enumerated(EnumType.STRING)
@@ -24,6 +26,7 @@ public class RoleRequest {
     public RoleRequest(User user, UserRole userRole) {
         this.user = user;
         this.userRole = userRole;
+        this.userID = user.getUserID();
     }
 
 }

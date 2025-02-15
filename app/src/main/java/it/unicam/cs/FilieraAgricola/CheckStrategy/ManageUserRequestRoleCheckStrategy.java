@@ -5,15 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ManageUserRequestRoleCheckStrategy implements CustomCheckStrategy<UserValidationState, UserRole> {
+public class ManageUserRequestRoleCheckStrategy implements CheckStrategy<UserValidationState> {
     @Autowired
     UserUtility userUtility;
 
     @Override
-    public boolean validate(User user, UserValidationState userValidationState, UserRole userRole) {
+    public boolean validate(User user, UserValidationState userValidationState ) {
         return this.userUtility.checkUserInfo(user) &&
                 this.userUtility.checkExistUser(user) &&
-                this.userUtility.checkExistRole(userRole) &&
+                user.getUserState().equals(UserState.VALIDATED) &&
+                this.userUtility.checkExistRoleRequest(user) &&
                 (userValidationState.equals(UserValidationState.ACCEPTED) ||
                         userValidationState.equals(UserValidationState.DENIED));
     }

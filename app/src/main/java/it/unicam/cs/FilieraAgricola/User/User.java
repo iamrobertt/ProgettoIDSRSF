@@ -38,9 +38,6 @@ public class User {
     @Column(name = "user_state")
     private UserState userState;
 
-    //@OneToMany(mappedBy = "user")
-    //private List<Product> products;
-
 
     public User (){}
 

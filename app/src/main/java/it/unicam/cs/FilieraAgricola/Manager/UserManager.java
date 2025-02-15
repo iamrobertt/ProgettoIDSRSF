@@ -65,7 +65,7 @@ public class UserManager {
     public void newRoleRequest(User user, UserRole newRole) {
 
         if(!this.roleRequestCheckStrategy.validate(user, newRole))
-            throw new IllegalArgumentException("Request not found or new role not available");
+            throw new IllegalArgumentException("User not found or new role not available");
 
         Command<UserRole> roleRequestCommand = new RoleRequestCommand(user, newRole, this.roleRequestRepository);
 
@@ -78,7 +78,7 @@ public class UserManager {
     public void manageUserValidation(User user, UserValidationState userValidationState) {
 
         if(!this.manageUserValidationCheckStrategy.validate(user, userValidationState))
-            throw new IllegalArgumentException("User not found or new role not available");
+            throw new IllegalArgumentException("User not found or validation state not available");
 
         Command<UserValidationState> manageUserValidationCommand = new ManageUserValidationCommand(user, userValidationState, this.userRepository);
 
@@ -88,16 +88,16 @@ public class UserManager {
         invoker.invoke();
     }
 
-    public void manageRequestRole(User user, UserValidationState userValidationState, UserRole userRole) {
+    public void manageRequestRole(User user, UserValidationState userValidationState) {
 
-        if(!this.manageUserRequestRoleCheckStrategy.validate(user, userValidationState, userRole))
-            throw new IllegalArgumentException("User not found or new role not available");
+        if(!this.manageUserRequestRoleCheckStrategy.validate(user, userValidationState))
+            throw new IllegalArgumentException("Request not found or validation state not available");
 
-        Command<UserValidationState> manageUserValidationCommand = new ManageUserValidationCommand(user, userValidationState, this.userRepository);
+        Command<UserValidationState> manageRequestRoleCommand = new ManageRequestRoleCommand(user, userValidationState, this.userRepository, this.roleRequestRepository);
 
         CommandInvoker invoker = new CommandInvoker();
 
-        invoker.setCommand(manageUserValidationCommand);
+        invoker.setCommand(manageRequestRoleCommand);
         invoker.invoke();
     }
 
