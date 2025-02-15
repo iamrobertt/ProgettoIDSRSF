@@ -24,12 +24,7 @@ public class TastingEventLoader implements EventLoader{
 
         for(EventProduct eventProduct : tastingEvent.getProductList()){
             Product realProduct = this.productRepository.findById(eventProduct.getProduct().getProductID()).orElse(null);
-
-            int actualQuantity = realProduct.getWarehouseProduct().getProductQuantity();
-            int newQuantity = actualQuantity - eventProduct.getProductQuantity();
-
-            realProduct.getWarehouseProduct().setProductQuantity(newQuantity);
-            this.productRepository.save(realProduct);
+            this.productRepository.subProductQuantity(realProduct.getProductID(), eventProduct.getProductQuantity());
         }
 
         this.eventRepository.save(event);

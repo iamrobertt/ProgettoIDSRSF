@@ -2,19 +2,16 @@ package it.unicam.cs.FilieraAgricola.Controller;
 
 import it.unicam.cs.FilieraAgricola.DTO.ProductWithQuantityDTO;
 import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
+import it.unicam.cs.FilieraAgricola.Exception.InsufficientUserAuthorizationException;
 import it.unicam.cs.FilieraAgricola.Manager.ProductManager;
 import it.unicam.cs.FilieraAgricola.Order.Order;
 import it.unicam.cs.FilieraAgricola.Order.OrderManager;
 import it.unicam.cs.FilieraAgricola.Order.OrderState;
 import it.unicam.cs.FilieraAgricola.Product.*;
 import it.unicam.cs.FilieraAgricola.Repository.OrderRepository;
-import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
-import it.unicam.cs.FilieraAgricola.User.UserRole;
-import it.unicam.cs.FilieraAgricola.User.UserState;
 import org.antlr.v4.runtime.misc.Pair;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -87,6 +83,7 @@ public class ProductController {
         return ResponseEntity.ok().body("Sell request for product" + product.getProductName() + " done successfully.");
     }
 
+
     @PostMapping("/validateProduct")
     public ResponseEntity<String> validateProduct(@RequestParam long productID, @RequestParam String validationState) {
 
@@ -110,21 +107,22 @@ public class ProductController {
     @PostMapping("/buyProduct")
     public ResponseEntity<String> buyProduct(@RequestBody List<ProductWithQuantityDTO> buyProductDTOList) {
 
-        try {
-            List<Pair<Product, Integer>> productsToBuy = new ArrayList<>();
 
-            //pairing every product with the quantity to buy
-            for (ProductWithQuantityDTO buyProductDTO : buyProductDTOList) {
-                Pair<Product, Integer> product = this.controllerUtility.convertToProduct(buyProductDTO);
-                productsToBuy.add(product);
-            }
+        List<Pair<Product, Integer>> productsToBuy = new ArrayList<>();
 
-            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = this.userRepository.findByUserEmail(userEmail);
-
-            this.productManager.buyProductRequest(user, productsToBuy);
+        //pairing every product with the quantity to buy
+        for (ProductWithQuantityDTO buyProductDTO : buyProductDTOList) {
+            Pair<Product, Integer> product = this.controllerUtility.convertToProduct(buyProductDTO);
+            productsToBuy.add(product);
         }
-        catch (RuntimeException e) {
+
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
+
+        try {
+            this.productManager.buyProductRequest(user, productsToBuy);
+        } catch (RuntimeException e) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
@@ -142,6 +140,7 @@ public class ProductController {
         User user = this.userRepository.findByUserEmail(userEmail);
 
         Order order = this.orderRepository.findByOrderIDAndUser(orderID, user.getUserID()).orElse(null);
+
         try {
             this.orderManager.updateOrderState(user, order, orderState);
         }

@@ -25,5 +25,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Modifying
     @Transactional
     @Query("UPDATE WarehouseProduct wp SET wp.productQuantity = wp.productQuantity - :orderItemQuantity WHERE wp.product.productID = :productID")
-    void subProductQuantity(int orderItemQuantity, long productID);
+    void subProductQuantity(long productID, int orderItemQuantity);
 }

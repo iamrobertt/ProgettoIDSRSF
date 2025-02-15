@@ -77,13 +77,13 @@ public class ProductManager {
             if(!this.buyProductCheckStrategy.validate(user, product.a, product.b))
                 throw new IllegalArgumentException("Product  with id: " + product.a.getProductID() + " non valid for buying");
 
-        BuyProductCommand buyProductCommand = new BuyProductCommand(user, productList, this.orderRepository, this.productRepository);
+
+        Command<List<Pair<Product, Integer>>> buyProductCommand = new BuyProductCommand(user, productList, this.orderRepository, this.productRepository);
 
         if (!buyProductCommand.hasCallerNeededAuthorization())
             throw new InsufficientUserAuthorizationException("Insufficient authorization to buy product");
 
         CommandInvoker invoker = new CommandInvoker();
-
         invoker.setCommand(buyProductCommand);
         invoker.invoke();
     }

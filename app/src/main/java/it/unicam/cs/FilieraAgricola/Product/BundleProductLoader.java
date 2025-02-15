@@ -27,15 +27,10 @@ public class BundleProductLoader implements ProductLoader {
             //updating the quantity of the real product linked with its id, not the one inside the bundle which contains
             //quantity per bundle (not the real quantity)
             Product realProduct = this.productRepository.findById(productInBundle.getProductID()).orElse(null);
-            if(realProduct == null)
-                return;
 
-            int actualQuantity = realProduct.getWarehouseProduct().getProductQuantity();
-            int newProductQuantity = actualQuantity - (quantityOfProductInBundle * bundleProduct.getWarehouseProduct().getProductQuantity());
+            int neededQuantity = (quantityOfProductInBundle * bundleProduct.getWarehouseProduct().getProductQuantity());
 
-
-            realProduct.getWarehouseProduct().setProductQuantity(newProductQuantity);
-            this.productRepository.save(realProduct);
+            this.productRepository.subProductQuantity(realProduct.getProductID(), neededQuantity);
 
         }
 
