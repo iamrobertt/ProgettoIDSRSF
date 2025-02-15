@@ -23,13 +23,18 @@ public class EventUtility {
     public  boolean checkEventInfo (Event event) {
         return event != null && event.getEventID() != 0;
     }
-    public  boolean checkExistEvent (Event event) {
-        return event != null ;
-    }
-    public  boolean isEventFull (Event event) {return event!= null ;}
-    protected List<User> CurrentEventParticipants;
 
-    public EventUtility (List<User> CurrentEventParticipants){
-        this.CurrentEventParticipants = CurrentEventParticipants;
+    public boolean checkEventInfoForLoading(Event event) {
+        return event != null;
     }
+
+    public boolean checkExistEvent (Event event) {
+        return this.eventRepository.findById(event.getEventID()).isPresent();
+    }
+
+    public boolean isEventFull (Event event) {
+        return event.getCurrentParticipants() >= event.getEventMaxParticipants();
+    }
+
+
 }

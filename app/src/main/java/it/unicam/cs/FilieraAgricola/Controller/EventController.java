@@ -65,7 +65,8 @@ public class EventController {
     @PostMapping("/addProductToTastingEvent")
     public ResponseEntity<String> addProductToTastingEvent(
                                            @RequestParam Long eventID,
-                                           @RequestParam Long productId) {
+                                           @RequestParam Long productId,
+                                           @RequestParam int productQuantity) {
 
         try{
             Optional<Event> event = this.eventRepository.findById(eventID);
@@ -74,8 +75,8 @@ public class EventController {
             TastingEvent tastingEvent = (TastingEvent) event.get();
             Product product = productEvent.get();
 
-
-            EventProduct eventProduct = new EventProduct(tastingEvent, product);
+            //TODO aggiungi controlli
+            EventProduct eventProduct = new EventProduct(tastingEvent, product, productQuantity);
             tastingEvent.getProductList().add(eventProduct);
 
             this.eventRepository.save(tastingEvent);

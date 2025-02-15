@@ -14,8 +14,9 @@ import java.util.List;
 public  class TastingEvent extends Event{
 
 
-    @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     protected List<EventProduct> productList;
+
 
     public TastingEvent(
             long eventID,

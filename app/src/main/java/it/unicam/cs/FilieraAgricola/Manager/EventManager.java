@@ -31,7 +31,6 @@ public class EventManager {
 
     public void createEventRequest(User user, Event event){
 
-
         if (!this.createEventCheckStrategy.validate(user, event))
             throw new IllegalArgumentException("Event non valid for creation");
 
