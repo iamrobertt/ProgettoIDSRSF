@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 
 
 @SpringBootTest
@@ -29,11 +29,28 @@ public class EventTest {
     @Test
         public void testInsertEventSuccessfull() throws Exception {
 
-        String jsonEventDTO = "{\"name\":\"Evento di prova\", \"date\":\"2025-02-18\"}";
-
-            mockMvc.perform(post("/insertEvent"))
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(jsonEventDTO)
+            mockMvc.perform(post("/api/event/insertEvent"))
+                    .contentType(APPLICATION_JSON)
+                    .content("""
+                            
+                            {
+                            
+                                "eventName" : "uva",
+                                "eventDescription" : "raccolta",
+                                "eventMaxParticipants" : 50,
+                                "eventCurrentParticipants" : 10,
+                                "eventType" : "SIMPLE",
+                                "participants" : [
+                                    {
+                                        "participantID": 1
+                                    },
+                                    {
+                                        "participantID": 3
+                                    }
+                                ]
+                            }
+                            """
+                    )
                     .andExpect(status().isOk())
                     .andExpect((ResultMatcher) content().string("Inserimento avvenuto con successo"));
 
