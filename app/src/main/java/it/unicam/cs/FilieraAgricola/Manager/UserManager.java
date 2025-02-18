@@ -3,6 +3,7 @@ package it.unicam.cs.FilieraAgricola.Manager;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
 import it.unicam.cs.FilieraAgricola.Command.*;
+import it.unicam.cs.FilieraAgricola.Exception.InsufficientUserAuthorizationException;
 import it.unicam.cs.FilieraAgricola.JWT.JWTService;
 import it.unicam.cs.FilieraAgricola.Repository.RoleRequestRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
@@ -36,9 +37,12 @@ public class UserManager {
     public String authenticateUserRequest(User user, String userPassword) {
 
         if (!this.authenticateUserCheckStrategy.validate(user,userPassword))
-            throw new UsernameNotFoundException("User not found or already authenticated");
+            throw new IllegalArgumentException("User not valid");
 
         Command<User> authenticateUserCommand = new AuthenticateUserCommand(user, user, this.jwtService);
+
+        if(!authenticateUserCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to authenticate user");
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -52,7 +56,7 @@ public class UserManager {
     public void registerUserRequest(User user, User userToRegister) {
 
         if(!this.registerUserCheckStrategy.validate(user, userToRegister))
-            throw new IllegalArgumentException("User non valid");
+            throw new IllegalArgumentException("User not valid");
 
         Command<User> registerUserCommand = new RegisterUserCommand(user,userToRegister, this.userRepository);
 
@@ -67,9 +71,12 @@ public class UserManager {
     public void newRoleRequest(User user, UserRole newRole) {
 
         if(!this.roleRequestCheckStrategy.validate(user, newRole))
-            throw new IllegalArgumentException("User not found or new role not available");
+            throw new IllegalArgumentException("Request not valid");
 
         Command<UserRole> roleRequestCommand = new RoleRequestCommand(user, newRole, this.roleRequestRepository);
+
+        if(!roleRequestCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to ask for a new role");
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -77,12 +84,15 @@ public class UserManager {
         invoker.invoke();
     }
 
-    public void manageUserValidation(User user, UserValidationState userValidationState) {
+    public void manageUserValidation(User userValidator ,User userToValidate, UserValidationState userValidationState) {
 
-        if(!this.manageUserValidationCheckStrategy.validate(user, userValidationState))
-            throw new IllegalArgumentException("User not found or validation state not available");
+        if(!this.manageUserValidationCheckStrategy.validate(userToValidate, userValidationState))
+            throw new IllegalArgumentException("Request not valid");
 
-        Command<UserValidationState> manageUserValidationCommand = new ManageUserValidationCommand(user, userValidationState, this.userRepository);
+        Command<UserValidationState> manageUserValidationCommand = new ManageUserValidationCommand(userToValidate, userValidationState, userValidator, this.userRepository);
+
+        if(!manageUserValidationCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to manage user validation");
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -90,12 +100,15 @@ public class UserManager {
         invoker.invoke();
     }
 
-    public void manageRequestRole(User user, UserValidationState userValidationState) {
+    public void manageRequestRole(User userValidator, User userToUpdate, UserValidationState userValidationState) {
 
-        if(!this.manageUserRequestRoleCheckStrategy.validate(user, userValidationState))
-            throw new IllegalArgumentException("Request not found or validation state not available");
+        if(!this.manageUserRequestRoleCheckStrategy.validate(userToUpdate, userValidationState))
+            throw new IllegalArgumentException("Request not valid");
 
-        Command<UserValidationState> manageRequestRoleCommand = new ManageRequestRoleCommand(user, userValidationState, this.userRepository, this.roleRequestRepository);
+        Command<UserValidationState> manageRequestRoleCommand = new ManageRequestRoleCommand(userToUpdate, userValidationState, userValidator, this.userRepository, this.roleRequestRepository);
+
+        if(!manageRequestRoleCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to manage role requests");
 
         CommandInvoker invoker = new CommandInvoker();
 

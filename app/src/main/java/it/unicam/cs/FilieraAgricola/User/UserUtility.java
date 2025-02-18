@@ -1,6 +1,7 @@
 package it.unicam.cs.FilieraAgricola.User;
 
 
+import it.unicam.cs.FilieraAgricola.Product.Product;
 import it.unicam.cs.FilieraAgricola.Repository.RoleRequestRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 
@@ -31,6 +32,10 @@ public class UserUtility {
 
     public boolean checkUserInfo(User user) {
         return user != null && user.getUserID() != 0;
+    }
+
+    public boolean checkUserInfoForLoading(User user) {
+        return user != null;
     }
 
     public boolean checkExistUser(User user) {

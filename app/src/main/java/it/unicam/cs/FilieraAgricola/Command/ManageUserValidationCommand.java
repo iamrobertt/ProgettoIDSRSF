@@ -10,11 +10,12 @@ import java.util.List;
 
 public class ManageUserValidationCommand extends Command<UserValidationState>{
 
-
+    private final User userValidator;
     private final UserRepository userRepository;
 
-    public ManageUserValidationCommand(User user, UserValidationState userValidationState, UserRepository userRepository) {
-        super(user, userValidationState);
+    public ManageUserValidationCommand(User userToValidate, UserValidationState userValidationState, User userValidator, UserRepository userRepository) {
+        super(userToValidate, userValidationState);
+        this.userValidator = userValidator;
         this.userRepository = userRepository;
     }
 
@@ -25,7 +26,7 @@ public class ManageUserValidationCommand extends Command<UserValidationState>{
 
     @Override
     public boolean hasCallerNeededAuthorization() {
-        return getNeededAuthorization().contains(this.user.getUserRole());
+        return getNeededAuthorization().contains(this.userValidator.getUserRole());
     }
 
     @Override
