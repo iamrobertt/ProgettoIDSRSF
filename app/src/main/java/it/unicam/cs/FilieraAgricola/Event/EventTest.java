@@ -1,10 +1,29 @@
 package it.unicam.cs.FilieraAgricola.Event;
+import it.unicam.cs.FilieraAgricola.CheckStrategy.AddGuestCheckStrategy;
+import it.unicam.cs.FilieraAgricola.CheckStrategy.CheckStrategy;
+import it.unicam.cs.FilieraAgricola.CheckStrategy.CreateEventCheckStrategy;
+import it.unicam.cs.FilieraAgricola.User.User;
+import it.unicam.cs.FilieraAgricola.User.UserRole;
+import it.unicam.cs.FilieraAgricola.User.UserState;
+import it.unicam.cs.FilieraAgricola.User.UserUtility;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventTest extends Event {
+public class EventTest extends Event{
+
+        @Autowired
+        private UserUtility userUtility;
+        @Autowired
+        private GuestUtility guestUtility;
+
+        private CreateEventCheckStrategy createEventCheckStrategy;
+        private EventUtility eventUtility;
+        private User user;
+        private AddGuestCheckStrategy addGuestCheckStrategy;
 
         public EventTest(
                 long eventID,
@@ -24,54 +43,74 @@ public class EventTest extends Event {
             this.participants = participants;
         }
 
-        @Test
-        public void testCreateEvent(){
-            EventTest event = new EventTest(1L, "vendemmia", "raccolta",
-                    50, 10, EventType.SIMPLE, new ArrayList<>());
+        List<EventParticipant> participants = new ArrayList<>();
 
-            assertEquals(1L, event.getEventID());
-            assertEquals("vendemmia", event.getEventName());
-            assertEquals(50, event.getEventMaxParticipants());
-            assertEquals(10, event.getCurrentParticipants());
+    /*
+        creo oggetti di eventi:
+
+        -event1: completo e corretto
+        -event2: non corretto -> descrizione vuota
+        -event3: non corretto -> id negativo
+        -event4: non corretto -> incoerenza tra maxParticipnts e currentParticipnts
+     */
+        EventTest event1 = new EventTest(1L, "vendemmia", "raccolta",
+                50, 10, EventType.SIMPLE, participants);
+
+        EventTest event2 = new EventTest(1L, "vendemmia", "",
+                50, 10, EventType.SIMPLE, new ArrayList<>());
+
+        EventTest event3 = new EventTest(-90L, "vendemmia", "raccolta",
+                50, 10, EventType.SIMPLE, new ArrayList<>());
+
+        EventTest event4 = new EventTest(1L, "vendemmia", "raccolta",
+                -90, 10, EventType.SIMPLE, new ArrayList<>());
+
+
+    /*
+        creo due oggetti user:
+        -user 1:è completto e corretto,
+        -user2: non corretto -> campo nome vuoto, compo congnome vuoto
+     */
+
+        User user1 = new User(1L, "Mario", "Rossi", "mario.rossi@email.com","prova",
+               "It56", UserRole.GENERIC_USER, UserState.VALIDATED);
+
+        User user2 = new User(1L, "", "", "mario.rossi@email.com","prova",
+            "It56", UserRole.GENERIC_USER, UserState.VALIDATED);
+
+    /*
+        aggiungo user1 a event1, mi aspetto che il test testAddPartcipants, fallisca
+     */
+
+        EventParticipant participant1 = new EventParticipant(event1, user1);
+
+
+        @Test
+        void testUserNull() {
+            assertThrows(IllegalArgumentException.class, () -> createEventCheckStrategy.validate(null,event1));
+        }
+        @Test
+        void testEventNull() {
+        assertThrows(IllegalArgumentException.class, () -> createEventCheckStrategy.validate(user1,null));
         }
 
         @Test
-        void testMaxParticipantNegativ() {
-            assertThrows(IllegalArgumentException.class, () -> new EventTest(
-                    1L, "vendemmia", "raccolta",
-                    -5, 0, EventType.SIMPLE, new ArrayList<>()
-            ));
+        void testDescriptionEvent(){
+            assertThrows(IllegalArgumentException.class, () -> createEventCheckStrategy.validate(user1,event2));
         }
 
         @Test
-        void testMaxParticipantsSuperated() {
-            assertThrows(IllegalArgumentException.class, () -> new EventTest(
-                    1L, "vendemmia", "raccolta",
-                    50, 60, EventType.SIMPLE, new ArrayList<>()
-            ));
+        void testExistEvent(){
+            assertThrows(IllegalArgumentException.class, () -> createEventCheckStrategy.validate(user1,event3));
         }
 
         @Test
-        void testNameEventNull() {
-            assertThrows(IllegalArgumentException.class, () -> new EventTest(
-                    1L, "", "raccolta",
-                    10, 5, EventType.SIMPLE, new ArrayList<>()
-            ));
+        void testInfoUser(){
+            assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user2,event1));
         }
 
         @Test
-        void testDescriptionEventNull() {
-            assertThrows(IllegalArgumentException.class, () -> new EventTest(
-                    1L, "uva", "",
-                    10, 5, EventType.SIMPLE, new ArrayList<>()
-            ));
+        void testAddParticipant(){
+            assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user1,event1));
         }
-
-        @Test
-        void testAggiuntaPartecipanteQuandoEventoPieno() {
-            EventTest event = new EventTest(1L, "uva", "raccolta", 1, 1, EventType.SIMPLE, new ArrayList<>());
-            assertThrows(IllegalStateException.class, () -> event.participants.add(new EventParticipant()));
-        }
-
-
 }

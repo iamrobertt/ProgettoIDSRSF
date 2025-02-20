@@ -8,6 +8,8 @@ import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+
 @Component
 public class CreateEventCheckStrategy implements CheckStrategy<Event>{
 
@@ -50,4 +52,7 @@ public class CreateEventCheckStrategy implements CheckStrategy<Event>{
 //        }
 
     }
+
+
+
 }
