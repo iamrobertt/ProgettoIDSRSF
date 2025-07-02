@@ -12,7 +12,8 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
+
+
 
 
 @SpringBootTest
@@ -29,8 +30,8 @@ public class EventTest {
     @Test
         public void testInsertEventSuccessfull() throws Exception {
 
-            mockMvc.perform(post("/api/event/insertEvent"))
-                    .contentType(APPLICATION_JSON)
+            mockMvc.perform(post("/api/event/insertEvent")
+                    .contentType(MediaType.APPLICATION_JSON)
                     .content("""
                             
                             {
@@ -49,7 +50,7 @@ public class EventTest {
                                     }
                                 ]
                             }
-                            """
+                            """)
                     )
                     .andExpect(status().isOk())
                     .andExpect((ResultMatcher) content().string("Inserimento avvenuto con successo"));
