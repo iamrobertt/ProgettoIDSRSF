@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "order_item")
-@IdClass(OrderItem.class)
 public class OrderItem {
 
     @Column(name = "item_quantity")

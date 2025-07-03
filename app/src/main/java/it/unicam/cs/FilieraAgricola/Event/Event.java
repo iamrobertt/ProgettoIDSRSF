@@ -13,7 +13,6 @@ import java.util.List;
 @DiscriminatorColumn(name = "event_type", discriminatorType = DiscriminatorType.STRING)
 //TODO EVENTI
 //TODO AGGIORNARE QUANTITA BUNDLE AGGIUNTI AD UN EVENTO + controllo disponibilità
-//TODO RIAGGIUNGI LE STRATEGY SEPARATE PER TASTING ED EVENTO NORMALE
 public abstract class Event {
 
     @Id
@@ -62,7 +61,6 @@ public abstract class Event {
         this.participants = participants;
     }
 
-    public Event() {
-    }
+    public Event() {}
 
 }

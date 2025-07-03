@@ -3,7 +3,7 @@ package it.unicam.cs.FilieraAgricola.Controller;
 
 import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
 import it.unicam.cs.FilieraAgricola.Event.*;
-import it.unicam.cs.FilieraAgricola.Manager.EventManager;
+import it.unicam.cs.FilieraAgricola.Event.EventManager;
 import it.unicam.cs.FilieraAgricola.Product.Product;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
@@ -11,6 +11,9 @@ import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -38,56 +41,71 @@ public class EventController {
 
     @Transactional
     @PostMapping("/insertEvent")
-    public String insertEvent(@RequestBody EventDTO eventDTO) {
+    public ResponseEntity<String> insertEvent(@RequestBody EventDTO eventDTO) {
 
-        Event event = this.controllerUtility.convertToEvent(eventDTO);
-        if (event == null) {
-            throw new IllegalArgumentException("Errore nella conversione dell'evento.");
+        try {
+            Event event = this.controllerUtility.convertToEvent(eventDTO);
+
+            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = this.userRepository.findByUserEmail(userEmail);
+
+            event.setEventCreator(user);
+
+            this.eventManager.createEventRequest(user, event);
+
+        }catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
-        Optional<User> user = this.userRepository.findById(3L);
-        event.setEventCreator(user.get());
-
-        this.eventManager.createEventRequest(user.get(), event);
-
-        return "proviamo";
+        return ResponseEntity.ok().body("Event created successfully.");
     }
 
 
     @Transactional
     @PostMapping("/addProductToTastingEvent")
-    public String addProductToTastingEvent(@RequestParam Long eventId,
-                                           @RequestParam Long productId) {
+    public ResponseEntity<String> addProductToTastingEvent(
+                                           @RequestParam Long eventID,
+                                           @RequestParam Long productId,
+                                           @RequestParam int productQuantity) {
 
-        Optional<Event> event = this.eventRepository.findById(eventId);
-        Optional<Product> productEvent = this.productRepository.findById(productId);
+        try{
+            Optional<Event> event = this.eventRepository.findById(eventID);
+            Optional<Product> productEvent = this.productRepository.findById(productId);
 
-        TastingEvent tastingEvent = (TastingEvent) event.get();
-        Product product = productEvent.get();
+            TastingEvent tastingEvent = (TastingEvent) event.get();
+            Product product = productEvent.get();
 
+            //TODO aggiungi controlli
+            EventProduct eventProduct = new EventProduct(tastingEvent, product, productQuantity);
+            tastingEvent.getProductList().add(eventProduct);
 
+            this.eventRepository.save(tastingEvent);
 
-        EventProduct eventProduct = new EventProduct(tastingEvent, product);
-        tastingEvent.getProductList().add(eventProduct);
+        }catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
 
-        this.eventRepository.save(tastingEvent);
-
-        return "Prodotto aggiunto con successo all'evento di degustazione!";
+        return ResponseEntity.ok().body("Product added to event " + eventID + "successfully.");
     }
 
 
     @PostMapping("/bookEvent")
-    public long bookEvent(@RequestParam long eventID) {
+    public ResponseEntity<String> bookEvent(@RequestParam long eventID) {
 
-        Optional<Event> event = this.eventRepository.findById(eventID);
 
-        if (!event.isPresent())
-            throw new IllegalArgumentException("Event with id" + eventID + " not found.");
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
 
-        Optional<User> user = this.userRepository.findById(3L);
+        Event event = this.eventRepository.findById(eventID).orElse(null);
 
-        this.eventManager.bookEventRequest(user.get(), event.get());
-        return 0;
+        try {
+            this.eventManager.bookEventRequest(user, event);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body("Booked to event " + event.getEventName() + "successfully.");
     }
 
     @Transactional

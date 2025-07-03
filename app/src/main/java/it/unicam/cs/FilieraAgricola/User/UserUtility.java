@@ -1,6 +1,7 @@
 package it.unicam.cs.FilieraAgricola.User;
 
 
+import it.unicam.cs.FilieraAgricola.Repository.RoleRequestRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class UserUtility {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRequestRepository roleRequestRepository;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -47,5 +51,19 @@ public class UserUtility {
         }
         return false;
     }
+
+    public boolean checkExistRoleRequest(User user) {
+        Optional<RoleRequest> requestToSearch = this.roleRequestRepository.findById(user.getUserID());
+        return requestToSearch.isPresent();
+    }
+
+    public boolean checkUserIsValidated(User user) {
+        return user.getUserState().equals(UserState.VALIDATED);
+    }
+
+    public boolean checkIsSameRole(User user, UserRole role) {
+        return user.getUserRole().equals(role);
+    }
+
 
 }

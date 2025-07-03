@@ -13,5 +13,5 @@ public class EventDTO {
     private int eventCurrentParticipants;
     private String eventType;
     private List<EventParticipantDTO> participants;
-    private List<EventProductDTO> productList;
+    private List<ProductWithQuantityDTO> productList;
 }

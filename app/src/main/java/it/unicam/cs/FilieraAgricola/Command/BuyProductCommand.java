@@ -21,6 +21,7 @@ import java.util.List;
 public class BuyProductCommand extends Command<List<Pair<Product, Integer>>> {
 
     private final OrderRepository orderRepository;
+
     private final ProductRepository productRepository;
 
 
@@ -61,22 +62,20 @@ public class BuyProductCommand extends Command<List<Pair<Product, Integer>>> {
             OrderItem orderItem = createOrderItem(order, productPair.a, productPair.b);
             Product realProduct = this.productRepository.findById(productPair.a.getProductID()).orElse(null);
 
-            int actualQuantity = realProduct.getWarehouseProduct().getProductQuantity();
-            int newProductQuantity = actualQuantity - productPair.b;
+            totalOrderPrice += realProduct.getProductPrice();
+            this.productRepository.subProductQuantity(realProduct.getProductID(), productPair.b);
 
-            realProduct.getWarehouseProduct().setProductQuantity(newProductQuantity);
             itemList.add(orderItem);
         }
 
         order.setOrderItems(itemList);
         order.setTotalOrderPrice(totalOrderPrice);
-
         this.orderRepository.save(order);
 
     }
 
 
-    private OrderItem createOrderItem(Order order, Product product, int quantity) {
+        private OrderItem createOrderItem(Order order, Product product, int quantity) {
         OrderItem orderItem = new OrderItem();
         orderItem.setParentOrder(order);
         orderItem.setOrderItemProduct(product);

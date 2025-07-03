@@ -22,8 +22,8 @@ public class OrderUtility {
     }
 
 
-    public boolean checkExistOrder(User user, Order order) {
-        Optional<Order> orderToSearch = this.orderRepository.findByOrderIDAndUser(user.getUserID(), order.getOrderID());
+    public boolean checkExistOrderWithUser(User user, Order order) {
+        Optional<Order> orderToSearch = this.orderRepository.findByOrderAndUser(user.getUserID(), order.getOrderID());
         return orderToSearch.isPresent();
     }
 
@@ -31,7 +31,7 @@ public class OrderUtility {
 
 
     public Order getOrder(long userID, long productID) {
-        Optional<Order> order = this.orderRepository.findByOrderIDAndUser(userID, productID);
+        Optional<Order> order = this.orderRepository.findByOrderAndUser(userID, productID);
         return order.orElse(null);
     }
 }

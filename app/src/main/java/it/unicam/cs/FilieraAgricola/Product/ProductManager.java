@@ -1,11 +1,8 @@
-package it.unicam.cs.FilieraAgricola.Manager;
+package it.unicam.cs.FilieraAgricola.Product;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
 import it.unicam.cs.FilieraAgricola.Command.*;
 import it.unicam.cs.FilieraAgricola.Exception.InsufficientUserAuthorizationException;
-import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.ProductLoaderFactory;
-import it.unicam.cs.FilieraAgricola.Product.ProductValidationState;
 import it.unicam.cs.FilieraAgricola.Repository.OrderRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
@@ -77,13 +74,13 @@ public class ProductManager {
             if(!this.buyProductCheckStrategy.validate(user, product.a, product.b))
                 throw new IllegalArgumentException("Product  with id: " + product.a.getProductID() + " non valid for buying");
 
-        BuyProductCommand buyProductCommand = new BuyProductCommand(user, productList, this.orderRepository, this.productRepository);
+
+        Command<List<Pair<Product, Integer>>> buyProductCommand = new BuyProductCommand(user, productList, this.orderRepository, this.productRepository);
 
         if (!buyProductCommand.hasCallerNeededAuthorization())
             throw new InsufficientUserAuthorizationException("Insufficient authorization to buy product");
 
         CommandInvoker invoker = new CommandInvoker();
-
         invoker.setCommand(buyProductCommand);
         invoker.invoke();
     }

@@ -24,7 +24,7 @@ public class UpdateOrderStateCheckStrategy implements CustomCheckStrategy<Order,
             throw new IllegalArgumentException("Error retrieving order information.");
 
 
-        if(!this.orderUtility.checkExistOrder(user, order))
+        if(!this.orderUtility.checkExistOrderWithUser(user, order))
             throw new IllegalArgumentException("Order with id" + order.getOrderID() + " does not exist.");
 
 

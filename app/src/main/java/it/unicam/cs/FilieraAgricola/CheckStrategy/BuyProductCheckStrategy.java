@@ -15,6 +15,8 @@ public class BuyProductCheckStrategy implements CustomCheckStrategy<Product, Int
     @Override
     public boolean validate(User user, Product product, Integer neededQuantity) {
 
+        if(user == null)
+            throw new IllegalArgumentException("Error retrieving user information");
 
         if (!this.productUtility.checkProductInfo(product))
             throw new IllegalArgumentException("Error retrieving product information.");
@@ -28,28 +30,13 @@ public class BuyProductCheckStrategy implements CustomCheckStrategy<Product, Int
             throw new IllegalArgumentException("Product with id " + product.getProductID() + " is not validated.");
 
 
+        if(neededQuantity < 1)
+            throw new IllegalArgumentException("Product has a non valid quantity.");
+
+
         if(!this.productUtility.checkProductAvailability(product, neededQuantity))
             throw new IllegalArgumentException("Product with id " + product.getProductID() + " is not available.");
 
-
-        if(product instanceof SingleProduct)
-            return true;
-
-
-        /*
-          Due to how the bundles are created, there is no need to check recursively in other bundles
-          I only need to check the first "layer" quantity and state
-         */
-        BundleProduct bundleProduct = (BundleProduct) product;
-
-        for(BundleItem bundleItem : bundleProduct.getBundleItems()) {
-
-            if (!this.productUtility.checkProductAvailability(bundleItem.getProduct(), bundleItem.getProductQuantityPerBundle()))
-                throw new IllegalArgumentException("Product with id " + bundleItem.getProduct().getProductID() + " is not available.");
-
-            if(!bundleItem.getProduct().getProductState().equals(ProductState.PRODUCT_VALIDATED))
-                throw new IllegalArgumentException("Product with id " + bundleItem.getProduct().getProductID() + " is not validated.");
-        }
 
         return true;
     }
