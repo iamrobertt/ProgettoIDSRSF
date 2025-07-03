@@ -32,4 +32,5 @@ public class EventUtility {
     public EventUtility (List<User> CurrentEventParticipants){
         this.CurrentEventParticipants = CurrentEventParticipants;
     }
+
 }

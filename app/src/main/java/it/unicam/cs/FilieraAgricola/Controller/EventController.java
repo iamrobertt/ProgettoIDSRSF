@@ -90,6 +90,39 @@ public class EventController {
         return 0;
     }
 
+    @Transactional
+    @PostMapping("/deleteEvent")
+    public String deleteEvent(@RequestParam long eventID) {
+        Optional<Event> event = this.eventRepository.findById(eventID);
+        if (!event.isPresent()){
+            throw new IllegalArgumentException("Event with id" + eventID + " not found.");
+        }
+        this.eventRepository.delete(event.get());
+
+        return "Evento eliminato!";
+    }
+
+    @Transactional
+    @PostMapping("/updateEvent")
+    public String updateEvent(@RequestBody EventDTO eventDTO) {
+        Optional<Event> event = this.eventRepository.findById(eventDTO.getEventID());
+
+        if (!event.isPresent()) {
+            throw new IllegalArgumentException("Event with id" + eventDTO.getEventID() + " not found.");
+        }
+
+        Event event1 = event.get();
+        event1.setEventName(eventDTO.getEventName());
+        event1.setEventDescription(eventDTO.getEventDescription());
+        event1.setEventMaxParticipants(eventDTO.getEventMaxParticipants());
+        event1.setCurrentParticipants(eventDTO.getEventCurrentParticipants());
+        event1.setEventType(EventType.valueOf(eventDTO.getEventType()));
+
+        this.eventRepository.save(event1);
+
+        return "Evento aggiornato con succeesso";
+
+    }
 
 }
 
