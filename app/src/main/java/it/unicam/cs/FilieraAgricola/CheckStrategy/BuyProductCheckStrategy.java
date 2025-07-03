@@ -18,7 +18,6 @@ public class BuyProductCheckStrategy implements CustomCheckStrategy<Product, Int
         if(user == null)
             throw new IllegalArgumentException("Error retrieving user information");
 
-
         if (!this.productUtility.checkProductInfo(product))
             throw new IllegalArgumentException("Error retrieving product information.");
 
@@ -29,6 +28,10 @@ public class BuyProductCheckStrategy implements CustomCheckStrategy<Product, Int
 
         if(!product.getProductState().equals(ProductState.PRODUCT_VALIDATED))
             throw new IllegalArgumentException("Product with id " + product.getProductID() + " is not validated.");
+
+
+        if(neededQuantity < 1)
+            throw new IllegalArgumentException("Product has a non valid quantity.");
 
 
         if(!this.productUtility.checkProductAvailability(product, neededQuantity))

@@ -26,6 +26,10 @@ public class LoadProductCheckStrategy implements CheckStrategy<Product> {
             throw new IllegalArgumentException("Product already exist.");
 
 
+        if(product.getWarehouseProduct().getProductQuantity() < 1)
+            throw new IllegalArgumentException("Product has a non valid quantity.");
+
+
         if (product instanceof SingleProduct)
             return true;
 

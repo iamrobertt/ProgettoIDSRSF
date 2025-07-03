@@ -37,7 +37,7 @@ public class ValidateProductCommand extends Command<Product> {
         if (this.productValidationState.equals(ProductValidationState.ACCEPTED))
             this.productRepository.updateProductState(this.user.getUserID(), this.item.getProductID(), ProductState.PRODUCT_VALIDATED);
         else
-            //the product state returns to default, so the product details can be modifid and validated again
+            //the product state returns to default, so the product details can be modified and validated again
             this.productRepository.updateProductState(this.user.getUserID(), this.item.getProductID(), ProductState.PRODUCT_INSERTED);
     }
 }

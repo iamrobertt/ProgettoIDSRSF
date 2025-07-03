@@ -37,8 +37,6 @@ public class AuthenticateUserCommand  extends Command <User>{
         this.jwtToken = jwtService.generateToken(this.item);
     }
 
-    public String getJwtToken() {
-        return this.jwtToken;
-    }
+    public String getJwtToken() {return this.jwtToken;}
 
 }

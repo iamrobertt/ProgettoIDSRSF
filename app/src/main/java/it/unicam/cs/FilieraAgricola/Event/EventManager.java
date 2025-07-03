@@ -1,4 +1,4 @@
-package it.unicam.cs.FilieraAgricola.Manager;
+package it.unicam.cs.FilieraAgricola.Event;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.BookEventStrategyCheck;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.CreateEventCheckStrategy;
@@ -6,8 +6,6 @@ import it.unicam.cs.FilieraAgricola.Command.BookEventCommand;
 import it.unicam.cs.FilieraAgricola.Command.Command;
 import it.unicam.cs.FilieraAgricola.Command.CommandInvoker;
 import it.unicam.cs.FilieraAgricola.Command.CreateEventCommand;
-import it.unicam.cs.FilieraAgricola.Event.Event;
-import it.unicam.cs.FilieraAgricola.Event.EventLoaderFactory;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
