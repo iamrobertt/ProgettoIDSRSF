@@ -111,6 +111,12 @@ public class EventTest extends Event{
 
         @Test
         void testAddParticipant(){
-            assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user1,event1));
+            assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user1,event2));
+            assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user1,event3));
+            assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user1,event4));
+            assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user2,event2));
+            assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user2,event3));
+            assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user2,event4));
+
         }
 }

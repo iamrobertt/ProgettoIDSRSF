@@ -54,6 +54,5 @@ public class EventTest {
                     )
                     .andExpect(status().isOk())
                     .andExpect((ResultMatcher) content().string("Inserimento avvenuto con successo"));
-
         }
 }
