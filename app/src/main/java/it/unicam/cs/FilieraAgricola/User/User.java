@@ -39,7 +39,7 @@ public class User {
     private UserState userState;
 
 
-    public User (){}
+    public User (long l, String mario, String rossi, String mail){}
 
     public User(
             long userID,

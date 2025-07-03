@@ -36,5 +36,4 @@ public class EventUtility {
         return event.getCurrentParticipants() >= event.getEventMaxParticipants();
     }
 
-
 }
