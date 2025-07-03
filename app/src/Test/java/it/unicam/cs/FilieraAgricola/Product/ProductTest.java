@@ -1,11 +1,10 @@
+package it.unicam.cs.FilieraAgricola.Product;
+
 import it.unicam.cs.FilieraAgricola.CheckStrategy.BuyProductCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.LoadProductCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.SellProductCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.ValidateProductCheckStrategy;
-import it.unicam.cs.FilieraAgricola.Product.*;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.nio.Buffer;
 
 public class ProductTest extends Product {
 

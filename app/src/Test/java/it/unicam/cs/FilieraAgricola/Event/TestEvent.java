@@ -1,4 +1,4 @@
-package it.unicam.cs.FilieraAgricola.Test;
+package it.unicam.cs.FilieraAgricola.Event;
 
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;

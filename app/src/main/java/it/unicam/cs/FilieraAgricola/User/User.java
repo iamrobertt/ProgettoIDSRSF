@@ -38,8 +38,7 @@ public class User {
     @Column(name = "user_state")
     private UserState userState;
 
-
-    public User (long l, String mario, String rossi, String mail){}
+    public User() {}
 
     public User(
             long userID,
@@ -60,4 +59,5 @@ public class User {
         this.userRole = userRole;
         this.userState = userState;
     }
+
 }

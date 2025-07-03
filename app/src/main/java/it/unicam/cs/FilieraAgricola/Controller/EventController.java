@@ -110,35 +110,35 @@ public class EventController {
 
     @Transactional
     @PostMapping("/deleteEvent")
-    public String deleteEvent(@RequestParam long eventID) {
-        Optional<Event> event = this.eventRepository.findById(eventID);
-        if (!event.isPresent()){
-            throw new IllegalArgumentException("Event with id" + eventID + " not found.");
-        }
-        this.eventRepository.delete(event.get());
+    public ResponseEntity<String> deleteEvent(@RequestParam long eventID) {
+        Event event = this.eventRepository.findById(eventID).orElse(null);
 
-        return "Evento eliminato!";
+        try {
+            //crea metodo dentro eventmanager e richiamalo qui
+            //this.eventManager.deleteEvent(user, event);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+
+        return ResponseEntity.ok().body("Event " + event.getEventName() + "successfully removed.");
     }
 
     @Transactional
     @PostMapping("/updateEvent")
-    public String updateEvent(@RequestBody EventDTO eventDTO) {
-        Optional<Event> event = this.eventRepository.findById(eventDTO.getEventID());
+    public ResponseEntity<String> updateEvent(@RequestBody EventDTO eventDTO) {
+        Event event = this.eventRepository.findById(eventDTO.getEventID()).orElse(null);
 
-        if (!event.isPresent()) {
-            throw new IllegalArgumentException("Event with id" + eventDTO.getEventID() + " not found.");
+        try {
+            //crea metodo dentro eventmanager e richiamalo qui
+            //this.eventManager.updateEvent(user, event);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
-        Event event1 = event.get();
-        event1.setEventName(eventDTO.getEventName());
-        event1.setEventDescription(eventDTO.getEventDescription());
-        event1.setEventMaxParticipants(eventDTO.getEventMaxParticipants());
-        event1.setCurrentParticipants(eventDTO.getEventCurrentParticipants());
-        event1.setEventType(EventType.valueOf(eventDTO.getEventType()));
-
-        this.eventRepository.save(event1);
-
-        return "Evento aggiornato con succeesso";
+        return ResponseEntity.ok().body("Event " + event.getEventName() + "successfully updated.");
 
     }
 

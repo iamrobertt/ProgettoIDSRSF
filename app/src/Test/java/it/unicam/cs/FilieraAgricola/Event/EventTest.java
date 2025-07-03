@@ -1,6 +1,7 @@
+package it.unicam.cs.FilieraAgricola.Event;
+
 import it.unicam.cs.FilieraAgricola.CheckStrategy.AddGuestCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.CreateEventCheckStrategy;
-import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
