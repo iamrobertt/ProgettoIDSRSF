@@ -34,7 +34,9 @@ public enum OrderState {
         return null;
     }
 
-
+    /*
+        Determines if the order can transit to its next state
+     */
     public boolean canTransitionTo(OrderState newState) {
         return switch (this) {
             case ORDER_RECEIVED -> newState == ORDER_READY || newState == ORDER_SHIPPED || newState == ORDER_DELIVERED;

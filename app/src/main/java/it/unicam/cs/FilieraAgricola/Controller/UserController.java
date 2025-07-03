@@ -1,7 +1,7 @@
 package it.unicam.cs.FilieraAgricola.Controller;
 
 import it.unicam.cs.FilieraAgricola.DTO.UserDTO;
-import it.unicam.cs.FilieraAgricola.Manager.UserManager;
+import it.unicam.cs.FilieraAgricola.User.UserManager;
 
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;

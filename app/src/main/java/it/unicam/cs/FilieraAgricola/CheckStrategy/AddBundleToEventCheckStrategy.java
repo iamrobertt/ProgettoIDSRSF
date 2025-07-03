@@ -27,15 +27,19 @@ public class AddBundleToEventCheckStrategy implements CheckStrategy<Event> {
         TastingEvent tastingEvent = (TastingEvent) event;
         for(EventProduct eventProduct : tastingEvent.getProductList()){
 
+
             Product product = eventProduct.getProduct();
             if(product == null)
                 throw new IllegalArgumentException("A product was not found.");
 
+
             if(!this.productUtility.checkExistProduct(product))
                 throw new IllegalArgumentException("Product with id " + product.getProductID() + "does not exist.");
 
+
             if(product instanceof SingleProduct)
                 throw new IllegalArgumentException("Product with id " + product.getProductID() + "is not a bundle.");
+
 
             Product realProduct = this.productUtility.getProduct(product.getProductID());
 
@@ -43,6 +47,7 @@ public class AddBundleToEventCheckStrategy implements CheckStrategy<Event> {
                 throw new IllegalArgumentException("Product with id " + product.getProductID() + "is not available.");
 
         }
+
         return true;
     }
 }

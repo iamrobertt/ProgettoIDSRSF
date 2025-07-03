@@ -19,10 +19,8 @@ public class BundleProductLoader implements ProductLoader {
 
         for (BundleItem bundleItem : bundleProduct.getBundleItems()) {
             Product productInBundle = bundleItem.getProduct();
-            int quantityOfProductInBundle = bundleItem.getProductQuantityPerBundle();
 
-            if (productInBundle instanceof BundleProduct nestedBundle)
-                loadProduct(nestedBundle);
+            int quantityOfProductInBundle = bundleItem.getProductQuantityPerBundle();
 
             //updating the quantity of the real product linked with its id, not the one inside the bundle which contains
             //quantity per bundle (not the real quantity)

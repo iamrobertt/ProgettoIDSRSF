@@ -1,11 +1,8 @@
-package it.unicam.cs.FilieraAgricola.Manager;
+package it.unicam.cs.FilieraAgricola.Product;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
 import it.unicam.cs.FilieraAgricola.Command.*;
 import it.unicam.cs.FilieraAgricola.Exception.InsufficientUserAuthorizationException;
-import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.ProductLoaderFactory;
-import it.unicam.cs.FilieraAgricola.Product.ProductValidationState;
 import it.unicam.cs.FilieraAgricola.Repository.OrderRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
