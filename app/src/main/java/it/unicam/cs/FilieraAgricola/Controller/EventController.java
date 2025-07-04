@@ -114,8 +114,9 @@ public class EventController {
         Event event = this.eventRepository.findById(eventID).orElse(null);
 
         try {
-            //crea metodo dentro eventmanager e richiamalo qui
-            //this.eventManager.deleteEvent(user, event);
+
+            //this.eventManager.deleteEventRequest(, event);
+            this.eventManager.deleteEventRequest(new User(), event);
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -131,8 +132,8 @@ public class EventController {
         Event event = this.eventRepository.findById(eventDTO.getEventID()).orElse(null);
 
         try {
-            //crea metodo dentro eventmanager e richiamalo qui
-            //this.eventManager.updateEvent(user, event);
+
+            this.eventManager.updateEventRequest(new User() , event);
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
