@@ -13,8 +13,17 @@ public class RegisterUserCheckStrategy implements CheckStrategy<User> {
 
     @Override
     public boolean validate(User user, User user1) {
-        return !this.userUtility.checkUserInfo(user1) &&
-                !this.userUtility.checkExistUser(user1);
+
+        if(user1 == null)
+            throw new IllegalArgumentException("Error retrieving user information.");
+
+        if (!this.userUtility.checkUserInfoForLoading(user1))
+            throw new IllegalArgumentException("Error retrieving user information.");
+
+        if (this.userUtility.checkExistUser(user1))
+            throw new IllegalArgumentException("User already exists.");
+
+        return true;
     }
 
 }

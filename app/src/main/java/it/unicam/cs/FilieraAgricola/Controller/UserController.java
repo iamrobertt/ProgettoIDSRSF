@@ -31,13 +31,13 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ControllerUtility controllerUtility;
 
     @PostMapping("/insertUser")
     public ResponseEntity<String> insertUser(@RequestBody UserDTO userDTO) {
 
-        ControllerUtility controllerUtility = new ControllerUtility();
         User user = controllerUtility.convertToUser(userDTO);
-
         try {
             this.userManager.registerUserRequest(user, user);
         }
@@ -49,11 +49,22 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public String authenticate(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity<String> authenticate(@RequestParam String email, @RequestParam String password) {
         User user = this.userUtility.getUser(email);
+        String jwt;
+
         if (user == null)
             throw new IllegalArgumentException("User Not Found");
-        return this.userManager.authenticateUserRequest(user, password);
+
+        try {
+             jwt = this.userManager.authenticateUserRequest(user, password);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body("User authenticated successfully:\n "+jwt);
+
     }
 
     @PostMapping("/requestRole")
@@ -70,7 +81,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
-        return ResponseEntity.ok().body("New Role Request created succesfully.");
+        return ResponseEntity.ok().body("New Role Request created successfully.");
     }
 
     @PostMapping("/manageUserValidation")
@@ -78,11 +89,14 @@ public class UserController {
 
         UserValidationState userValidationState = UserValidationState.valueOf(validationState);
 
-        User user = this.userRepository.findById(userID)
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userValidator = this.userUtility.getUser(userEmail);
+
+        User userToValidate = this.userRepository.findById(userID)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         try {
-            this.userManager.manageUserValidation(user, userValidationState);
+            this.userManager.manageUserValidation(userValidator, userToValidate, userValidationState);
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -95,12 +109,14 @@ public class UserController {
     public ResponseEntity<String> manageRequestRole(@RequestParam long userID, @RequestParam String validationState) {
 
         UserValidationState userValidationState = UserValidationState.valueOf(validationState);
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userValidator = this.userUtility.getUser(userEmail);
 
-        User user = this.userRepository.findById(userID)
+        User userToUpdate = this.userRepository.findById(userID)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         try {
-            this.userManager.manageRequestRole(user, userValidationState);
+            this.userManager.manageRequestRole(userValidator, userToUpdate, userValidationState);
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
