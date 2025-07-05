@@ -24,9 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class TestEvent {
 
-        @Autowired
-        private MockMvc mockMvc;
-        @Autowired
+    @Autowired
+    private MockMvc mockMvc;
 
     @Test
         public void testInsertEventSuccessfull() throws Exception {
