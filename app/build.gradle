@@ -50,7 +50,8 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'org.example.App'
+    //mainClass = 'org.example.App'
+    mainClass= 'it.unicam.cs.FilieraAgricola.FilieraAgricolaApplication'
 }
 
 tasks.named('test') {
