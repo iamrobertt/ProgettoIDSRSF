@@ -43,31 +43,9 @@ public class ProductTest extends Product {
 
     ProductTest product1 = new ProductTest(1L,"","",
             0,0,ProductState.PRODUCT_NOT_VALIDATED,null);
-    ProductTest product2 = new ProductTest(1L,"","",
-            0,0,ProductState.PRODUCT_INSERTED,null);
-    ProductTest product3 = new ProductTest(1L,"","",
-            0,0,ProductState.PRODUCT_VALIDATED,null);
+    ProductTest product2 = new ProductTest(1L,"s","e",
+            1,1,ProductState.PRODUCT_INSERTED,ProductType.SINGLE);
 
-    ProductTest product4 = new ProductTest(-1,"a","b",0.1,
-            1,ProductState.PRODUCT_INSERTED,ProductType.SINGLE);
-    ProductTest product5 = new ProductTest(-1,"a","b",0.1,
-            1,ProductState.PRODUCT_NOT_VALIDATED,ProductType.SINGLE);
-    ProductTest product6 = new ProductTest(-1,"a","b",0.1,
-            1,ProductState.PRODUCT_VALIDATED,ProductType.SINGLE);
-
-    ProductTest product7 = new ProductTest(1L,"a","b",0.1,
-            1,ProductState.PRODUCT_INSERTED,ProductType.SINGLE);
-    ProductTest product8 = new ProductTest(1L,"a","b",0.1,
-            1,ProductState.PRODUCT_VALIDATED,ProductType.SINGLE);
-    ProductTest product9 = new ProductTest(1L,"a","b",0.1,
-            1,ProductState.PRODUCT_NOT_VALIDATED,ProductType.SINGLE);
-
-    ProductTest product10 = new ProductTest(1,"","",0.0,
-            0,ProductState.PRODUCT_NOT_VALIDATED,ProductType.SINGLE);
-    ProductTest product11 = new ProductTest(1,"","",0.0,
-            0,ProductState.PRODUCT_INSERTED,ProductType.SINGLE);
-    ProductTest product12 = new ProductTest(1,"","",0.0,
-            0,ProductState.PRODUCT_VALIDATED,ProductType.SINGLE);
 
 
 
@@ -151,229 +129,228 @@ public class ProductTest extends Product {
     @Test
     public void valideteSellProduct(){
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.CUSTOMER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.CUSTOMER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.CUSTOMER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.CUSTOMER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.CUSTOMER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.CUSTOMER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.CUSTOMER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.CUSTOMER,UserState.WAITING_FOR_VALIDATION),product1));
 
     }
 
     @Test
     public void validateBoughtProduct() {
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product2,1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product2,2));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product2,1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product2,0));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product2,1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product2,0));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product2,-1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product2,1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product2,1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product2,0));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product2,-1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1,1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product2,1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product2,0));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product2,-1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product2,2));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product2,1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product2,0));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product2,-1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product2,2));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product2,1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product2,-1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product2,0));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product2,2));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product2,1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product2,0));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product2,-1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product2,2));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.SELLER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.SELLER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.SELLER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.SELLER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.SELLER,UserState.VALIDATED),product2,0));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.SELLER,UserState.VALIDATED),product2,2));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.SELLER,UserState.WAITING_FOR_VALIDATION),product2,-1));
+        assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.SELLER,UserState.WAITING_FOR_VALIDATION),product2,1));
     }
 
     @Test public void valodateLoadProduct(){
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PROMOTER,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.MANUFACTURER,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.VALIDATOR,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.ADMINISTRATOR,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.PRODUCER,UserState.WAITING_FOR_VALIDATION),product1));
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.CUSTOMER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.CUSTOMER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.CUSTOMER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.DENIED));
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.CUSTOMER,UserState.WAITING_FOR_VALIDATION),product1,ProductValidationState.ACCEPTED));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.CUSTOMER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.CUSTOMER,UserState.VALIDATED),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.CUSTOMER,UserState.WAITING_FOR_VALIDATION),product1));
+        assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
+                ,"","",UserRole.CUSTOMER,UserState.WAITING_FOR_VALIDATION),product1));
     }
-
 
 }
