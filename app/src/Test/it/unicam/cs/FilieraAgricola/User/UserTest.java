@@ -1,8 +1,6 @@
 package it.unicam.cs.FilieraAgricola.User;
 
-import it.unicam.cs.FilieraAgricola.CheckStrategy.AuthenticateUserCheckStrategy;
-import it.unicam.cs.FilieraAgricola.CheckStrategy.RegisterUserCheckStrategy;
-import it.unicam.cs.FilieraAgricola.CheckStrategy.RoleRequestCheckStrategy;
+import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +14,8 @@ public class UserTest extends User{
     private RegisterUserCheckStrategy registerUserCheckStrategy;
     private AuthenticateUserCheckStrategy authenticateUserCheckStrategy;
     private RoleRequestCheckStrategy roleRequestCheckStrategy;
+    private ManageUserValidationCheckStrategy manageUserValidationCheckStrategy;
+    private ManageUserRequestRoleCheckStrategy manageUserRequestRoleCheckStrategy;
     private User user;
 
     public UserTest(
@@ -139,7 +139,61 @@ public class UserTest extends User{
                 "","",null,UserState.WAITING_FOR_VALIDATION), UserRole.GENERIC_USER));
     }
 
+    @Test
+    public void manageUserRequestRole(){
 
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(-1l, "a","b","c",
+                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED), UserValidationState.ACCEPTED ));
 
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(1l, "","","",
+                "","",UserRole.GENERIC_USER,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(-1l, "a","b","c",
+                "d","e",null,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(1l, "","","",
+                "","",null,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(-1l, "a","b","c",
+                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(1l, "","","",
+                "","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(-1l, "a","b","c",
+                "d","e",null,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(1l, "","","",
+                "","",null,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+    }
+
+    @Test
+    public void manageUserValidation(){
+
+        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(-1l, "a","b","c",
+                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+
+        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(1l, "","","",
+                "","",UserRole.GENERIC_USER,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+
+        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(-1l, "a","b","c",
+                "d","e",null,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+
+        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(1l, "","","",
+                "","",null,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+
+        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(-1l, "a","b","c",
+                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+
+        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(1l, "","","",
+                "","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+
+        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(-1l, "a","b","c",
+                "d","e",null,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+
+        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(1l, "","","",
+                "","",null,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+
+    }
 
 }
