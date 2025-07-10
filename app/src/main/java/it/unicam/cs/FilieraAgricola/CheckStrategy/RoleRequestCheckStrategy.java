@@ -14,12 +14,29 @@ public class RoleRequestCheckStrategy  implements CheckStrategy<UserRole>{
 
     @Override
     public boolean validate(User user, UserRole newUserRole) {
-        return this.userUtility.checkUserInfo(user) &&
-                this.userUtility.checkExistUser(user) &&
-                this.userUtility.checkUserIsValidated(user) &&
-                this.userUtility.checkExistRole(newUserRole) &&
-                !this.userUtility.checkIsSameRole(user, newUserRole) &&
-                !this.userUtility.checkExistRoleRequest(user);
+
+        if(user == null)
+            throw new IllegalArgumentException("Error retrieving user information.");
+
+        if (!this.userUtility.checkUserInfo(user))
+            throw new IllegalArgumentException("Error retrieving user information.");
+
+        if (!this.userUtility.checkExistUser(user))
+            throw new IllegalArgumentException("User does not exist.");
+
+        if (!this.userUtility.checkUserIsValidated(user))
+            throw new IllegalArgumentException("User is not validated.");
+
+        if (!this.userUtility.checkExistRole(newUserRole))
+            throw new IllegalArgumentException("New role not found.");
+
+        if (this.userUtility.checkIsSameRole(user, newUserRole))
+            throw new IllegalArgumentException("You already have this role.");
+
+        if (this.userUtility.checkExistRoleRequest(user))
+            throw new IllegalArgumentException("You already have this role request.");
+
+        return true;
     }
 
 }

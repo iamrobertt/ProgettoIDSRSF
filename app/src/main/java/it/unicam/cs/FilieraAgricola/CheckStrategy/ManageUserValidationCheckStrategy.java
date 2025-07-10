@@ -14,12 +14,26 @@ public class ManageUserValidationCheckStrategy implements CheckStrategy<UserVali
     UserUtility userUtility;
 
     @Override
-    public boolean validate(User user, UserValidationState userValidationState) {
-        return this.userUtility.checkUserInfo(user) &&
-                this.userUtility.checkExistUser(user) &&
-                user.getUserState().equals(UserState.WAITING_FOR_VALIDATION) &&
-                (userValidationState.equals(UserValidationState.ACCEPTED) ||
-                        userValidationState.equals(UserValidationState.DENIED));
+    public boolean validate(User userToValidate, UserValidationState userValidationState) {
+
+        if(userToValidate == null)
+            throw new IllegalArgumentException("Error retrieving user information.");
+
+        if (!this.userUtility.checkUserInfo(userToValidate))
+            throw new IllegalArgumentException("Error retrieving user information.");
+
+        if (!this.userUtility.checkExistUser(userToValidate))
+            throw new IllegalArgumentException("User does not exist.");
+
+        if (!userToValidate.getUserState().equals(UserState.WAITING_FOR_VALIDATION))
+            throw new IllegalArgumentException("User is already validated.");
+
+        if(!userValidationState.equals(UserValidationState.ACCEPTED) &&
+                !userValidationState.equals(UserValidationState.DENIED))
+            throw new IllegalArgumentException("New validation state does not exist.");
+
+        return true;
+
     }
 
 }

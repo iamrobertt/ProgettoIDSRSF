@@ -9,11 +9,13 @@ import java.util.Optional;
 
 public class ManageRequestRoleCommand extends Command<UserValidationState>{
 
+    private final User userValidator;
     private final UserRepository userRepository;
     private final RoleRequestRepository roleRequestRepository;
 
-    public ManageRequestRoleCommand(User user, UserValidationState userValidationState, UserRepository userRepository, RoleRequestRepository roleRequestRepository) {
+    public ManageRequestRoleCommand(User user, UserValidationState userValidationState, User userValidator, UserRepository userRepository, RoleRequestRepository roleRequestRepository) {
         super(user, userValidationState);
+        this.userValidator = userValidator;
         this.userRepository = userRepository;
         this.roleRequestRepository = roleRequestRepository;
     }
@@ -25,7 +27,7 @@ public class ManageRequestRoleCommand extends Command<UserValidationState>{
 
     @Override
     public boolean hasCallerNeededAuthorization() {
-        return getNeededAuthorization().contains(this.user.getUserRole());
+        return getNeededAuthorization().contains( this.userValidator.getUserRole());
     }
 
     @Override
