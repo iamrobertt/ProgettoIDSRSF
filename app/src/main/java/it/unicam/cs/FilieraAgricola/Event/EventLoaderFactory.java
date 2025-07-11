@@ -13,9 +13,9 @@ public class EventLoaderFactory {
     private final Map<Class<? extends Event>, EventLoader> eventLoaders = new HashMap<>();
 
     @Autowired
-    public EventLoaderFactory(SimpleEventLoader simpleEventLoader, TastingEventLoader tastingEventLoader) {
-        eventLoaders.put(SimpleEvent.class, simpleEventLoader);
-        eventLoaders.put(TastingEvent.class, tastingEventLoader);
+    public EventLoaderFactory() {
+        eventLoaders.put(SimpleEvent.class, new SimpleEventLoader());
+        eventLoaders.put(TastingEvent.class, new TastingEventLoader());
     }
 
     public EventLoader getEventLoader(Class<? extends Event> eventClass) {

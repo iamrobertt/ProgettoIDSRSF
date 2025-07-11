@@ -1,12 +1,13 @@
-package it.unicam.cs.FilieraAgricola.User;
+package it.unicam.cs.FilieraAgricola.Test.User;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
+import it.unicam.cs.FilieraAgricola.User.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class UserTest extends User{
+public class UserTest extends User {
 
     @Autowired
     private UserUtility userUtility;
