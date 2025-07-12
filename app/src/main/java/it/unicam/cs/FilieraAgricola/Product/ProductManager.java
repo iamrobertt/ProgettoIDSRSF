@@ -25,8 +25,6 @@ public class ProductManager {
     @Autowired
     private ValidateProductCheckStrategy validateProductCheckStrategy;
     @Autowired
-    private ProductLoaderFactory productLoaderFactory;
-    @Autowired
     private ProductRepository productRepository;
     @Autowired
     private OrderRepository orderRepository;
@@ -37,7 +35,7 @@ public class ProductManager {
         if(!this.loadProductCheckStrategy.validate(user, product))
             throw new IllegalArgumentException("Product non valid for loading");
 
-        Command<Product> loadProductCommand = new LoadProductCommand(user, product, this.productLoaderFactory);
+        Command<Product> loadProductCommand = new LoadProductCommand(user, product);
 
         if(!loadProductCommand.hasCallerNeededAuthorization())
             throw new InsufficientUserAuthorizationException("Insufficient authorization to perform a loading product request");

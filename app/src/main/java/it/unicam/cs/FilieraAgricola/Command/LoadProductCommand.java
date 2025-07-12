@@ -11,11 +11,9 @@ import java.util.List;
 
 public class LoadProductCommand extends Command<Product> {
 
-    private final ProductLoaderFactory productLoaderFactory;
 
-    public LoadProductCommand(User user, Product product, ProductLoaderFactory productLoaderFactory) {
+    public LoadProductCommand(User user, Product product) {
         super(user, product);
-        this.productLoaderFactory = productLoaderFactory;
     }
 
     @Override
@@ -32,7 +30,8 @@ public class LoadProductCommand extends Command<Product> {
 
     @Override
     public void execute() {
-        ProductLoader productLoader = this.productLoaderFactory.getProductLoader(this.item.getClass());
+        ProductLoaderFactory productLoaderFactory = new ProductLoaderFactory();
+        ProductLoader productLoader = productLoaderFactory.getProductLoader(this.item.getClass());
         productLoader.loadProduct(this.item);
     }
 }
