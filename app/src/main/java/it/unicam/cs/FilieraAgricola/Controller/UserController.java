@@ -1,7 +1,7 @@
 package it.unicam.cs.FilieraAgricola.Controller;
 
 import it.unicam.cs.FilieraAgricola.DTO.UserDTO;
-import it.unicam.cs.FilieraAgricola.Manager.UserManager;
+import it.unicam.cs.FilieraAgricola.User.UserManager;
 
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
@@ -53,9 +53,6 @@ public class UserController {
         User user = this.userUtility.getUser(email);
         String jwt;
 
-        if (user == null)
-            throw new IllegalArgumentException("User Not Found");
-
         try {
              jwt = this.userManager.authenticateUserRequest(user, password);
         }
@@ -93,8 +90,7 @@ public class UserController {
         User userValidator = this.userUtility.getUser(userEmail);
 
         User userToValidate = this.userRepository.findById(userID)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+                .orElse(null);
         try {
             this.userManager.manageUserValidation(userValidator, userToValidate, userValidationState);
         }
@@ -113,8 +109,7 @@ public class UserController {
         User userValidator = this.userUtility.getUser(userEmail);
 
         User userToUpdate = this.userRepository.findById(userID)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+                .orElse(null);
         try {
             this.userManager.manageRequestRole(userValidator, userToUpdate, userValidationState);
         }

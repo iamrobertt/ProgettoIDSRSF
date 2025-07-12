@@ -2,8 +2,7 @@ package it.unicam.cs.FilieraAgricola.Controller;
 
 import it.unicam.cs.FilieraAgricola.DTO.ProductWithQuantityDTO;
 import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
-import it.unicam.cs.FilieraAgricola.Exception.InsufficientUserAuthorizationException;
-import it.unicam.cs.FilieraAgricola.Manager.ProductManager;
+import it.unicam.cs.FilieraAgricola.Product.ProductManager;
 import it.unicam.cs.FilieraAgricola.Order.Order;
 import it.unicam.cs.FilieraAgricola.Order.OrderManager;
 import it.unicam.cs.FilieraAgricola.Order.OrderState;
@@ -133,13 +132,13 @@ public class ProductController {
     @PostMapping("/manageOrderState")
     public ResponseEntity<String> manageOrderState(@RequestParam long orderID,
                                    @RequestParam String newOrderState) {
-
+        //TODO trasforma in loop, modifica anche sequence diagram
         OrderState orderState = OrderState.valueOf(newOrderState);
 
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = this.userRepository.findByUserEmail(userEmail);
 
-        Order order = this.orderRepository.findByOrderIDAndUser(orderID, user.getUserID()).orElse(null);
+        Order order = this.orderRepository.findByOrderAndUser(orderID, user.getUserID()).orElse(null);
 
         try {
             this.orderManager.updateOrderState(user, order, orderState);

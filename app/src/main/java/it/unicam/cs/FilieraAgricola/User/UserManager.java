@@ -1,4 +1,4 @@
-package it.unicam.cs.FilieraAgricola.Manager;
+package it.unicam.cs.FilieraAgricola.User;
 
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.*;
@@ -7,9 +7,6 @@ import it.unicam.cs.FilieraAgricola.Exception.InsufficientUserAuthorizationExcep
 import it.unicam.cs.FilieraAgricola.JWT.JWTService;
 import it.unicam.cs.FilieraAgricola.Repository.RoleRequestRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
-import it.unicam.cs.FilieraAgricola.User.User;
-import it.unicam.cs.FilieraAgricola.User.UserRole;
-import it.unicam.cs.FilieraAgricola.User.UserValidationState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

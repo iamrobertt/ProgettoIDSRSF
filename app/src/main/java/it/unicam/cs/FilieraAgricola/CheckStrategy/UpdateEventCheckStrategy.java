@@ -1,29 +1,26 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
+
 import it.unicam.cs.FilieraAgricola.Event.Event;
 import it.unicam.cs.FilieraAgricola.Event.EventUtility;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
 @Component
-public abstract class CreateTastingEventCheckStrategy implements CheckStrategy <Event>{
+public class UpdateEventCheckStrategy implements CheckStrategy <Event> {
 
     @Autowired
     private EventUtility eventUtility;
 
     @Override
-    public boolean validate(User user, Event event) {
-
-        if(!this.eventUtility.checkEventInfo(event)){
-            return false;
+    public boolean validate(User user, Event item) {
+        if(!this.eventUtility.checkEventInfo(item)){
+            throw new IllegalArgumentException("Event info is not valid");
         }
-        if (this.eventUtility.checkExistEvent(event)) {
-            return false;
+        if(!this.eventUtility.checkExistEvent(item)){
+            throw new IllegalArgumentException("Event does not exist");
         }
-
-        if(this.eventUtility.isEventFull(event)){
-            return false;
-        }
-        return false;
+        return true;
     }
 }

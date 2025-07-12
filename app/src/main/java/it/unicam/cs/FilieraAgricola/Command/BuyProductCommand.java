@@ -21,6 +21,7 @@ import java.util.List;
 public class BuyProductCommand extends Command<List<Pair<Product, Integer>>> {
 
     private final OrderRepository orderRepository;
+
     private final ProductRepository productRepository;
 
 
@@ -74,7 +75,7 @@ public class BuyProductCommand extends Command<List<Pair<Product, Integer>>> {
     }
 
 
-    private OrderItem createOrderItem(Order order, Product product, int quantity) {
+        private OrderItem createOrderItem(Order order, Product product, int quantity) {
         OrderItem orderItem = new OrderItem();
         orderItem.setParentOrder(order);
         orderItem.setOrderItemProduct(product);
