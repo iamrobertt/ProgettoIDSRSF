@@ -51,4 +51,7 @@ public class CreateEventCheckStrategy implements CheckStrategy<Event>{
         return true;
 
     }
+
+
+
 }

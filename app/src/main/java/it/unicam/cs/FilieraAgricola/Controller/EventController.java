@@ -108,6 +108,40 @@ public class EventController {
         return ResponseEntity.ok().body("Booked to event " + event.getEventName() + "successfully.");
     }
 
+    @Transactional
+    @PostMapping("/deleteEvent")
+    public ResponseEntity<String> deleteEvent(@RequestParam long eventID) {
+        Event event = this.eventRepository.findById(eventID).orElse(null);
+
+        try {
+
+            //this.eventManager.deleteEventRequest(, event);
+            this.eventManager.deleteEventRequest(new User(), event);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+
+        return ResponseEntity.ok().body("Event " + event.getEventName() + "successfully removed.");
+    }
+
+    @Transactional
+    @PostMapping("/updateEvent")
+    public ResponseEntity<String> updateEvent(@RequestBody EventDTO eventDTO) {
+        Event event = this.eventRepository.findById(eventDTO.getEventID()).orElse(null);
+
+        try {
+
+            this.eventManager.updateEventRequest(new User() , event);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body("Event " + event.getEventName() + "successfully updated.");
+
+    }
 
 }
 

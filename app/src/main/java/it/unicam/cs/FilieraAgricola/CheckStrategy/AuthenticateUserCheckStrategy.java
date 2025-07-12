@@ -13,9 +13,22 @@ public class AuthenticateUserCheckStrategy implements CheckStrategy<String> {
 
     @Override
     public boolean validate(User user, String userPassword) {
-        return this.userUtility.checkUserInfo(user) &&
-                this.userUtility.checkExistUser(user) &&
-                this.userUtility.checkUserIsValidated(user) &&
-                this.userUtility.verifyUser(user, userPassword);
+
+        if (user == null)
+            throw new IllegalArgumentException("Error retrieving user information.");
+
+        if (!this.userUtility.checkUserInfo(user))
+            throw new IllegalArgumentException("Error retrieving user information.");
+
+        if (!this.userUtility.checkExistUser(user))
+            throw new IllegalArgumentException("User does not exist.");
+
+        if (!this.userUtility.checkUserIsValidated(user))
+            throw new IllegalArgumentException("User is not validated.");
+
+        if (!this.userUtility.verifyUser(user, userPassword))
+            throw new IllegalArgumentException("User credentials are incorrect.");
+
+        return true;
     }
 }
