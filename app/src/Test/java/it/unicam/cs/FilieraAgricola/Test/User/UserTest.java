@@ -19,181 +19,125 @@ public class UserTest extends User {
     private ManageUserRequestRoleCheckStrategy manageUserRequestRoleCheckStrategy;
     private User user;
 
-    public UserTest(
-            long userID,
-            String userName,
-            String userSurname,
-            String userEmail,
-            String userPassword,
-            String companyVatNumber,
-            UserRole userRole,
-            UserState userState
-    ) {
 
-
-    }
 
     @Test
-    public void registerUser(){
+    public void registerUserStrategyTest(){
 
-        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED),new User(1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED) ));
+        User user = new User(1,"Shaz","Khan","porva@prova.prova","juventus12345","1234567",UserRole.SELLER,UserState.VALIDATED);
 
-        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(new User(-1, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED),new User(-1, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED)));
+        // mi da errore perchè l'utente è gia registrato
+        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(user,user));
 
-        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(new User(1, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED),new User(1, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED)));
+        // imposto id 0 per controllare che salti il controllo su user info
+        user.setUserID(0);
+        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(user,user));
 
-        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(new User(1L, "","","",
-                "","",UserRole.GENERIC_USER,UserState.VALIDATED),new User(1L, "","","",
-                "","",UserRole.GENERIC_USER,UserState.VALIDATED)));
+        // mi aspetto un errore poichè il campo non può essere nullo
+        user.setUserID(3);
+        user.setUserEmail(null);
+        user.setUserPassword(null);
+        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(user,user));
 
-        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(new User(1L, "","","",
-                "","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),new User(1L, "","","",
-                "","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION)));
+        // mi aspetto che fallisca per user name vuoto
+        user.setUserID(4);
+        user.setUserState(UserState.WAITING_FOR_VALIDATION);
+        user.setUserName(null);
+        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(user,user));
 
-        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),new User(1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION) ));
-
-        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(new User(-1, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),new User(-1, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION)));
-
-        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(new User(1, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),new User(1, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION)));
-
-        assertThrows(IllegalArgumentException.class, () -> registerUserCheckStrategy.validate(new User(1L, "","","",
-                "","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION),new User(1L, "","","",
-                "","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION)));
     }
 
     @Test
     public void authenticateUser(){
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED), "d"));
 
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "","","",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED), "d"));
+        User user = new User (3,"Rober","Necula","porva@prova.prova1","juventus12345","1234567",UserRole.SELLER,UserState.VALIDATED);
 
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED), "e"));
+        // mi aspetto un errore perchè l'utente è validato correttamente ma la password è errata
+        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(user,"Juventus12345"));
 
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED), ""));
+        // mi aspetto che fallisca poichè la password è cprretta ma l'utente è in attesa di essere validato
+        user.setUserState(UserState.WAITING_FOR_VALIDATION);
+        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(user,"juventus12345"));
 
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "a","b","c",
-                "","e",UserRole.GENERIC_USER,UserState.VALIDATED), ""));
+        // mi aspetto che fallisca poichè la password impostata è nulla
+        user.setUserPassword(null);
+        user.setUserState(UserState.VALIDATED);
+        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(user,"juventus12345"));
 
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "a","b","c",
-                "","e",UserRole.GENERIC_USER,UserState.VALIDATED), "e"));
+        // mi aspetto che fallisca poichè l'utente non è registrato
+        user.setUserID(4);
+        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(user,"juventus12345"));
 
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), "d"));
-
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "","","",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), "d"));
-
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), "e"));
-
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), ""));
-
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "a","b","c",
-                "","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), ""));
-
-        assertThrows(IllegalStateException.class, () -> authenticateUserCheckStrategy.validate(new User(1l, "a","b","c",
-                "","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), "e"));
     }
 
     @Test
     public void userRequestRole(){
 
-        assertThrows(IllegalStateException.class, () -> roleRequestCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED), UserRole.GENERIC_USER));
+        User user = new User(17,"Shaz","Khan","porva1@prova.prova","$2a$12$PyPaZxIDC6eJCaFGElxSS.SwGQx2rpYq9XiKdjJu5t5eHuUtkuZbO","1234567",UserRole.CUSTOMER,UserState.VALIDATED);
 
-        assertThrows(IllegalStateException.class, () -> roleRequestCheckStrategy.validate(new User(1l, "","","",
-                "","",UserRole.GENERIC_USER,UserState.VALIDATED), UserRole.GENERIC_USER));
+        // mi aspetto un errore percè non è stato passato nessun utente
+        assertThrows(IllegalArgumentException.class, () -> roleRequestCheckStrategy.validate(null,UserRole.CUSTOMER));
 
-        assertThrows(IllegalStateException.class, () -> roleRequestCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",null,UserState.VALIDATED), UserRole.GENERIC_USER));
+        // mi aspetto un errore perchè l'utente non è stato ancora convalidato
+        user.setUserState(UserState.WAITING_FOR_VALIDATION);
+        assertThrows(IllegalArgumentException.class, () -> roleRequestCheckStrategy.validate(user,UserRole.GENERIC_USER));
 
-        assertThrows(IllegalStateException.class, () -> roleRequestCheckStrategy.validate(new User(1l, "","","",
-                "","",null,UserState.VALIDATED), UserRole.GENERIC_USER));
+        // mi aspetto un errore perchè l'utente sta richiedendo come nuovo ruolo, lo stesso ruolo
+        assertThrows(IllegalArgumentException.class, () -> roleRequestCheckStrategy.validate(user,UserRole.CUSTOMER));
 
-        assertThrows(IllegalStateException.class, () -> roleRequestCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserRole.GENERIC_USER));
+        // mi aspetto un errore perchè l'utente ha un campo info nullo
+        user.setUserSurname(null);
+        assertThrows(IllegalArgumentException.class, () -> roleRequestCheckStrategy.validate(user,UserRole.CUSTOMER));
 
-        assertThrows(IllegalStateException.class, () -> roleRequestCheckStrategy.validate(new User(1l, "","","",
-                "","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserRole.GENERIC_USER));
+        // mi aspetto un essore poiche l'user id non esiste
+        user.setUserID(0);
+        assertThrows(IllegalStateException.class, () -> roleRequestCheckStrategy.validate(user,UserRole.GENERIC_USER));
 
-        assertThrows(IllegalStateException.class, () -> roleRequestCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",null,UserState.WAITING_FOR_VALIDATION), UserRole.GENERIC_USER));
-
-        assertThrows(IllegalStateException.class, () -> roleRequestCheckStrategy.validate(new User(1l, "","","",
-                "","",null,UserState.WAITING_FOR_VALIDATION), UserRole.GENERIC_USER));
     }
 
     @Test
     public void manageUserRequestRole(){
 
-        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+        User user = new User (3,"Rober","Necula","porva@prova.prova1","juventus12345","1234567",UserRole.SELLER,UserState.VALIDATED);
 
-        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(1l, "","","",
-                "","",UserRole.GENERIC_USER,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+        // mi aspetto un errore poichè l'utente è nullo
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(null,UserValidationState.ACCEPTED));
 
-        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",null,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+        // mi aspetto un errore poichè lo stato di validazione non esiste
+        user.setUserState(UserState.WAITING_FOR_VALIDATION);
+        assertThrows(IllegalArgumentException.class, () -> manageUserRequestRoleCheckStrategy.validate(user,null));
 
-        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(1l, "","","",
-                "","",null,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+        // mi aspetto un errore perchè le info dell'utente sono nulle
+        user.setUserSurname(null);
+        assertThrows(IllegalArgumentException.class, () -> manageUserRequestRoleCheckStrategy.validate(user,UserValidationState.DENIED));
 
-        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+        // mi aspetto un errore poichè l'user id non esiste
+        user.setUserID(6);
+        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(user,UserValidationState.ACCEPTED));
 
-        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(1l, "","","",
-                "","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
-
-        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",null,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
-
-        assertThrows(IllegalStateException.class, () -> manageUserRequestRoleCheckStrategy.validate(new User(1l, "","","",
-                "","",null,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
     }
 
     @Test
     public void manageUserValidation(){
+        User user = new User (3,"Rober","Necula","porva@prova.prova1","juventus12345","1234567",UserRole.SELLER,UserState.VALIDATED);
 
-        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+        // mi aspetto un errore perchè l'utente è nullo
+        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(null,UserValidationState.ACCEPTED));
 
-        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(1l, "","","",
-                "","",UserRole.GENERIC_USER,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+        // mi aspetto un errore perchè lo stato di validazione non esiste
+        assertThrows(IllegalArgumentException.class, () -> manageUserValidationCheckStrategy.validate(user,null));
 
-        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",null,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+        // mi aspetto un errore poichè il ruiolo dell'utente non esiste
+        user.setUserRole(null);
+        assertThrows(IllegalArgumentException.class, () -> manageUserValidationCheckStrategy.validate(user,UserValidationState.DENIED));
 
-        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(1l, "","","",
-                "","",null,UserState.VALIDATED), UserValidationState.ACCEPTED ));
+        // mi aspetto un errore poichè le info sono nulle
+        user.setUserName(null);
+        assertThrows(IllegalArgumentException.class, () -> manageUserValidationCheckStrategy.validate(user,null));
 
-        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
-
-        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(1l, "","","",
-                "","",UserRole.GENERIC_USER,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
-
-        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(-1l, "a","b","c",
-                "d","e",null,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
-
-        assertThrows(IllegalStateException.class, () -> manageUserValidationCheckStrategy.validate(new User(1l, "","","",
-                "","",null,UserState.WAITING_FOR_VALIDATION), UserValidationState.DENIED));
+        // mi aspetto un errore perchè l'utente non esiste
+        user.setUserID(5);
+        assertThrows(IllegalArgumentException.class, () -> manageUserValidationCheckStrategy.validate(user,UserValidationState.ACCEPTED));
 
     }
 
