@@ -7,7 +7,7 @@ import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
 import it.unicam.cs.FilieraAgricola.User.UserUtility;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
 import org.junit.platform.commons.annotation.Testable;
 import org.springframework.beans.factory.annotation.Autowired;
 
