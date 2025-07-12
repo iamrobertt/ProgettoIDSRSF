@@ -1,18 +1,21 @@
-package it.unicam.cs.FilieraAgricola.Event;
+package it.unicam.cs.FilieraAgricola.Test.Event;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.AddGuestCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.CreateEventCheckStrategy;
+import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
 import it.unicam.cs.FilieraAgricola.User.UserUtility;
-import org.junit.jupiter.api.Test;
+import org.testng.annotations.Test;
+import org.junit.platform.commons.annotation.Testable;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Testable
 public class EventTest extends Event {
 
         @Autowired
@@ -176,4 +179,5 @@ public class EventTest extends Event {
             assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user2,event4));
             assertThrows(IllegalArgumentException.class, () -> addGuestCheckStrategy.validate(user2,event5));
         }
+
 }

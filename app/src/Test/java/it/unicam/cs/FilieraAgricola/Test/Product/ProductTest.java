@@ -1,9 +1,10 @@
-package it.unicam.cs.FilieraAgricola.Product;
+package it.unicam.cs.FilieraAgricola.Test.Product;
 
 import it.unicam.cs.FilieraAgricola.CheckStrategy.BuyProductCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.LoadProductCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.SellProductCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.ValidateProductCheckStrategy;
+import it.unicam.cs.FilieraAgricola.Product.*;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
@@ -24,36 +25,19 @@ public class ProductTest extends Product {
     private Product product;
     private User user;
 
-    public ProductTest(
-        long productID,
-        String productName,
-        String productDescription,
-        double productPrice,
-        int productQuantity,
-        ProductState productState,
-        ProductType productType
-    ){
-        this.productID = productID;
-        this.productName = productName;
-        this.productDescription = productDescription;
-        this.productPrice = productPrice;
-        this.productState = productState;
-        this.productType = productType;
-    }
-
-    ProductTest product1 = new ProductTest(1L,"","",
-            0,0,ProductState.PRODUCT_NOT_VALIDATED,null);
-    ProductTest product2 = new ProductTest(1L,"s","e",
-            1,1,ProductState.PRODUCT_INSERTED,ProductType.SINGLE);
-
 
 
 
     @Test
     public void validateProduct(){
 
-        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1,ProductValidationState.DENIED));
+        User user = new User(1L,"","","","","",UserRole.GENERIC_USER, UserState.VALIDATED);
+        Product product1 = new SingleProduct();
+
+        assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(user, product1, ProductValidationState.DENIED));
+
+
+
         assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
                 ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1,ProductValidationState.ACCEPTED));
         assertThrows(IllegalArgumentException.class, () -> validateProductCheckStrategy.validate(new User(1L,"","",""
@@ -128,6 +112,7 @@ public class ProductTest extends Product {
 
     @Test
     public void valideteSellProduct(){
+        Product product1 = new SingleProduct();
 
         assertThrows(IllegalArgumentException.class, () -> sellProductCheckStrategy.validate(new User(1L,"","",""
                 ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1));
@@ -205,6 +190,7 @@ public class ProductTest extends Product {
 
     @Test
     public void validateBoughtProduct() {
+        Product product2 = new SingleProduct();
         assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
                 ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product2,1));
         assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
@@ -230,7 +216,7 @@ public class ProductTest extends Product {
         assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
                 ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product2,-1));
         assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
-                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product1,1));
+                ,"","",UserRole.DISTRIBUTOR,UserState.WAITING_FOR_VALIDATION),product2,1));
 
         assertThrows(IllegalArgumentException.class, () -> buyProductCheckStrategy.validate(new User(1L,"","",""
                 ,"","",UserRole.MANUFACTURER,UserState.VALIDATED),product2,1));
@@ -279,7 +265,7 @@ public class ProductTest extends Product {
     }
 
     @Test public void valodateLoadProduct(){
-
+        Product product1 = new SingleProduct();
         assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""
                 ,"","",UserRole.GENERIC_USER,UserState.VALIDATED),product1));
         assertThrows(IllegalArgumentException.class, () -> loadProductCheckStrategy.validate(new User(1L,"","",""

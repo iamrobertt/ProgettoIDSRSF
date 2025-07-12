@@ -4,7 +4,10 @@ import it.unicam.cs.FilieraAgricola.Event.Event;
 import it.unicam.cs.FilieraAgricola.Event.EventUtility;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+
+@Component
 public class UpdateEventCheckStrategy implements CheckStrategy <Event> {
 
     @Autowired

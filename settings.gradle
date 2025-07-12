@@ -12,3 +12,5 @@ plugins {
 
 rootProject.name = 'ProgettoIDSRSF'
 include('app')
+
+include 'app:src:test:java'
