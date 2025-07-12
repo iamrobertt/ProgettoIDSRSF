@@ -5,6 +5,7 @@ import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
 import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.Event.EventManager;
 import it.unicam.cs.FilieraAgricola.Product.Product;
+import it.unicam.cs.FilieraAgricola.Product.ProductUtility;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
@@ -31,13 +32,17 @@ public class EventController {
     private ControllerUtility controllerUtility;
 
     @Autowired
+    private ProductUtility productUtility;
+
+    @Autowired
+    private EventUtility eventUtility;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private EventRepository eventRepository;
-
-    @Autowired
     private ProductRepository productRepository;
+
 
     @Transactional
     @PostMapping("/insertEvent")
@@ -61,6 +66,7 @@ public class EventController {
     }
 
 
+    /*
     @Transactional
     @PostMapping("/addProductToTastingEvent")
     public ResponseEntity<String> addProductToTastingEvent(
@@ -69,11 +75,9 @@ public class EventController {
                                            @RequestParam int productQuantity) {
 
         try{
-            Optional<Event> event = this.eventRepository.findById(eventID);
-            Optional<Product> productEvent = this.productRepository.findById(productId);
+            Event event = this.eventUtility.getEvent(eventID);
+            Product productEvent = this.productUtility.getProduct(productId);
 
-            TastingEvent tastingEvent = (TastingEvent) event.get();
-            Product product = productEvent.get();
 
             //TODO aggiungi controlli
             EventProduct eventProduct = new EventProduct(tastingEvent, product, productQuantity);
@@ -86,17 +90,16 @@ public class EventController {
         }
 
         return ResponseEntity.ok().body("Product added to event " + eventID + "successfully.");
-    }
+    }*/
 
 
     @PostMapping("/bookEvent")
     public ResponseEntity<String> bookEvent(@RequestParam long eventID) {
 
-
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = this.userRepository.findByUserEmail(userEmail);
 
-        Event event = this.eventRepository.findById(eventID).orElse(null);
+        Event event = this.eventUtility.getEvent(eventID);
 
         try {
             this.eventManager.bookEventRequest(user, event);
@@ -108,24 +111,26 @@ public class EventController {
         return ResponseEntity.ok().body("Booked to event " + event.getEventName() + "successfully.");
     }
 
+
     @Transactional
     @PostMapping("/deleteEvent")
     public ResponseEntity<String> deleteEvent(@RequestParam long eventID) {
-        Event event = this.eventRepository.findById(eventID).orElse(null);
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
+        Event event = this.eventUtility.getEvent(eventID);
 
         try {
-
-            //this.eventManager.deleteEventRequest(, event);
-            this.eventManager.deleteEventRequest(new User(), event);
+            this.eventManager.deleteEventRequest(user, event);
         }
         catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
-
         return ResponseEntity.ok().body("Event " + event.getEventName() + "successfully removed.");
     }
 
+    /*
     @Transactional
     @PostMapping("/updateEvent")
     public ResponseEntity<String> updateEvent(@RequestBody EventDTO eventDTO) {
@@ -141,7 +146,7 @@ public class EventController {
 
         return ResponseEntity.ok().body("Event " + event.getEventName() + "successfully updated.");
 
-    }
+    }*/
 
 }
 

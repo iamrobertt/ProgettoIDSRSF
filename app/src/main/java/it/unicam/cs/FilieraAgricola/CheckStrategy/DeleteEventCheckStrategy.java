@@ -3,7 +3,6 @@ package it.unicam.cs.FilieraAgricola.CheckStrategy;
 import it.unicam.cs.FilieraAgricola.Event.Event;
 import it.unicam.cs.FilieraAgricola.Event.EventUtility;
 import it.unicam.cs.FilieraAgricola.User.User;
-import it.unicam.cs.FilieraAgricola.User.UserUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +14,19 @@ public class DeleteEventCheckStrategy implements CheckStrategy<Event> {
     private EventUtility eventUtility;
 
     @Override
-    public boolean validate(User user, Event item) {
+    public boolean validate(User user, Event event) {
 
-        if(!this.eventUtility.checkExistEvent(item)){
+        if(user == null)
+            throw new IllegalArgumentException("Error retrieving user information.");
+
+        if(event == null)
+            throw new IllegalArgumentException("Error retrieving event information.");
+
+        if(!this.eventUtility.checkEventInfo(event))
             throw new IllegalArgumentException("Event does not exist.");
-        }
-        if(!this.eventUtility.checkEventInfo(item)){
-            throw new IllegalArgumentException("Event info does not exist.");
-        }
+
+        if(!this.eventUtility.checkExistEvent(event))
+            throw new IllegalArgumentException("Event does not exist.");
 
         return true;
     }
