@@ -1,38 +1,45 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
-import it.unicam.cs.FilieraAgricola.MarketPlace.MarketPlaceUtility;
-import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.ProductState;
-import it.unicam.cs.FilieraAgricola.Product.ProductUtility;
+import it.unicam.cs.FilieraAgricola.Product.*;
+import it.unicam.cs.FilieraAgricola.User.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class BuyProductCheckStrategy implements CustomCheckStrategy<Product, Integer>  {
 
 
-public class BuyProductCheckStrategy implements CheckStrategy {
-
-    private Product product;
-
-    public BuyProductCheckStrategy(Product product) {
-        this.product = product;
-    }
-
+    @Autowired
+    private ProductUtility productUtility;
 
     @Override
-    public boolean validate() {
+    public boolean validate(User user, Product product, Integer neededQuantity) {
 
-        //if the product does not have the necessary data to be uniquely identified, return false
-        if (!ProductUtility.checkProductInfo(this.product))
-            return false;
+        if(user == null)
+            throw new IllegalArgumentException("Error retrieving user information");
 
-        //if the product does not exist, return false
-        if (!ProductUtility.checkExistProduct(this.product))
-            return false;
+        if (!this.productUtility.checkProductInfo(product))
+            throw new IllegalArgumentException("Error retrieving product information.");
 
-        //if the product isn't in a sell state, return false
-        if(!this.product.getProductState().equals(ProductState.PRODUCT_VALIDATED))
-            return false;
 
-        if(!MarketPlaceUtility.checkProductAvailability(this.product))
-            return false;
+        if (!this.productUtility.checkExistProduct(product))
+            throw new IllegalArgumentException("Product does not exist.");
+
+
+        if(!product.getProductState().equals(ProductState.PRODUCT_VALIDATED))
+            throw new IllegalArgumentException("Product with id " + product.getProductID() + " is not validated.");
+
+
+        if(neededQuantity < 1)
+            throw new IllegalArgumentException("Product has a non valid quantity.");
+
+
+        if(!this.productUtility.checkProductAvailability(product, neededQuantity))
+            throw new IllegalArgumentException("Product with id " + product.getProductID() + " is not available.");
+
 
         return true;
     }
+
+
 }

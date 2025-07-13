@@ -1,34 +1,59 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
-import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.ProductState;
-import it.unicam.cs.FilieraAgricola.Product.ProductUtility;
+import it.unicam.cs.FilieraAgricola.Product.*;
+import it.unicam.cs.FilieraAgricola.User.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class SellProductCheckStrategy implements CheckStrategy {
+@Component
+public class SellProductCheckStrategy implements CheckStrategy<Product> {
 
-    private final Product product;
-
-    public SellProductCheckStrategy(Product product) {
-        this.product = product;
-    }
+    @Autowired
+    private ProductUtility productUtility;
 
     @Override
-    public boolean validate() {
+    public boolean validate(User user, Product product) {
 
-        //if the product does not have the necessary data to be uniquely identified, return false
-        if (!ProductUtility.checkProductInfo(this.product))
-            return false;
+        if(user == null)
+            throw new IllegalArgumentException("Error retrieving user information.");
 
-        //TODO aggiorna anche sequence diagram su questa funzione aggiungendo anche l'utente
-        //in questo modo non si controlla se il prodotto esiste per il dato utente, ma per qualsiasi utente
-        //if the product does not exist, return false
-        if (!ProductUtility.checkExistProduct(this.product))
-            return false;
+        if(product == null)
+            throw new IllegalArgumentException("Error retrieving product information.");
 
-        //if the product isn't in a pre-sell state, return false
-        if(!this.product.getProductState().equals(ProductState.PRODUCT_INSERTED))
-            return false;
+
+        if (!this.productUtility.checkProductInfo(product))
+            throw new IllegalArgumentException("Error retrieving product information.");
+
+
+        if (!this.productUtility.checkExistProductWithUser(user,product))
+            throw new IllegalArgumentException("Product does not exist.");
+
+
+        if(!product.getProductState().equals(ProductState.PRODUCT_INSERTED))
+            throw new IllegalArgumentException("Product already validated or waiting for validation.");
+
+
+        if (product instanceof SingleProduct)
+            return true;
+
+
+        /*
+          Due to how the bundles are crated, i only need to check the first "layer" of
+          products to determine if the product can be sold.
+         */
+
+        BundleProduct bundleProduct = (BundleProduct) product;
+
+        for(BundleItem bundleItem : bundleProduct.getBundleItems()) {
+
+            Product realProduct = this.productUtility.getProduct(bundleItem.getProduct().getProductID());
+
+            if (!realProduct.getProductState().equals(ProductState.PRODUCT_VALIDATED))
+                throw new IllegalArgumentException("Product" + bundleProduct.getProductID() + " with id " + realProduct.getProductID() + " is not validated.");
+
+        }
 
         return true;
+
     }
 }

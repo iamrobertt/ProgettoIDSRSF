@@ -2,17 +2,22 @@ package it.unicam.cs.FilieraAgricola.Controller;
 
 
 import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
-import it.unicam.cs.FilieraAgricola.Event.Event;
+import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.Event.EventManager;
-import it.unicam.cs.FilieraAgricola.Event.EventRepository;
+import it.unicam.cs.FilieraAgricola.Product.Product;
+import it.unicam.cs.FilieraAgricola.Product.ProductUtility;
+import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
+import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
+import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
-import it.unicam.cs.FilieraAgricola.User.UserRole;
-import it.unicam.cs.FilieraAgricola.User.UserState;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 
 
@@ -24,46 +29,79 @@ public class EventController {
     private EventManager eventManager;
 
     @Autowired
-    private EventRepository eventRepository;
+    private ControllerUtility controllerUtility;
 
+    @Autowired
+    private ProductUtility productUtility;
+
+    @Autowired
+    private EventUtility eventUtility;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+
+    @Transactional
     @PostMapping("/insertEvent")
-    public String insertEvent(@RequestBody EventDTO eventDTO) {
-        ControllerUtility controllerUtility = new ControllerUtility();
-        Event event = controllerUtility.convertToEvent(eventDTO);
+    public ResponseEntity<String> insertEvent(@RequestBody EventDTO eventDTO) {
 
+        try {
+            Event event = this.controllerUtility.convertToEvent(eventDTO);
 
-        List<UserRole> userRole = new ArrayList<UserRole>();
-        userRole.add(UserRole.PROMOTER);
+            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = this.userRepository.findByUserEmail(userEmail);
 
-        User user = new User(
-                        1,
-                        "ciao",
-                        "ciao",
-                        "ciao",
-                        "ciao",
-                        123456,
-                        userRole,
-                        UserState.AUTHENTICATED
-        );
+            event.setEventCreator(user);
 
+            this.eventManager.createEventRequest(user, event);
 
-        this.eventManager.createEventRequest(user, event);
+        }catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
 
-        return "proviamo";
-
-    }
-
-    @GetMapping("/findEvent{eventID")
-    public int findEvent (@PathVariable("eventID") int eventID){
-        Optional<EventDTO> event1 = this.eventRepository.findById(eventID);
-
-        if(event1.isPresent())
-            return event1.get().getEventID();
-        else
-            return -1;
+        return ResponseEntity.ok().body("Event created successfully.");
     }
 
 
+    @PostMapping("/bookEvent")
+    public ResponseEntity<String> bookEvent(@RequestParam long eventID) {
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
+
+        Event event = this.eventUtility.getEvent(eventID);
+
+        try {
+            this.eventManager.bookEventRequest(user, event);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body("Booked to event " + event.getEventName() + "successfully.");
+    }
+
+
+    @Transactional
+    @PostMapping("/deleteEvent")
+    public ResponseEntity<String> deleteEvent(@RequestParam long eventID) {
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
+        Event event = this.eventUtility.getEvent(eventID);
+
+        try {
+            this.eventManager.deleteEventRequest(user, event);
+        }
+        catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body("Event " + event.getEventName() + "successfully removed.");
+    }
 
 }
 

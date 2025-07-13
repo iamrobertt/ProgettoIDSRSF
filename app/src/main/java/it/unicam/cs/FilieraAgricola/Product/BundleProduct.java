@@ -1,38 +1,56 @@
 package it.unicam.cs.FilieraAgricola.Product;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
-import lombok.Data;
 
-import java.util.ArrayList;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+
 import java.util.List;
 
 
+@EqualsAndHashCode(callSuper = true)
+@Entity
+@DiscriminatorValue("BUNDLE")
+@Data
 public class BundleProduct extends Product{
 
-    private final List<Product> productsInBundle;
 
-    public BundleProduct(int bundleID, String bundleName, String bundleDescription, double bundlePrice, int bundleQuantity, ProductState bundleState, List<Product> productsInBundle) {
-        super(bundleID, bundleName, bundleDescription, bundlePrice, bundleQuantity, bundleState);
-        this.productsInBundle = new ArrayList<>(productsInBundle);
+    @OneToMany(mappedBy = "parentBundle", cascade = CascadeType.ALL)
+    private List<BundleItem> bundleItems;
+
+    public BundleProduct(long bundleID,
+                         String bundleName,
+                         String bundleDescription,
+                         double bundlePrice,
+                         int bundleQuantity,
+                         ProductState bundleState,
+                         ProductType bundleType,
+                         List<BundleItem> bundleItems
+    ) {
+        super(bundleID, bundleName, bundleDescription, bundlePrice, bundleQuantity, bundleState, ProductType.BUNDLE);
+        this.bundleItems = bundleItems;
     }
+
+
+    public BundleProduct() {}
 
 
     @Override
     public void setProductPrice(double productPrice) {
         double price = 0.0;
-        for (Product product : this.productsInBundle)
-            price += product.getProductPrice();
+
+        for(BundleItem item : this.bundleItems)
+            price += item.getProduct().getProductPrice();
 
         this.productPrice = price;
     }
 
-    public void add(Product product) {
-        if(product == null) throw new NullPointerException("Product is null");
-        this.productsInBundle.add(product);
-    }
 
-    public List<Product> getProductsInBundle() {
-        return productsInBundle;
+    public void add(BundleItem bundleItem) {
+        if(bundleItem == null)
+            throw new NullPointerException("Product is null");
+        this.bundleItems.add(bundleItem);
     }
 
 

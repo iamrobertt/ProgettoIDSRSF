@@ -1,25 +1,36 @@
 package it.unicam.cs.FilieraAgricola.Event;
 
-import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.User.User;
+
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
+@Entity
+@DiscriminatorValue("TASTING")
 @Data
 public  class TastingEvent extends Event{
 
-    protected List<Product> productList;
+
+    @OneToMany(mappedBy = "parentEvent", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    protected List<EventProduct> productList;
+
 
     public TastingEvent(
-            int eventID,
+            long eventID,
+            String eventName,
+            String eventDescription,
             int eventMaxParticipants,
             int currentParticipants,
-            List<User> participants,
-            List<Product> productList
+            EventType eventType,
+            List<EventParticipant> participants,
+            List<EventProduct> productList
     ){
-        super(eventID, eventMaxParticipants,currentParticipants,participants);
-        this.productList = productList;}
+        super(eventID, eventName, eventDescription, eventMaxParticipants, currentParticipants, eventType, participants);
+        this.productList = productList;
+    }
 
     public TastingEvent(){}
 

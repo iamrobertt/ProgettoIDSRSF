@@ -1,6 +1,8 @@
 package it.unicam.cs.FilieraAgricola.Command;
 
 import it.unicam.cs.FilieraAgricola.Product.Product;
+import it.unicam.cs.FilieraAgricola.Product.ProductState;
+import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 
@@ -9,8 +11,12 @@ import java.util.List;
 
 public class SellProductCommand extends Command<Product> {
 
-    public SellProductCommand(User user, Product product) {
+    private final ProductRepository productRepository;
+
+
+    public SellProductCommand(User user, Product product, ProductRepository productRepository) {
         super(user, product);
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -22,11 +28,11 @@ public class SellProductCommand extends Command<Product> {
 
     @Override
     public boolean hasCallerNeededAuthorization() {
-        return this.user.getUserRole().contains(getNeededAuthorization());
+        return getNeededAuthorization().contains(this.user.getUserRole());
     }
 
     @Override
     public void execute() {
-        //TODO
+        this.productRepository.updateProductState(this.user.getUserID(), this.item.getProductID(), ProductState.PRODUCT_TO_VALIDATE);
     }
 }

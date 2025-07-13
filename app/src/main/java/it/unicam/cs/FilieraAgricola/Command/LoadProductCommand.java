@@ -11,6 +11,7 @@ import java.util.List;
 
 public class LoadProductCommand extends Command<Product> {
 
+
     public LoadProductCommand(User user, Product product) {
         super(user, product);
     }
@@ -24,12 +25,13 @@ public class LoadProductCommand extends Command<Product> {
 
     @Override
     public boolean hasCallerNeededAuthorization() {
-        return this.user.getUserRole().contains(getNeededAuthorization());
+        return getNeededAuthorization().contains(this.user.getUserRole());
     }
 
     @Override
     public void execute() {
-        ProductLoader productLoader = ProductLoaderFactory.getProductLoader(this.item.getClass());
+        ProductLoaderFactory productLoaderFactory = new ProductLoaderFactory();
+        ProductLoader productLoader = productLoaderFactory.getProductLoader(this.item.getClass());
         productLoader.loadProduct(this.item);
     }
 }

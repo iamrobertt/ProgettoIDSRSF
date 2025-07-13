@@ -1,5 +1,9 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
-public interface CheckStrategy {
-    boolean validate();
+
+import it.unicam.cs.FilieraAgricola.User.User;
+
+public interface CheckStrategy<T> {
+
+    boolean validate(User user, T item);
 }

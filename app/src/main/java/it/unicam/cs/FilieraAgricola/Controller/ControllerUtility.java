@@ -1,91 +1,169 @@
 package it.unicam.cs.FilieraAgricola.Controller;
 
-import it.unicam.cs.FilieraAgricola.DTO.EventDTO;
-import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
-import it.unicam.cs.FilieraAgricola.DTO.UserDTO;
-import it.unicam.cs.FilieraAgricola.Event.Event;
-import it.unicam.cs.FilieraAgricola.Event.TastingEvent;
-import it.unicam.cs.FilieraAgricola.Product.BundleProduct;
-import it.unicam.cs.FilieraAgricola.Product.Product;
-import it.unicam.cs.FilieraAgricola.Product.ProductState;
-import it.unicam.cs.FilieraAgricola.Product.SingleProduct;
+import it.unicam.cs.FilieraAgricola.Certificate.Certificate;
+import it.unicam.cs.FilieraAgricola.Certificate.CertificateProduct;
+import it.unicam.cs.FilieraAgricola.Certificate.CertificateType;
+import it.unicam.cs.FilieraAgricola.DTO.*;
+import it.unicam.cs.FilieraAgricola.Event.*;
+import it.unicam.cs.FilieraAgricola.Product.*;
+import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
+import it.unicam.cs.FilieraAgricola.Repository.ProductRepository;
+import it.unicam.cs.FilieraAgricola.Repository.UserRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
+import it.unicam.cs.FilieraAgricola.User.UserRole;
+import it.unicam.cs.FilieraAgricola.User.UserState;
+import org.antlr.v4.runtime.misc.Pair;
+import org.checkerframework.checker.units.qual.C;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
+import java.util.Optional;
 
+@Component
 public class ControllerUtility {
+
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private EventRepository eventRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public Product convertToProduct(ProductDTO productDTO) {
 
-        if (productDTO.getBundleProducts() != null && !productDTO.getBundleProducts().isEmpty()) {
-            List<Product> products = productDTO.getBundleProducts()
-                    .stream()
-                    .map(this::convertToProduct)
-                    .toList();
+        ProductState productState = ProductState.fromValue(productDTO.getProductState());
+        ProductType productType = ProductType.fromValue(productDTO.getProductType());
 
-            return new BundleProduct(
-                    0,
+
+        if (Objects.requireNonNull(productType).getValue().equals("SINGLE"))
+            return new SingleProduct(
+                    productDTO.getProductID(),
                     productDTO.getProductName(),
                     productDTO.getProductDescription(),
                     productDTO.getProductPrice(),
                     productDTO.getProductQuantity(),
-                    ProductState.PRODUCT_INSERTED,
-                    products
+                    productState,
+                    productType
             );
-        }
 
-        // Altrimenti è un SingleProduct
-        return new SingleProduct(
-                0,
+
+        //is a bundle product
+
+        BundleProduct bundleProduct = new BundleProduct(
+                productDTO.getProductID(),
                 productDTO.getProductName(),
                 productDTO.getProductDescription(),
                 productDTO.getProductPrice(),
                 productDTO.getProductQuantity(),
-                ProductState.PRODUCT_INSERTED
+                productState,
+                productType,
+                null
         );
+
+        List<BundleItem> bundleItems = productDTO.getBundleProducts()
+                .stream()
+                .map(productWithQuantityDTO -> {
+                    Product product = this.productRepository.findById(productWithQuantityDTO.getProductID())
+                            .orElse(null);
+
+                    if (product == null)
+                        return null;
+
+                    BundleItem bundleItem = new BundleItem();
+                    bundleItem.setParentBundle(bundleProduct);
+                    bundleItem.setProduct(product);
+                    bundleItem.setProductQuantityPerBundle(productWithQuantityDTO.getProductQuantity());
+
+                    return bundleItem;
+
+                })
+                .toList();
+
+        bundleProduct.setBundleItems(bundleItems);
+        return bundleProduct;
     }
 
     public Event convertToEvent(EventDTO eventDTO){
 
-        //TODO da fare convertToUser
-        List<User> participants = eventDTO.getParticipants()
+        List<EventParticipant> participants = eventDTO.getParticipants()
                 .stream()
-                .map(this::convertToUser)
+                .map(this::convertToParticipant)
                 .toList();
+
+        EventType eventType = EventType.fromValue(eventDTO.getEventType());
+
+        if(participants.isEmpty() || eventType == null)
+            return null;
+
+
+        if(eventDTO.getEventType().equals("SINGLE"))
+            return new SimpleEvent(
+                    eventDTO.getEventID(),
+                    eventDTO.getEventName(),
+                    eventDTO.getEventDescription(),
+                    eventDTO.getEventMaxParticipants(),
+                    eventDTO.getEventCurrentParticipants(),
+                    eventType,
+                    participants
+            );
+
 
 
         //tasting event
-        if(eventDTO.getProductList() != null && !eventDTO.getProductList().isEmpty()){
 
-            List<Product> products = eventDTO.getProductList()
-                    .stream()
-                    .map(this::convertToProduct)
-                    .toList();
-
-
-            return new TastingEvent(
-                    eventDTO.getEventID(),
-                    eventDTO.getEventMaxParticipants(),
-                    eventDTO.getCurrentParticipants(),
-                    participants,
-                    products
-            );
-
-        }
-
-        //simple event
-        return new Event(
+        TastingEvent tastingEvent = new TastingEvent(
                 eventDTO.getEventID(),
+                eventDTO.getEventName(),
+                eventDTO.getEventDescription(),
                 eventDTO.getEventMaxParticipants(),
-                eventDTO.getCurrentParticipants(),
-                participants
+                eventDTO.getEventCurrentParticipants(),
+                eventType,
+                participants,
+                null
         );
+
+
+        List<EventProduct> products = eventDTO.getProductList()
+                .stream()
+                .map(productWithQuantityDTO -> {
+                    Product product = this.productRepository.findById(productWithQuantityDTO.getProductID())
+                            .orElse(null);
+
+                    if (product == null)
+                        return null;
+
+                    EventProduct eventProduct = new EventProduct();
+                    eventProduct.setProduct(product);
+                    eventProduct.setProductQuantity(productWithQuantityDTO.getProductQuantity());
+                    eventProduct.setParentEvent(tastingEvent);
+                    return eventProduct;
+
+                })
+                .toList();
+
+        tastingEvent.setProductList(products);
+        return tastingEvent;
+    }
+
+
+    public Pair<Product, Integer> convertToProduct(ProductWithQuantityDTO productWithQuantityDTO) {
+
+        Optional<Product> product = this.productRepository.findById(productWithQuantityDTO.getProductID());
+
+        if(product.isPresent())
+            return new Pair<>(product.get(), productWithQuantityDTO.getProductQuantity());
+
+
+        return null;
     }
 
 
     public User convertToUser(UserDTO userDTO){
+
+        UserRole userRole = UserRole.fromValue(userDTO.getUserRole());
+        UserState userState = UserState.fromValue(userDTO.getUserState());
 
         return new User(
                 userDTO.getUserID(),
@@ -94,8 +172,43 @@ public class ControllerUtility {
                 userDTO.getUserEmail(),
                 userDTO.getUserPassword(),
                 userDTO.getCompanyVATNumber(),
-                userDTO.getUserRole(),
-                userDTO.getUserState()
+                userRole,
+                userState
         );
     }
+
+
+    public EventParticipant convertToParticipant(EventParticipantDTO eventParticipantDTO){
+
+        Optional<User> participant = this.userRepository.findById(eventParticipantDTO.getParticipantID());
+        EventParticipant eventParticipant = new EventParticipant();
+
+        if(participant.isPresent()){
+            eventParticipant.setParticipant(participant.get());
+            return eventParticipant;
+        }
+
+        return null;
+    }
+
+
+    public Certificate convertToCertificateProduct(CertificateProductDTO certificateProductDTO){
+
+        Product product = this.productRepository.findById(certificateProductDTO.getProductID()).orElse(null);
+
+        if(product == null)
+            return null;
+
+        CertificateType certificateType = CertificateType.fromValue(certificateProductDTO.getCertificateType());
+
+        return new CertificateProduct(
+                certificateProductDTO.getCertificateID(),
+                certificateType,
+                product,
+                certificateProductDTO.getCertificateFilePath()
+        );
+
+
+    }
+
 }
