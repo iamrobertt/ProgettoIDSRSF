@@ -66,33 +66,6 @@ public class EventController {
     }
 
 
-    /*
-    @Transactional
-    @PostMapping("/addProductToTastingEvent")
-    public ResponseEntity<String> addProductToTastingEvent(
-                                           @RequestParam Long eventID,
-                                           @RequestParam Long productId,
-                                           @RequestParam int productQuantity) {
-
-        try{
-            Event event = this.eventUtility.getEvent(eventID);
-            Product productEvent = this.productUtility.getProduct(productId);
-
-
-            //TODO aggiungi controlli
-            EventProduct eventProduct = new EventProduct(tastingEvent, product, productQuantity);
-            tastingEvent.getProductList().add(eventProduct);
-
-            this.eventRepository.save(tastingEvent);
-
-        }catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-
-        return ResponseEntity.ok().body("Product added to event " + eventID + "successfully.");
-    }*/
-
-
     @PostMapping("/bookEvent")
     public ResponseEntity<String> bookEvent(@RequestParam long eventID) {
 
@@ -129,24 +102,6 @@ public class EventController {
 
         return ResponseEntity.ok().body("Event " + event.getEventName() + "successfully removed.");
     }
-
-    /*
-    @Transactional
-    @PostMapping("/updateEvent")
-    public ResponseEntity<String> updateEvent(@RequestBody EventDTO eventDTO) {
-        Event event = this.eventRepository.findById(eventDTO.getEventID()).orElse(null);
-
-        try {
-
-            this.eventManager.updateEventRequest(new User() , event);
-        }
-        catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-
-        return ResponseEntity.ok().body("Event " + event.getEventName() + "successfully updated.");
-
-    }*/
 
 }
 

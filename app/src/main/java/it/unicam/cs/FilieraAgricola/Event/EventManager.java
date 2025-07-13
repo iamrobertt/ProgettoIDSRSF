@@ -22,10 +22,6 @@ public class EventManager {
     @Autowired
     private DeleteEventCheckStrategy deleteEventCheckStrategy;
 
-    /*
-    @Autowired
-    private UpdateEventCheckStrategy updateEventCheckStrategy;*/
-
     @Autowired
     private EventLoaderFactory eventLoaderFactory;
 
@@ -79,15 +75,4 @@ public class EventManager {
         invoker.invoke();
     }
 
-    /*
-    public void updateEventRequest(User user, Event event){
-        if (!this.updateEventCheckStrategy.validate(user, event)){
-            throw new IllegalArgumentException("Event non valid for update");
-        }
-
-        Command<Event> updateEventCommand = new UpdateEventCommand(user, event, this.eventLoaderFactory);
-        CommandInvoker invoker = new CommandInvoker();
-        invoker.setCommand(updateEventCommand);
-        invoker.invoke();
-    }*/
 }
