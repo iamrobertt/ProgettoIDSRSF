@@ -3,8 +3,8 @@ package it.unicam.cs.FilieraAgricola.Event;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.BookEventStrategyCheck;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.CreateEventCheckStrategy;
 import it.unicam.cs.FilieraAgricola.CheckStrategy.DeleteEventCheckStrategy;
-import it.unicam.cs.FilieraAgricola.CheckStrategy.UpdateEventCheckStrategy;
 import it.unicam.cs.FilieraAgricola.Command.*;
+import it.unicam.cs.FilieraAgricola.Exception.InsufficientUserAuthorizationException;
 import it.unicam.cs.FilieraAgricola.Repository.EventRepository;
 import it.unicam.cs.FilieraAgricola.User.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,9 @@ public class EventManager {
     @Autowired
     private DeleteEventCheckStrategy deleteEventCheckStrategy;
 
+    /*
     @Autowired
-    private UpdateEventCheckStrategy updateEventCheckStrategy;
+    private UpdateEventCheckStrategy updateEventCheckStrategy;*/
 
     @Autowired
     private EventLoaderFactory eventLoaderFactory;
@@ -49,9 +50,12 @@ public class EventManager {
     public void bookEventRequest (User user, Event event){
 
         if (!this.bookEventStrategyCheck.validate(user, event))
-            throw new IllegalArgumentException("The event is not on the book");
+            throw new IllegalArgumentException("Event non valid for booking");
 
         Command<Event> bookEventCommand = new BookEventCommand(user, event, this.eventRepository);
+
+        if (!bookEventCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to book an event");
 
         CommandInvoker invoker = new CommandInvoker();
 
@@ -60,16 +64,22 @@ public class EventManager {
     }
 
     public void deleteEventRequest(User user, Event event){
-        if(!this.deleteEventCheckStrategy.validate(user, event)){
-            throw new IllegalArgumentException("Event non valid for deletion");
-        }
 
-        Command<Event> deleteEventCommand = new DeleteEventCommand(user, event, this.eventLoaderFactory);
+        if(!this.deleteEventCheckStrategy.validate(user, event))
+            throw new IllegalArgumentException("Event non valid for deletion");
+
+        Command<Event> deleteEventCommand = new DeleteEventCommand(user, event, this.eventRepository);
+
+        if (!deleteEventCommand.hasCallerNeededAuthorization())
+            throw new InsufficientUserAuthorizationException("Insufficient authorization to delete an event");
+
         CommandInvoker invoker = new CommandInvoker();
+
         invoker.setCommand(deleteEventCommand);
         invoker.invoke();
     }
 
+    /*
     public void updateEventRequest(User user, Event event){
         if (!this.updateEventCheckStrategy.validate(user, event)){
             throw new IllegalArgumentException("Event non valid for update");
@@ -79,5 +89,5 @@ public class EventManager {
         CommandInvoker invoker = new CommandInvoker();
         invoker.setCommand(updateEventCommand);
         invoker.invoke();
-    }
+    }*/
 }

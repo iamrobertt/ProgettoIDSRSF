@@ -21,7 +21,7 @@ public class BookEventCommand extends Command<Event> {
     @Override
     public List<UserRole> getNeededAuthorization() {
         List<UserRole> neededRoles = new ArrayList<>();
-        neededRoles.add(UserRole.PROMOTER);
+        neededRoles.add(UserRole.CUSTOMER);
         return neededRoles;
     }
 
