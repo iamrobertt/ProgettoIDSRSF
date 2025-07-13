@@ -1,6 +1,7 @@
 package it.unicam.cs.FilieraAgricola.CheckStrategy;
 
 import it.unicam.cs.FilieraAgricola.Event.Event;
+import it.unicam.cs.FilieraAgricola.Event.EventUtility;
 import it.unicam.cs.FilieraAgricola.Event.GuestUtility;
 import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserUtility;
@@ -17,6 +18,9 @@ public class AddGuestCheckStrategy implements CheckStrategy<Event>{
     @Autowired
     private UserUtility userUtility;
 
+    @Autowired
+    private EventUtility eventUtility;
+
     public boolean validate(User guest, Event event) {
 
         if(!this.userUtility.checkUserInfo(guest))
@@ -25,6 +29,9 @@ public class AddGuestCheckStrategy implements CheckStrategy<Event>{
 
         if(this.guestUtility.checkExistParticipants(guest,event))
             throw new IllegalArgumentException("Already signed to the event.");
+
+        if(this.eventUtility.isEventFull(event))
+            throw new IllegalArgumentException("The event is already full");
 
         return true;
 

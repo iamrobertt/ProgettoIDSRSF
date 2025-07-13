@@ -12,6 +12,8 @@ public class DeleteEventCheckStrategy implements CheckStrategy<Event> {
 
     @Autowired
     private EventUtility eventUtility;
+    @Autowired
+    private UserUtility userUtility;
 
     @Override
     public boolean validate(User user, Event event) {
