@@ -1,5 +1,9 @@
 package it.unicam.cs.FilieraAgricola.Controller;
 
+import it.unicam.cs.FilieraAgricola.Certificate.Certificate;
+import it.unicam.cs.FilieraAgricola.Certificate.CertificateManager;
+import it.unicam.cs.FilieraAgricola.Certificate.CertificateProduct;
+import it.unicam.cs.FilieraAgricola.DTO.CertificateProductDTO;
 import it.unicam.cs.FilieraAgricola.DTO.ProductWithQuantityDTO;
 import it.unicam.cs.FilieraAgricola.DTO.ProductDTO;
 import it.unicam.cs.FilieraAgricola.Product.ProductManager;
@@ -16,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +35,9 @@ public class ProductController {
 
     @Autowired
     private OrderManager orderManager;
+
+    @Autowired
+    private CertificateManager certificateManager;
 
     @Autowired
     private ControllerUtility controllerUtility;
@@ -121,6 +129,23 @@ public class ProductController {
 
         try {
             this.productManager.buyProductRequest(user, productsToBuy);
+        } catch (RuntimeException e) {
+            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+
+        return ResponseEntity.ok().body("All the products have been bought successfully.");
+    }
+
+    @PostMapping("/insertCertificate")
+    public ResponseEntity<String> loadCertificate(@RequestBody CertificateProductDTO certificateProductDTO, @RequestParam MultipartFile certificateFile) {
+
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = this.userRepository.findByUserEmail(userEmail);
+
+        CertificateProduct certificate = (CertificateProduct) this.controllerUtility.convertToCertificateProduct(certificateProductDTO);
+
+        try {
+            this.certificateManager.loadCertificateRequest(user, certificate, certificateFile);
         } catch (RuntimeException e) {
             ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

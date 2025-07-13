@@ -1,5 +1,8 @@
 package it.unicam.cs.FilieraAgricola.Controller;
 
+import it.unicam.cs.FilieraAgricola.Certificate.Certificate;
+import it.unicam.cs.FilieraAgricola.Certificate.CertificateProduct;
+import it.unicam.cs.FilieraAgricola.Certificate.CertificateType;
 import it.unicam.cs.FilieraAgricola.DTO.*;
 import it.unicam.cs.FilieraAgricola.Event.*;
 import it.unicam.cs.FilieraAgricola.Product.*;
@@ -10,6 +13,7 @@ import it.unicam.cs.FilieraAgricola.User.User;
 import it.unicam.cs.FilieraAgricola.User.UserRole;
 import it.unicam.cs.FilieraAgricola.User.UserState;
 import org.antlr.v4.runtime.misc.Pair;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -185,6 +189,26 @@ public class ControllerUtility {
         }
 
         return null;
+    }
+
+
+    public Certificate convertToCertificateProduct(CertificateProductDTO certificateProductDTO){
+
+        Product product = this.productRepository.findById(certificateProductDTO.getProductID()).orElse(null);
+
+        if(product == null)
+            return null;
+
+        CertificateType certificateType = CertificateType.fromValue(certificateProductDTO.getCertificateType());
+
+        return new CertificateProduct(
+                certificateProductDTO.getCertificateID(),
+                certificateType,
+                product,
+                certificateProductDTO.getCertificateFilePath()
+        );
+
+
     }
 
 }

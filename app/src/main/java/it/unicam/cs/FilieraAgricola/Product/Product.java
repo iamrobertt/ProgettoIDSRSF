@@ -39,8 +39,6 @@ public abstract class Product {
     @Column(insertable = false, updatable = false, name = "product_type")
     protected ProductType productType;
 
-    @Setter
-    @Getter
     @ManyToOne
     @JoinColumn(name = "product_user_id", referencedColumnName = "user_id")
     protected User productUser;
